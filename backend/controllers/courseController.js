@@ -330,3 +330,30 @@ export const deletePart = async (req, res, next) => {
         return res.status(404).json({ message: "Course part not found" });
     }
 }
+
+export const deleteCourse = async (req, res, next) => {
+    const courseId = req.params.id;
+
+    const { user } = req;
+    const teacherId = user.id;
+
+    const course = await Course.findById(courseId);
+
+    if (course) {
+        if (course.teacherId != teacherId) {
+            return res.status(401).json({ message: "Unauthorized" + course.teacherId });
+        }
+
+        const sections = await CourseSection.find({ courseId: course._id });
+
+        for (const section of sections) {
+            await CoursePart.deleteMany({ sectionId: { $in: section._id } });
+            await CourseSection.deleteOne({ _id: section._id });
+        };
+
+        await Course.deleteOne({ _id: course._id });
+        return res.status(200).json({ message: "Course deleted successfully" });
+    } else {
+        return res.status(404).json({ message: "Course part not found" });
+    }
+}

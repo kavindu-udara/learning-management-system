@@ -1,7 +1,7 @@
 import apiClient from "@/axios/axios";
 import Header from "@/components/Header";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   Accordion,
@@ -51,13 +51,15 @@ const EditCourse: React.FC = () => {
   const editPartButtonRef = useRef<HTMLButtonElement>(null);
 
   const editCourseDetailsButtonRef = useRef<HTMLButtonElement>(null);
+  const deleteCourseButtonRef = useRef<HTMLButtonElement>(null);
   const deleteSecConfirmDialogRef = useRef<HTMLButtonElement>(null);
   const deletePartConfirmDialogRef = useRef<HTMLButtonElement>(null);
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
   const handleAddPartDialog = (sectionId: string) => {
-    console.log(sectionId);
     setCurrentSectionId(sectionId);
     createPartButtonRef.current?.click();
   };
@@ -83,7 +85,7 @@ const EditCourse: React.FC = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        //
       });
   };
 
@@ -103,6 +105,7 @@ const EditCourse: React.FC = () => {
       })
       .catch((err) => {
         toast.error(err.response.data.message);
+        navigate("/teacher");
       });
   };
 
@@ -174,13 +177,11 @@ const EditCourse: React.FC = () => {
           courseId: id,
         })
         .then((res) => {
-          console.log(res);
           toast.success(res.data.message);
           loadCourseData();
           setIsSaving(false);
         })
         .catch((err) => {
-          console.log(err);
           toast.error(err.response.data.message);
           setIsSaving(false);
         });
@@ -205,7 +206,6 @@ const EditCourse: React.FC = () => {
 
   const handleDeletesectionButton = (sectionId: string) => {
     setCurrentSectionId(sectionId);
-    //
     deleteSecConfirmDialogRef.current?.click();
   };
 
@@ -232,7 +232,6 @@ const EditCourse: React.FC = () => {
 
   const updateCourseSection = () => {
     if (currentSectionId !== "") {
-      //
       setIsSaving(true);
       apiClient
         .put(`/course/section/${currentSectionId}`, {
@@ -262,12 +261,6 @@ const EditCourse: React.FC = () => {
   };
 
   const updateCoursePart = async () => {
-    console.log({
-      id: currentPartId,
-      title: partTitle,
-      description: partDescription,
-      videoFile: partFile,
-    });
     apiClient
       .post(
         `/course/update-part/${currentPartId}`,
@@ -284,7 +277,6 @@ const EditCourse: React.FC = () => {
         }
       )
       .then((res) => {
-        console.log(res);
         toast.success(res.data.message);
         loadCourseData();
         editPartButtonRef.current?.click();
@@ -311,6 +303,22 @@ const EditCourse: React.FC = () => {
     editPartButtonRef.current?.click();
   };
 
+  const deleteCourse = async () => {
+    apiClient
+      .delete(`/course/${id}`)
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate("/teacher");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  };
+
+  const handleCourseDeleteButton = () => {
+    deleteCourseButtonRef.current?.click();
+  };
+
   useEffect(() => {
     loadCourseData();
     loadCourseCategories();
@@ -326,6 +334,7 @@ const EditCourse: React.FC = () => {
         title={course?.title}
         description={course?.description}
         onClickFunc={handleCourseEditButton}
+        deleteBtnFunc={handleCourseDeleteButton}
         isEditable={true}
       />
 
@@ -461,6 +470,14 @@ const EditCourse: React.FC = () => {
         categories={categories}
       />
 
+      {/* delete course confirmation dialog */}
+      <ConfirmationDialog
+        alertTriggerButtonRef={deleteCourseButtonRef}
+        title="Are you sure ?"
+        description=""
+        confirmFunc={() => deleteCourse()}
+      />
+
       {/* delete section confirmation dialog */}
       <ConfirmationDialog
         alertTriggerButtonRef={deleteSecConfirmDialogRef}
@@ -476,87 +493,8 @@ const EditCourse: React.FC = () => {
         description=""
         confirmFunc={() => deleteCoursePart()}
       />
-
-      {/* <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            // ref={editCourseDetailsButtonRef}
-            className="hidden"
-          >
-            Edit Course
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[700px]">
-          <DialogHeader>
-            <DialogTitle>Edit Course Details</DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-2 w-full items-center gap-4 mb-4">
-            <div className="grid w-full items-center gap-4">
-              <Label>Title</Label>
-              <Input
-                type="text"
-                value={courseTitle}
-                onChange={(e) => setCourseTitle(e.target.value)}
-              />
-            </div>
-            <div className="grid w-full items-center gap-4">
-              <Label>Category</Label>
-              <Select
-                value={categoryId}
-                onValueChange={(categoryId: string) =>
-                  setCategoryId(categoryId)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {categories.map((category: categoryType) => {
-                      return (
-                        <SelectItem value={category._id} key={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label>Description</Label>
-              <Textarea
-                value={courseDescription}
-                onChange={(e) => setCourseDescription(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label>Price (USD)</Label>
-              <Input
-                type="number"
-                value={coursePrice}
-                onChange={(e) => setCoursePrice(e.target.value)}
-                placeholder="100"
-                min={0}
-                max={1000000}
-                step={10}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" onClick={() => updateCourse()}>
-              Save changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog> */}
     </>
   );
 };
 
 export default EditCourse;
-
-// TODO: make part delete and course delete

@@ -1,5 +1,5 @@
 import express from "express";
-import { createCategory, createCourse, createCoursePart, createCourseSection, deletePart, deleteSection, showCourseById, showCourseCategories, showCoursesByTeacherId, updateCourse, updatePart, updateSection } from "../controllers/courseController.js";
+import { createCategory, createCourse, createCoursePart, createCourseSection, deleteCourse, deletePart, deleteSection, showCourseById, showCourseCategories, showCoursesByTeacherId, updateCourse, updatePart, updateSection } from "../controllers/courseController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 import { verifyTeacher } from "../utils/verifyTeacher.js";
 import upload from "../utils/uploadConfig.js";
@@ -26,7 +26,7 @@ router.put('/section/:id', verifyTeacher, updateSection);
 router.post('/update-part/:id', verifyTeacher, upload.single('videoFile'), updatePart);
 
 // delete routes
-router.delete('/:id', verifyTeacher); // TODO : make delete course process
+router.delete('/:id', verifyTeacher, deleteCourse); 
 router.delete('/section/:id', verifyTeacher, deleteSection);
 router.delete('/part/:id', verifyTeacher, deletePart);
 
