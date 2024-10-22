@@ -1,12 +1,11 @@
 import apiClient from "@/axios/axios";
 import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
+import CourseTabs from "@/components/course/CourseTabs";
+import SingleCourseHeroSection from "@/components/course/SingleCourseHeroSection";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { RootState } from "@reduxjs/toolkit/query";
 import React, { useEffect, useState } from "react";
-import { FaUsers, FaCalendarAlt } from "react-icons/fa";
-import { IoMdTime } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -85,44 +84,17 @@ const SingleCoursePage: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="bg-[#EFF4FF] flex justify-center">
-        <div className="container flex flex-row py-10 gap-10">
-          <div className="basis-1/2">
-            <Badge variant="outline" className="bg-white">
-              {category}
-            </Badge>
-            <div className="text-3xl font-bold text-[#2563EB] my-3">
-              {course?.title}
-            </div>
-            <p className="text-gray-500">{course?.description}</p>
-            <div className="flex flex-wrap text-lg mt-3">
-              <div className="text-gray-500 mr-5 inline-flex items-center gap-1">
-                <FaUsers />
-                145,000 students
-              </div>
-              <div className="text-gray-500 mr-5 inline-flex items-center gap-1">
-                <IoMdTime />6 Hr
-              </div>
-              <div className="text-gray-500 mr-5 inline-flex items-center gap-1">
-                <FaCalendarAlt />
-                Last updated 2 days ago
-              </div>
-            </div>
-            <Button className="mt-5">Entroll Now</Button>
-          </div>
-          <div className="basis-1/2">
-            <img src="https://picsum.photos/500/300" alt="" />
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center">
+
+      <SingleCourseHeroSection
+        category={category}
+        title={course?.title}
+        description={course?.description}
+        onClickFunc={() => {}}
+      />
+
+      <div className="flex justify-center mb-10">
         <div className="container mt-5">
-          <div className="border-b flex flex-wrap gap-5 text-lg pb-3">
-            <div className="font-bold text-[#2563EB]">About</div>
-            <div>Course content</div>
-            <div>What includes</div>
-            <div>Ratings</div>
-          </div>
+          <CourseTabs />
 
           <div>
             <div className="text-3xl font-bold my-5">Description</div>
@@ -140,6 +112,8 @@ const SingleCoursePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 };

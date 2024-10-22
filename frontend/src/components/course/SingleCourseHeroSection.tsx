@@ -7,8 +7,8 @@ type Props = {
   title: string;
   description: string;
   onClickFunc: () => void;
-  deleteBtnFunc: () => void;
-  isEditable: boolean;
+  deleteBtnFunc?: () => void;
+  isEditable?: boolean | false;
 };
 
 const SingleCourseHeroSection: React.FC<Props> = ({
@@ -31,7 +31,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
           <Button className="mt-5 mx-3" onClick={() => onClickFunc()}>
             {isEditable ? "Edit Course" : "Start Course"}
           </Button>
-          {isEditable && <Button className="bg-red-500" onClick={() => deleteBtnFunc()}>Delete Course</Button>}
+          {isEditable && <Button className="bg-red-500" onClick={() => deleteBtnFunc?.()}>Delete Course</Button>}
         </div>
         <div className="basis-1/2">
           <img src="https://picsum.photos/500/300" alt="" />

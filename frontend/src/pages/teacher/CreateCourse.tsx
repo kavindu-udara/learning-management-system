@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RootState } from "@reduxjs/toolkit/query";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type categoryType = {
@@ -33,6 +34,9 @@ type categoryType = {
 };
 
 const CreateCourse: React.FC = () => {
+
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>('');
@@ -56,6 +60,7 @@ const CreateCourse: React.FC = () => {
         })
         .then((res) => {
           toast.success(res.data.message);
+          navigate(`/teacher/edit-course/${res.data.course._id}`);
         })
         .catch((err) => {
           toast.error(err.response.data.message);

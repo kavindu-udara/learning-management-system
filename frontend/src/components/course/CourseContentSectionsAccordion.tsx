@@ -36,7 +36,11 @@ type Props = {
   handleEditSectionButton?: (section: { _id: string; title: string }) => void;
   handleDeletesectionButton?: (id: string) => void;
   handleAddPartDialog?: (id: string) => void;
-  handleEditPartButton?: (part: {}) => void;
+  handleEditPartButton?: (part: {
+    _id: string;
+    title: string;
+    description: string;
+  }) => void;
   handleDeletePartButton?: (id: string) => void;
 };
 

@@ -3,23 +3,29 @@ import { AccordionContent } from "../ui/accordion";
 import { Button } from "../ui/button";
 
 type Props = {
-  parts: [
-    {
-      _id: string;
-      title: string;
-      description: string;
-      videoUrl: string;
-      sectionId: string;
-      createdAt: string;
-      updatedAt: string;
-      __v: number;
-    }
-  ] | [];
+  parts:
+    | [
+        {
+          _id: string;
+          title: string;
+          description: string;
+          videoUrl: string;
+          sectionId: string;
+          createdAt: string;
+          updatedAt: string;
+          __v: number;
+        }
+      ]
+    | [];
   section: {
     _id: string;
   };
   isEditable: boolean | false;
-  handleEditPartButton?: (part: {}) => void;
+  handleEditPartButton?: (part: {
+    _id: string;
+    title: string;
+    description: string;
+  }) => void;
   handleDeletePartButton?: (id: string) => void;
 };
 
@@ -30,7 +36,6 @@ const CourseContentPartsAccordion: React.FC<Props> = ({
   handleEditPartButton,
   handleDeletePartButton,
 }: Props) => {
-
   return (
     <>
       {parts

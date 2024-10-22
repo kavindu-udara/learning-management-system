@@ -10,6 +10,7 @@ import SingleCourseHeroSection from "@/components/course/SingleCourseHeroSection
 import CreateCourseDialog from "@/components/course/CreateCourseDialog";
 import ConfirmationDialog from "@/components/alerts/ConfirmationDialog";
 import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
+import CourseTabs from "@/components/course/CourseTabs";
 
 const EditCourse: React.FC = () => {
   const [categories, setCategories] = useState([]);
@@ -334,11 +335,7 @@ const EditCourse: React.FC = () => {
 
       <div className="flex justify-center">
         <div className="container mt-5">
-          <div className="border-b flex flex-wrap gap-5 text-lg pb-3">
-            <div className="font-bold text-[#2563EB]">Course content</div>
-            <div>What includes</div>
-            <div>Ratings</div>
-          </div>
+          <CourseTabs />
 
           <div>
             <div className="flex flex-wrap items-center gap-5">
@@ -351,7 +348,6 @@ const EditCourse: React.FC = () => {
               </span>
             </div>
 
-            {/* // ! section components */}
             <CourseContentSectionsAccordion
               sections={courseSections}
               parts={courseParts}
@@ -362,60 +358,6 @@ const EditCourse: React.FC = () => {
               handleDeletePartButton={handleDeletePartButton}
               isEditable
             />
-
-            {/* <Accordion type="single" collapsible className="w-full">
-              {courseSections.map((section) => (
-                <AccordionItem value={section._id} className="text-xl">
-                  <AccordionTrigger className="text-xl">
-                    <div className="flex flex-row items-center gap-5">
-                      {section.title}
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-lg flex flex-row gap-5">
-                    <Button onClick={() => handleEditSectionButton(section)}>
-                      Edit
-                    </Button>
-                    <Button
-                      className="bg-red-500"
-                      onClick={() => handleDeletesectionButton(section._id)}
-                    >
-                      Delete
-                    </Button>
-                  </AccordionContent>
-
-                  {courseParts
-                    .filter(
-                      (part: { sectionId: string }) =>
-                        part.sectionId === section._id
-                    )
-                    .map((part) => (
-                      <AccordionContent className="text-lg">
-                        {part.title}
-                        <Button
-                          className="mx-5"
-                          onClick={() => handleEditPartButton(part)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          className="bg-red-500"
-                          onClick={() => handleDeletePartButton(part._id)}
-                        >
-                          Delete
-                        </Button>
-                      </AccordionContent>
-                    ))}
-                  <AccordionContent className="text-lg text-center flex justify-center">
-                    <span
-                      onClick={() => handleAddPartDialog(section._id)}
-                      className="bg-[#EFF4FF] p-2 cursor-pointer text-[#2563EB]"
-                    >
-                      <FaPlus />
-                    </span>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion> */}
           </div>
         </div>
       </div>
