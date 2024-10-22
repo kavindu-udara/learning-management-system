@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
 import LargeCourseCard from "@/components/course/LargeCourseCard";
@@ -8,19 +8,37 @@ import { toast } from "react-toastify";
 import { addUser } from "@/features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { addCourseCategories } from "@/features/course/courseCategoriesSlice";
+import Footer from "@/components/Footer";
 
 const Home: React.FC = () => {
   const user = useSelector((state: RootState) => state.userReducer.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [courses, setCourses] = useState([]);
+
   const loadCourseCategories = async () => {
-    apiClient.get(`/course/categories`).then((res) => {
-      dispatch(addCourseCategories(res.data.categories))
-    }).catch((err) => {
-      console.log(err);
-    })
-  }
+    apiClient
+      .get(`/course/categories`)
+      .then((res) => {
+        dispatch(addCourseCategories(res.data.categories));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const loadCourses = () => {
+    apiClient
+      .get(`/course`)
+      .then((res) => {
+        console.log(res.data.courses);
+        setCourses(res.data.courses);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const updateToTeacher = async () => {
     apiClient
@@ -40,6 +58,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     loadCourseCategories();
+    loadCourses();
   }, []);
 
   return (
@@ -63,11 +82,20 @@ const Home: React.FC = () => {
             buttonAction={gotoTeacherDashboard}
           />
         )}
-        <LargeCourseCard />
-        <LargeCourseCard />
-        <LargeCourseCard />
-        <LargeCourseCard />
+
+        <div className="text-xl font-bold text-[#2563EB] text-left container">Discover</div>
+
+        {courses.map((course: any) => {
+          return (
+            <LargeCourseCard
+              id={course?._id}
+              title={course?.title}
+              description={course?.description}
+            />
+          );
+        })}
       </div>
+      <Footer />
     </>
   );
 };

@@ -1,4 +1,5 @@
 import apiClient from "@/axios/axios";
+import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
 import Header from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,47 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+type course =
+  | {
+      _id: string;
+      title: string;
+      description: string;
+      categoryId: string;
+    }
+  | [];
+
+type sections =
+  | [
+      {
+        _id: string;
+        title: string;
+        courseId: string;
+        createdAt: string;
+        updatedAt: string;
+      }
+    ]
+  | [];
+
+type parts =
+  | [
+      {
+        _id: string;
+        title: string;
+        description: string;
+        videoUrl: string;
+        sectionId: string;
+        createdAt: string;
+        updatedAt: string;
+        __v: number;
+      }
+    ]
+  | [];
+
 const SingleCoursePage: React.FC = () => {
-  const [course, setCourse] = useState([]);
+  const [course, setCourse] = useState<course>([]);
   const [category, setCategory] = useState<string>("");
+  const [sections, setSections] = useState<sections>([]);
+  const [parts, setParts] = useState<parts>([]);
 
   const { id } = useParams();
 
@@ -25,6 +64,8 @@ const SingleCoursePage: React.FC = () => {
       .get(`/course/${id}`)
       .then((res) => {
         setCourse(res.data.course);
+        setSections(res.data.courseSections);
+        setParts(res.data.courseParts);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -88,6 +129,14 @@ const SingleCoursePage: React.FC = () => {
             <div className="text-gray-500 text-lg my-5">
               {course?.description}
             </div>
+          </div>
+
+          <div>
+            <CourseContentSectionsAccordion
+              sections={sections}
+              parts={parts}
+              isEditable={false}
+            />
           </div>
         </div>
       </div>

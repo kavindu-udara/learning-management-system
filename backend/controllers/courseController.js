@@ -38,6 +38,15 @@ export const showCourseCategories = async (req, res, next) => {
 
 }
 
+export const showCourses = async (req, res, next) => {
+    try{
+        const courses = await Course.find();
+        return res.status(200).json({courses});
+    }catch(err){
+        return res.status(500).json({ message: err.message });
+    }
+}
+
 export const createCourse = async (req, res, next) => {
 
     const { user } = req;

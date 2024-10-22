@@ -3,19 +3,13 @@ import Header from "@/components/Header";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { FaPlus } from "react-icons/fa6";
 import CreateSection from "@/components/course/CreateSection";
 import CreatePart from "@/components/course/CreatePart";
 import SingleCourseHeroSection from "@/components/course/SingleCourseHeroSection";
 import CreateCourseDialog from "@/components/course/CreateCourseDialog";
-import { Button } from "@/components/ui/button";
 import ConfirmationDialog from "@/components/alerts/ConfirmationDialog";
+import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
 
 const EditCourse: React.FC = () => {
   const [categories, setCategories] = useState([]);
@@ -356,7 +350,20 @@ const EditCourse: React.FC = () => {
                 <FaPlus />
               </span>
             </div>
-            <Accordion type="single" collapsible className="w-full">
+
+            {/* // ! section components */}
+            <CourseContentSectionsAccordion
+              sections={courseSections}
+              parts={courseParts}
+              handleEditSectionButton={handleEditSectionButton}
+              handleDeletesectionButton={handleDeletesectionButton}
+              handleAddPartDialog={handleAddPartDialog}
+              handleEditPartButton={handleEditPartButton}
+              handleDeletePartButton={handleDeletePartButton}
+              isEditable
+            />
+
+            {/* <Accordion type="single" collapsible className="w-full">
               {courseSections.map((section) => (
                 <AccordionItem value={section._id} className="text-xl">
                   <AccordionTrigger className="text-xl">
@@ -375,6 +382,7 @@ const EditCourse: React.FC = () => {
                       Delete
                     </Button>
                   </AccordionContent>
+
                   {courseParts
                     .filter(
                       (part: { sectionId: string }) =>
@@ -407,7 +415,7 @@ const EditCourse: React.FC = () => {
                   </AccordionContent>
                 </AccordionItem>
               ))}
-            </Accordion>
+            </Accordion> */}
           </div>
         </div>
       </div>
