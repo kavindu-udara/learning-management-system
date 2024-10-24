@@ -22,7 +22,7 @@ const Profile: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.userReducer.user);
 
   const dispatch = useDispatch();
 

@@ -39,10 +39,10 @@ export const showCourseCategories = async (req, res, next) => {
 }
 
 export const showCourses = async (req, res, next) => {
-    try{
+    try {
         const courses = await Course.find();
-        return res.status(200).json({courses});
-    }catch(err){
+        return res.status(200).json({ courses });
+    } catch (err) {
         return res.status(500).json({ message: err.message });
     }
 }
@@ -68,7 +68,7 @@ export const createCourse = async (req, res, next) => {
             }
         }
     } else {
-        return res.status(401).json({ message: "Unauthorized" + role });
+        return res.status(401).json({ message: "Unauthorized" });
     }
 
 }

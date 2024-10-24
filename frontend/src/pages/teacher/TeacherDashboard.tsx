@@ -2,6 +2,7 @@ import apiClient from "@/axios/axios";
 import LargeGetCard from "@/components/cards/LargeGetCard";
 import OverviewCard from "@/components/cards/OverviewCard";
 import MediumCourseCard from "@/components/course/MediumCourseCard";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { RootState } from "@reduxjs/toolkit/query";
 import React, { useEffect, useState } from "react";
@@ -41,7 +42,7 @@ const TeacherDashboard: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="flex flex-col justify-center items-center gap-5">
+      <div className="flex flex-col justify-center items-center gap-5 my-10">
         <div className="container">
           <div className="font-bold text-3xl text-[#2563EB]">
             Hi, {user?.fname} !
@@ -82,6 +83,8 @@ const TeacherDashboard: React.FC = () => {
           })}
         </div>
       </div>
+
+      <Footer/>
     </>
   );
 };
