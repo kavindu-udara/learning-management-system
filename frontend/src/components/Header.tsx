@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
 
-  const user = useSelector((state: RootState) => state.userReducer.user);
+  // const user = useSelector((state: RootState) => state.userReducer.user);
+  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : [];
 
   return (
     <header className="bg-white">

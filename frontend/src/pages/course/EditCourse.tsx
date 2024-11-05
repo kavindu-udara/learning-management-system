@@ -328,6 +328,7 @@ const EditCourse: React.FC = () => {
         category={currentCategory}
         title={course?.title}
         description={course?.description}
+        price={course?.price}
         onClickFunc={handleCourseEditButton}
         deleteBtnFunc={handleCourseDeleteButton}
         isEditable={true}

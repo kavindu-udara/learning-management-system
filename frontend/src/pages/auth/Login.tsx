@@ -37,6 +37,9 @@ const Login: React.FC = () => {
         toast.success(res.data.message);
         // save user info
         dispatch(addUser(res.data.user));
+        localStorage.clear();
+        localStorage.setItem("accessToken", res.data.user.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/");
       })
       .catch((err) => {

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import authRouter from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
 import courseRouter from "./routes/courseRouter.js";
+import paymentRouter from "./routes/paymentRouter.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
@@ -35,3 +36,4 @@ app.listen(process.env.PORT || 3000, () => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/course", courseRouter);
+app.use("/api/v1/checkout", paymentRouter);

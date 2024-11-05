@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import { RootState } from "@reduxjs/toolkit/query";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type course =
@@ -54,6 +54,8 @@ const SingleCoursePage: React.FC = () => {
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
   const categories = useSelector(
     (state: RootState) => state.courseCategoriesReducer.categories
   );
@@ -89,7 +91,10 @@ const SingleCoursePage: React.FC = () => {
         category={category}
         title={course?.title}
         description={course?.description}
-        onClickFunc={() => {}}
+        onClickFunc={() => {
+          navigate(`/checkout/${course?._id}`);
+        }}
+        price={course?.price}
       />
 
       <div className="flex justify-center mb-10">

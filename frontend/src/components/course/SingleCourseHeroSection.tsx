@@ -6,15 +6,17 @@ type Props = {
   category: string;
   title: string;
   description: string;
+  price?: string;
   onClickFunc: () => void;
   deleteBtnFunc?: () => void;
-  isEditable?: boolean | false;
+  isEditable?: boolean;
 };
 
 const SingleCourseHeroSection: React.FC<Props> = ({
   category,
   title,
   description,
+  price,
   onClickFunc,
   deleteBtnFunc,
   isEditable = false,
@@ -28,6 +30,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
           </Badge>
           <div className="text-3xl font-bold text-[#2563EB] my-3">{title}</div>
           <p className="text-gray-500">{description}</p>
+          <p className="font-bold text-lg">${price}</p>
           <Button className="mt-5 mx-3" onClick={() => onClickFunc()}>
             {isEditable ? "Edit Course" : "Start Course"}
           </Button>
