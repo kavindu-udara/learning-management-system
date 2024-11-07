@@ -51,6 +51,7 @@ const SingleCoursePage: React.FC = () => {
   const [category, setCategory] = useState<string>("");
   const [sections, setSections] = useState<sections>([]);
   const [parts, setParts] = useState<parts>([]);
+  const [isPurchased, setIsPurchased] = useState<boolean>(false);
 
   const { id } = useParams();
 
@@ -67,6 +68,7 @@ const SingleCoursePage: React.FC = () => {
         setCourse(res.data.course);
         setSections(res.data.courseSections);
         setParts(res.data.courseParts);
+        setIsPurchased(res.data.isPurchased);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -92,7 +94,11 @@ const SingleCoursePage: React.FC = () => {
         title={course?.title}
         description={course?.description}
         onClickFunc={() => {
-          navigate(`/checkout/${course?._id}`);
+          if (!isPurchased) {
+            toast.error("You have to buy this course first !");
+          } else {
+            navigate(`/course/entroll/${course?._id}`);
+          }
         }}
         price={course?.price}
       />
@@ -100,7 +106,6 @@ const SingleCoursePage: React.FC = () => {
       <div className="flex justify-center mb-10">
         <div className="container mt-5">
           <CourseTabs />
-
           <div>
             <div className="text-3xl font-bold my-5">Description</div>
             <div className="text-gray-500 text-lg my-5">

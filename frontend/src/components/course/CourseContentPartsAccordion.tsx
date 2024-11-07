@@ -27,6 +27,7 @@ type Props = {
     description: string;
   }) => void;
   handleDeletePartButton?: (id: string) => void;
+  titleCallback?: (titleId: string) => void;
 };
 
 const CourseContentPartsAccordion: React.FC<Props> = ({
@@ -35,14 +36,18 @@ const CourseContentPartsAccordion: React.FC<Props> = ({
   isEditable,
   handleEditPartButton,
   handleDeletePartButton,
+  titleCallback,
 }: Props) => {
   return (
     <>
       {parts
         .filter((part) => part.sectionId === section._id)
         .map((part) => (
-          <AccordionContent className="text-lg">
-            {part.title}
+          <AccordionContent
+            className={isEditable ? "text-lg" : "text-lg cursor-pointer"}
+            key={part._id}
+          >
+            <span onClick={() => titleCallback?.(part._id)} className="text-lg">{part.title}</span>
             {isEditable && (
               <Button
                 className="mx-5"

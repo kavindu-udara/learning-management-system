@@ -15,6 +15,7 @@ import BuildCheckout from "./pages/stripe/BuildCheckout";
 import PaymentComplete from "./pages/stripe/PaymentComplete";
 import PrivateRoute from "./routes/PrivateRoute";
 import CompletePage from "./pages/stripe/CompletePage";
+import TeacherRoute from "./routes/TeacherRoute";
 
 function App() {
   return (
@@ -28,23 +29,20 @@ function App() {
 
         <Route path="/course">
           <Route path=":id" element={<SingleCoursePage />} />
-          <Route path="entroll/:id" element={<EntrollCoursePage />} />
+          <Route path="entroll/:courseId" element={<EntrollCoursePage />} />
         </Route>
 
-        <Route path="/teacher">
-          <Route index element={<TeacherDashboard />} />
-          <Route path="create-course" element={<CreateCourse />} />
-          <Route path="edit-course/:id" element={<EditCourse />} />
+        <Route element={<TeacherRoute />}>
+          <Route path="/teacher">
+            <Route index element={<TeacherDashboard />} />
+            <Route path="create-course" element={<CreateCourse />} />
+            <Route path="edit-course/:id" element={<EditCourse />} />
+          </Route>
         </Route>
 
-        {/* <Route path="/checkout/*" element={<PrivateRoute />}/> */}
-        {/* Add the new route for Stripe Checkout */}
         <Route element={<PrivateRoute />}>
           <Route path="/checkout/:courseId/*" element={<BuildCheckout />} />
         </Route>
-        {/* <Route path="/payment-complete" element={<PaymentComplete />} /> */}
-        {/* <Route path="/payment-complete" element={<CompletePage />} /> */}
-
       </Routes>
     </BrowserRouter>
   );

@@ -2,6 +2,8 @@ import CourseCategory from "../models/courseCategoryModel.js";
 import Course from "../models/courseModel.js";
 import CoursePart from "../models/coursePartModel.js";
 import CourseSection from "../models/courseSectionModel.js";
+import PurchasedCourse from "../models/purchasedCourseModel.js";
+import jwt from "jsonwebtoken";
 
 // ! need to delete this
 export const createCategory = () => {
@@ -77,7 +79,8 @@ export const showCourseById = async (req, res, next) => {
     const id = req.params.id;
 
     try {
-        const course = await Course.findOne({ _id: id });
+        // return res.status(404).json({ message: "Course not found : " +id });
+        const course = await Course.findById(id);
 
         if (!course) {
             return res.status(404).json({ message: "Course not found" });
@@ -90,10 +93,38 @@ export const showCourseById = async (req, res, next) => {
 
         const courseParts = await CoursePart.find({ sectionId: { $in: sectionIds } });
 
-        return res.status(200).json({ course, courseSections, courseParts });
+        let isPurchased = false;
+        if(req.cookies.access_token){
+            const user = verifyToken(req.cookies.access_token)
+            if(user){
+                if (user?.id) {
+                    isPurchased = isUserPurchasedCourse(req.user.id, id)
+                }
+            }
+        }
+
+        return res.status(200).json({ course, courseSections, courseParts, isPurchased: true });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
+}
+
+const isUserPurchasedCourse =async (userId, courseId) => {
+    const purchasedCourse = await  PurchasedCourse.find({ courseId, userId });
+    if (purchasedCourse) {
+        return true;
+    }
+    return false;
+}
+
+const verifyToken = (token) => {
+    const user = {};
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (!err) {
+            user = user;
+        }
+    });
+    return user;
 }
 
 export const showCoursesByTeacherId = async (req, res, next) => {

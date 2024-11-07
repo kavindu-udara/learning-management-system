@@ -42,6 +42,7 @@ type Props = {
     description: string;
   }) => void;
   handleDeletePartButton?: (id: string) => void;
+  partTitleCallback?: () => void;
 };
 
 const CourseContentSectionsAccordion: React.FC<Props> = ({
@@ -53,6 +54,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
   handleAddPartDialog,
   handleEditPartButton,
   handleDeletePartButton,
+  partTitleCallback,
 }: Props) => {
   return (
     <Accordion type="single" collapsible className="w-full">
@@ -85,6 +87,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
             isEditable={isEditable}
             handleEditPartButton={handleEditPartButton}
             handleDeletePartButton={handleDeletePartButton}
+            titleCallback={partTitleCallback}
           />
 
           {isEditable && (
