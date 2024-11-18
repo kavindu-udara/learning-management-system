@@ -10,11 +10,11 @@ type Props = {
 
 const LargeGetCard: React.FC<Props> = ({title, description, buttonText, buttonAction}: Props) => {
   return (
-    <div className="bg-[#EFF4FF] rounded-2xl p-5 container">
-      <span className="text-2xl font-bold text-[#2563EB]">
+    <div className="bg-secondary-color rounded-[21px] p-5 container ">
+      <span className="text-2xl text-primary-color font-jua">
         {title}
       </span>
-      <p className="text-gray-500 text-lg my-3">
+      <p className="text-gray-500 text-lg font-montserrat my-3">
         {description}
       </p>
       <WhiteRoundedBtn text={buttonText} buttonEvent={buttonAction} />

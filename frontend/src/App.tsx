@@ -16,12 +16,14 @@ import PaymentComplete from "./pages/stripe/PaymentComplete";
 import PrivateRoute from "./routes/PrivateRoute";
 import CompletePage from "./pages/stripe/CompletePage";
 import TeacherRoute from "./routes/TeacherRoute";
+import Index from "./pages/LandingPage";
 
 function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
       <Routes>
+        <Route path="/index" element={<Index/>}/>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

@@ -43,6 +43,19 @@ export const showCourseCategories = async (req, res, next) => {
 export const showCourses = async (req, res, next) => {
     try {
         const courses = await Course.find();
+
+        let baseUrl = "http://127.0.0.1:8000/api/v1/image/";
+        // update image Url value
+        courses.forEach(item => {
+            if (item.imageUrl) {
+                // Prepend the base URL to the existing imageUrl
+                item.imageUrl = `${baseUrl}${item.imageUrl}`;
+            } else {
+                // Add the default image URL if imageUrl does not exist
+                item.imageUrl = `${baseUrl}default.jpg`;
+            }
+        });
+
         return res.status(200).json({ courses });
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -57,12 +70,13 @@ export const createCourse = async (req, res, next) => {
 
     if (role == "teacher") {
         const { title, description, price, categoryId } = req.body;
+        const courseImage = req.file;
 
-        if (!title || !description || !price || !categoryId || !teacherId) {
+        if (!title || !description || !price || !categoryId || !teacherId || !courseImage) {
             return res.status(400).json({ message: "All fields are required" });
         } else {
             try {
-                const course = new Course({ title, description, price, categoryId, teacherId });
+                const course = new Course({ title, description, price, categoryId, teacherId, imageUrl: courseImage.filename });
                 await course.save();
                 return res.status(200).json({ message: "Course created successfully", course });
             } catch (err) {
@@ -86,6 +100,15 @@ export const showCourseById = async (req, res, next) => {
             return res.status(404).json({ message: "Course not found" });
         }
 
+        let baseUrl = "http://127.0.0.1:8000/api/v1/image/";
+        if (course.imageUrl) {
+            // Prepend the base URL to the existing imageUrl
+            course.imageUrl = `${baseUrl}${course.imageUrl}`;
+        } else {
+            // Add the default image URL if imageUrl does not exist
+            course.imageUrl = `${baseUrl}default.jpg`;
+        }
+
         // send course sections
         const courseSections = await CourseSection.find({ courseId: id });
 
@@ -94,9 +117,9 @@ export const showCourseById = async (req, res, next) => {
         const courseParts = await CoursePart.find({ sectionId: { $in: sectionIds } });
 
         let isPurchased = false;
-        if(req.cookies.access_token){
+        if (req.cookies.access_token) {
             const user = verifyToken(req.cookies.access_token)
-            if(user){
+            if (user) {
                 if (user?.id) {
                     isPurchased = isUserPurchasedCourse(req.user.id, id)
                 }
@@ -109,8 +132,8 @@ export const showCourseById = async (req, res, next) => {
     }
 }
 
-const isUserPurchasedCourse =async (userId, courseId) => {
-    const purchasedCourse = await  PurchasedCourse.find({ courseId, userId });
+const isUserPurchasedCourse = async (userId, courseId) => {
+    const purchasedCourse = await PurchasedCourse.find({ courseId, userId });
     if (purchasedCourse) {
         return true;
     }

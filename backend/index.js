@@ -7,6 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import courseRouter from "./routes/courseRouter.js";
 import paymentRouter from "./routes/paymentRouter.js";
 import videoRouter from "./routes/videoRouter.js";
+import imageRouter from "./routes/imageRouter.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
@@ -39,3 +40,4 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/checkout", paymentRouter);
 app.use("/api/v1/video", videoRouter);
+app.use("/api/v1/image", imageRouter);

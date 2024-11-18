@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -56,6 +56,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
   handleDeletePartButton,
   partTitleCallback,
 }: Props) => {
+
   return (
     <Accordion type="single" collapsible className="w-full">
       {sections.map((section) => (

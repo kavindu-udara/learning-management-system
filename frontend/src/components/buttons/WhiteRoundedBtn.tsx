@@ -8,7 +8,7 @@ type Props = {
 
 const WhiteRoundedBtn: React.FC<Props> = ({ text, buttonEvent }: Props) => {
   return (
-    <Button className="bg-white text-[#2563EB] shadow-none hover:bg-[#2563EB] hover:text-white p-5 rounded-2xl" onClick={() => buttonEvent && buttonEvent()}>
+    <Button className=" p-5 rounded-[21px]" onClick={() => buttonEvent && buttonEvent()}>
       {text}
     </Button>
   );

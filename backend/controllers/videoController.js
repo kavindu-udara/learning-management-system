@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import CoursePart from "../models/coursePartModel.js";
 
 export const showVideo = async (req, res, next) => {
@@ -21,7 +20,7 @@ export const showVideo = async (req, res, next) => {
     if (!fileName) {
         return res.status(404).json({ message: "Video file not found", coursePart: coursePart });
     } else {
-        const videoPath = "../backend/public/uploads/" + fileName;
+        const videoPath = "../backend/public/course/videos/" + fileName;
         const stat = fs.statSync(videoPath);
         const fileSize = stat.size;
         const range = req.headers.range;

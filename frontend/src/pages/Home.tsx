@@ -9,6 +9,8 @@ import { addUser } from "@/features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { addCourseCategories } from "@/features/course/courseCategoriesSlice";
 import Footer from "@/components/Footer";
+import CourseCard from "@/components/course/CourseCard";
+import CourseCategoryCard from "@/components/course/CourseCategoryCard";
 
 const Home: React.FC = () => {
   const user = useSelector((state: RootState) => state.userReducer.user);
@@ -16,12 +18,14 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const [courses, setCourses] = useState([]);
+  const [courseCategories, setCourseCategories] = useState([]);
 
   const loadCourseCategories = async () => {
     apiClient
       .get(`/course/categories`)
       .then((res) => {
         dispatch(addCourseCategories(res.data.categories));
+        setCourseCategories(res.data.categories);
       })
       .catch((err) => {
         console.log(err);
@@ -64,7 +68,16 @@ const Home: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="flex flex-col justify-center items-center gap-5 pb-10">
+
+      <div className="flex flex-col justify-center items-center gap-5 py-10">
+        {user?.role === "teacher" && (
+          <LargeGetCard
+            title="Get Started"
+            description="We all start somewhere. For programming, this series is that first"
+            buttonText="Dashboard"
+            buttonAction={gotoTeacherDashboard}
+          />
+        )}
         {user?.role === "user" && (
           <LargeGetCard
             title="Become a Teacher"
@@ -74,26 +87,134 @@ const Home: React.FC = () => {
           />
         )}
 
-        {user?.role === "teacher" && (
-          <LargeGetCard
-            title="Get Started"
-            description="We all start somewhere. For programming, this series is that first"
-            buttonText="Dashboard"
-            buttonAction={gotoTeacherDashboard}
+        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
+          Newest Courses
+        </div>
+        <div className="grid grid-cols-4 gap-5 container">
+          {courses.map((course: any) => {
+            return (
+              <CourseCard
+                id={course?._id}
+                title={course?.title}
+                price={course?.price}
+                createdAt={course?.createdAt}
+                imageUrl = {course?.imageUrl}
+                isNew
+              />
+            );
+          })}
+        </div>
+
+        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
+          Trending Courses
+        </div>
+        <div className="grid grid-cols-4 gap-5 container">
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
           />
-        )}
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+        </div>
 
-        <div className="text-xl font-bold text-[#2563EB] text-left container">Discover</div>
+        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
+          Trending Categories
+        </div>
+        <div className="grid grid-cols-6 gap-5 container">
+          {courseCategories.map((category) => (
+            <CourseCategoryCard title={category?.name} />
+          ))}
+        </div>
 
-        {courses.map((course: any) => {
-          return (
-            <LargeCourseCard
-              id={course?._id}
-              title={course?.title}
-              description={course?.description}
-            />
-          );
-        })}
+        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
+          Best Selling Courses
+        </div>
+        <div className="grid grid-cols-4 gap-5 container">
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+        </div>
+
+        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
+          Free Courses
+        </div>
+        <div className="grid grid-cols-4 gap-5 container">
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+          <CourseCard
+            id="1"
+            title="Title"
+            price="100"
+            createdAt="2024-10-22T22:13:22.147Z"
+            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+          />
+        </div>
       </div>
       <Footer />
     </>

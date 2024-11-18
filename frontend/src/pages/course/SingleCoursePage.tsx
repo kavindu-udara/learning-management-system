@@ -101,17 +101,12 @@ const SingleCoursePage: React.FC = () => {
           }
         }}
         price={course?.price}
+        imageUrl={course?.imageUrl}
       />
 
       <div className="flex justify-center mb-10">
         <div className="container mt-5">
           <CourseTabs />
-          <div>
-            <div className="text-3xl font-bold my-5">Description</div>
-            <div className="text-gray-500 text-lg my-5">
-              {course?.description}
-            </div>
-          </div>
 
           <div>
             <CourseContentSectionsAccordion

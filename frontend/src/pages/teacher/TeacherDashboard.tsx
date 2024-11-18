@@ -44,10 +44,10 @@ const TeacherDashboard: React.FC = () => {
       <Header />
       <div className="flex flex-col justify-center items-center gap-5 my-10">
         <div className="container">
-          <div className="font-bold text-3xl text-[#2563EB]">
+          <div className="text-3xl text-dark-acent-color font-jua">
             Hi, {user?.fname} !
           </div>
-          <p className="text-gray-600">Let's get Started</p>
+          <p className="text-gray-600 font-montserrat">Let's get Started</p>
         </div>
         <LargeGetCard
           title="Create a new course"
@@ -59,7 +59,7 @@ const TeacherDashboard: React.FC = () => {
           <OverviewCard title="Total Courses" count={myCourses.length} />
         </div>
         <div className="container grid grid-cols-2 font-semibold">
-          <div className="text-xl font-bold text-[#2563EB]">My Courses</div>
+          <div className="text-xl font-bold text-dark-acent-color">My Courses</div>
           <div className="underline text-[#2563EB] text-end">View all</div>
         </div>
         <div className="container grid grid-cols-2 gap-5">
@@ -84,7 +84,7 @@ const TeacherDashboard: React.FC = () => {
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };

@@ -1,14 +1,24 @@
 import multer from "multer";
 
-const storage = multer.diskStorage({
+const videoStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads');
+        cb(null, 'public/course/videos');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
-const upload = multer({ storage: storage });
+const courseimageStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/course/images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+})
 
-export default upload;
+const uploadVideo = multer({ storage: videoStorage });
+const uploadCourseImage = multer({storage: courseimageStorage});
+
+export { uploadVideo, uploadCourseImage };

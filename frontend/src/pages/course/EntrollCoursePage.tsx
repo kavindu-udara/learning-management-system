@@ -6,7 +6,9 @@ import Header from "@/components/Header";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import ReactPlayer from 'react-player'
+import VideoPlayer from "@/components/video/VideoPlayer";
+
+// TODO : create react player
 
 const EntrollCoursePage: React.FC = () => {
   const { courseId } = useParams();
@@ -23,8 +25,8 @@ const EntrollCoursePage: React.FC = () => {
     apiClient
       .get(`/course/${courseId}`)
       .then((res) => {
-        if(!res.data.isPurchased) {
-            toast.error("You have to purchase first !");
+        if (!res.data.isPurchased) {
+          toast.error("You have to purchase first !");
         }
         setCourse(res.data.course);
         setSections(res.data.courseSections);
@@ -58,18 +60,23 @@ const EntrollCoursePage: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="w-full">
-        <ReactPlayer url={videoUrl}/>
+      <div className="w-full my-5">
         <div className="flex justify-center mb-10">
-          <div className="container mt-5">
-            <video
-              ref={videoPlayerRef}
-              controls
-              className="container min-h-[800px] max-h-[800px] bg-black"
+          <div className="container grid grid-cols-3 gap-3">
+            <div
+              className="col-span-2"
+              onContextMenu={(e) => e.preventDefault()}
             >
-              <source src={videoUrl} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+              <VideoPlayer url={videoUrl} title="" />
+            </div>
+            <div>
+              <CourseContentSectionsAccordion
+                sections={sections}
+                parts={courseParts}
+                isEditable={false}
+                partTitleCallback={getVideo}
+              />
+            </div>
           </div>
         </div>
         <div className="flex justify-center mb-10">
@@ -80,15 +87,6 @@ const EntrollCoursePage: React.FC = () => {
               <div className="text-gray-500 text-lg my-5">
                 {course?.description}
               </div>
-            </div>
-
-            <div>
-              <CourseContentSectionsAccordion
-                sections={sections}
-                parts={courseParts}
-                isEditable={false}
-                partTitleCallback={getVideo}
-              />
             </div>
           </div>
         </div>
