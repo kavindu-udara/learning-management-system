@@ -1,6 +1,7 @@
 import apiClient from "@/axios/axios";
 import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
 import CourseTabs from "@/components/course/CourseTabs";
+import PurchaseCourse from "@/components/course/PurchaseCourse";
 import SingleCourseHeroSection from "@/components/course/SingleCourseHeroSection";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -53,7 +54,11 @@ const SingleCoursePage: React.FC = () => {
   const [parts, setParts] = useState<parts>([]);
   const [isPurchased, setIsPurchased] = useState<boolean>(false);
 
+  const payDialogRef = React.useRef<HTMLButtonElement>(null);
+
   const { id } = useParams();
+
+  // TODO : check use is logged if not payment will be show a error
 
   const navigate = useNavigate();
 
@@ -69,6 +74,7 @@ const SingleCoursePage: React.FC = () => {
         setSections(res.data.courseSections);
         setParts(res.data.courseParts);
         setIsPurchased(res.data.isPurchased);
+        console.log(res.data);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -80,6 +86,15 @@ const SingleCoursePage: React.FC = () => {
     setCategory(category ? category.name : "");
   };
 
+  const handleStartCourse = () => {
+    if (!isPurchased) {
+      toast.error("You have to buy this course first !");
+      payDialogRef.current?.click();
+    } else {
+      navigate(`/course/entroll/${course?._id}`);
+    }
+  };
+
   useEffect(() => {
     loadCourseData();
     getCourseCategory();
@@ -89,25 +104,27 @@ const SingleCoursePage: React.FC = () => {
     <>
       <Header />
 
+      {!isPurchased && (
+        <PurchaseCourse
+          triggerRef={payDialogRef}
+          courseId={id}
+          coursePrice={course?.price}
+          courseTitle={course?.title}
+          loadCourseData={loadCourseData}
+        />
+      )}
+
       <SingleCourseHeroSection
         category={category}
         title={course?.title}
         description={course?.description}
-        onClickFunc={() => {
-          if (!isPurchased) {
-            toast.error("You have to buy this course first !");
-          } else {
-            navigate(`/course/entroll/${course?._id}`);
-          }
-        }}
+        onClickFunc={() => handleStartCourse()}
         price={course?.price}
         imageUrl={course?.imageUrl}
       />
-
       <div className="flex justify-center mb-10">
         <div className="container mt-5">
           <CourseTabs />
-
           <div>
             <CourseContentSectionsAccordion
               sections={sections}

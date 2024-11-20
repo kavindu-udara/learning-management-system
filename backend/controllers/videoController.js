@@ -1,13 +1,22 @@
 import fs from "fs";
 import CoursePart from "../models/coursePartModel.js";
+import WatchHistory from "../models/watchHistoryModel.js";
 
 export const showVideo = async (req, res, next) => {
 
-    const { partId } = req.params;
+    const { historyId } = req.params;
 
-    if (!partId) {
-        return res.status(400).json({ message: "Part ID is required" });
+    if (!historyId) {
+        return res.status(400).json({ message: "History ID is required" });
     }
+
+    const watchHistory = await WatchHistory.findById(historyId);
+    
+    if(!watchHistory){
+        return res.status(404).json({ message: "History not found" });
+    }
+
+    const partId = watchHistory.coursePartId;
 
     const coursePart = await CoursePart.findById(partId);
 

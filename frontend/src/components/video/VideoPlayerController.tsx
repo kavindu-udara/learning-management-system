@@ -57,11 +57,11 @@ const VideoPlayerController: React.FC<Props> = ({
   };
 
   return (
-    <div className=" bottom-0 flex flex-col justify-between w-full">
-      <div className="flex items-center justify-between my-5 px-20  text-white font-bold ">
+    <div className="">
+      <div className="flex items-center justify-between px-20  text-white font-bold ">
         <h2>{title}</h2>
       </div>
-      <div className=" bg-primary-color py-5">
+      <div className=" bg-primary-color py-5 rounded-b-lg">
         <div className="flex py-0 px-10">
           <Slider
             defaultValue={[0]}

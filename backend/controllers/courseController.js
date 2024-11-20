@@ -4,6 +4,7 @@ import CoursePart from "../models/coursePartModel.js";
 import CourseSection from "../models/courseSectionModel.js";
 import PurchasedCourse from "../models/purchasedCourseModel.js";
 import jwt from "jsonwebtoken";
+import WatchHistory from "../models/watchHistoryModel.js";
 
 // ! need to delete this
 export const createCategory = () => {
@@ -93,7 +94,6 @@ export const showCourseById = async (req, res, next) => {
     const id = req.params.id;
 
     try {
-        // return res.status(404).json({ message: "Course not found : " +id });
         const course = await Course.findById(id);
 
         if (!course) {
@@ -109,7 +109,6 @@ export const showCourseById = async (req, res, next) => {
             course.imageUrl = `${baseUrl}default.jpg`;
         }
 
-        // send course sections
         const courseSections = await CourseSection.find({ courseId: id });
 
         const sectionIds = courseSections.map(section => section._id);
@@ -120,20 +119,18 @@ export const showCourseById = async (req, res, next) => {
         if (req.cookies.access_token) {
             const user = verifyToken(req.cookies.access_token)
             if (user) {
-                if (user?.id) {
-                    isPurchased = isUserPurchasedCourse(req.user.id, id)
-                }
+                isPurchased = await isUserPurchasedCourse(user.id, id)
             }
         }
 
-        return res.status(200).json({ course, courseSections, courseParts, isPurchased: true });
+        return res.status(200).json({ course, courseSections, courseParts, isPurchased });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
 }
 
 const isUserPurchasedCourse = async (userId, courseId) => {
-    const purchasedCourse = await PurchasedCourse.find({ courseId, userId });
+    const purchasedCourse = await PurchasedCourse.findOne({ courseId: courseId, userId: userId });
     if (purchasedCourse) {
         return true;
     }
@@ -141,13 +138,11 @@ const isUserPurchasedCourse = async (userId, courseId) => {
 }
 
 const verifyToken = (token) => {
-    const user = {};
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (!err) {
-            user = user;
-        }
-    });
-    return user;
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return null;
+    }
 }
 
 export const showCoursesByTeacherId = async (req, res, next) => {
@@ -418,5 +413,63 @@ export const deleteCourse = async (req, res, next) => {
         return res.status(200).json({ message: "Course deleted successfully" });
     } else {
         return res.status(404).json({ message: "Course part not found" });
+    }
+}
+
+export const entrollCourse = async (req, res, next) => {
+    const { courseId } = req.params;
+    const { user } = req;
+    const userId = user.id;
+
+    try {
+        if (!courseId || !userId) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        // check is this course purchased
+        const purchasedCourse = await PurchasedCourse.findOne({ courseId, userId });
+        if (!purchasedCourse) {
+            return res.status(404).json({ message: "Not Purchased" });
+        }
+
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+
+        let baseUrl = "http://127.0.0.1:8000/api/v1/image/";
+        if (course.imageUrl) {
+            // Prepend the base URL to the existing imageUrl
+            course.imageUrl = `${baseUrl}${course.imageUrl}`;
+        } else {
+            // Add the default image URL if imageUrl does not exist
+            course.imageUrl = `${baseUrl}default.jpg`;
+        }
+
+        const courseSections = await CourseSection.find({ courseId });
+
+        const sectionIds = courseSections.map(section => section._id);
+
+        const courseParts = await CoursePart.find({ sectionId: { $in: sectionIds } });
+
+        let watchHistoryParts = await WatchHistory.find({ coursePartId: { $in: courseParts.map(part => part._id) }, userId });
+
+        if (!watchHistoryParts) {
+            return res.status(404).json({ message: "Course part not found" });
+        }
+
+        const updatedWatchHistoryParts = watchHistoryParts.map(watchPart => {
+            const matchingCoursePart = courseParts.find(coursePart => coursePart._id.toString() === watchPart.coursePartId.toString());
+            if (matchingCoursePart) {
+                return { ...watchPart._doc, title: matchingCoursePart.title, description: matchingCoursePart.description, sectionId: matchingCoursePart.sectionId };
+            }
+        });
+
+        let isPurchased = true;
+
+        return res.status(200).json({ course, courseSections, watchHistoryParts: updatedWatchHistoryParts, isPurchased });
+
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
 }

@@ -60,9 +60,9 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
   return (
     <Accordion type="single" collapsible className="w-full">
       {sections.map((section) => (
-        <AccordionItem value={section._id} className="text-xl">
+        <AccordionItem value={section._id} className="text-xl bg-secondary-color p-3 rounded-[21px]">
           <AccordionTrigger className="text-xl">
-            <div className="flex flex-row items-center gap-5">
+            <div className="flex flex-row items-center gap-5 font-bahnschrift text-dark-acent-color text-xl">
               {section.title}
             </div>
           </AccordionTrigger>
@@ -89,13 +89,14 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
             handleEditPartButton={handleEditPartButton}
             handleDeletePartButton={handleDeletePartButton}
             titleCallback={partTitleCallback}
+            isLocked={false}
           />
 
           {isEditable && (
             <AccordionContent className="text-lg text-center flex justify-center">
               <span
                 onClick={() => handleAddPartDialog?.(section._id)}
-                className="bg-[#EFF4FF] p-2 cursor-pointer text-[#2563EB]"
+                className="bg-primary-color rounded-[21px] p-2 cursor-pointer text-secondary-color"
               >
                 <FaPlus />
               </span>

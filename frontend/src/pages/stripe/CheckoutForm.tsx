@@ -8,11 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter } from "@/components/ui/card";
 
 type Props = {
-  dpmCheckerLink: string;
+  dpmCheckerLink?: string;
+  successCallBack: ({
+  }) => void
 };
 // import "../../stripe.css";
 
-const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink }: Props) => {
+const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink, successCallBack }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -28,17 +30,19 @@ const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink }: Props) => {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent  } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:5173/checkout/complete",
+        // return_url: "http://localhost:5173/checkout/complete",
       },
+      redirect: 'if_required', 
     });
-
-    // TODO : return_url - clearing all the redux data need to fix it
-
-    if (error.type === "card_error" || error.type === "validation_error") {
+    
+    if (error?.type === "card_error" || error?.type === "validation_error") {
       setMessage(error.message);
+      successCallBack({success:false, message: error.message});
+    } else if (paymentIntent && paymentIntent?.status === "succeeded") {
+      handlePaymentSuccess(paymentIntent);
     } else {
       setMessage("An unexpected error occurred.");
     }
@@ -50,31 +54,39 @@ const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink }: Props) => {
     layout: "accordion",
   };
 
+  const handlePaymentSuccess = (paymentIntent) => {
+      console.log(paymentIntent);
+      successCallBack({success: true, message: "Payment successfull"}, paymentIntent);
+  }
+
   return (
-    <div className="flex h-screen bg-slate-100 items-center content-center justify-center">
-      <Card className="w-[500px]">
-        <form id="payment-form" onSubmit={handleSubmit}>
-          <PaymentElement
-            id="payment-element"
-            options={paymentElementOptions}
-          />
-          <CardFooter>
-            <Button disabled={isLoading || !stripe || !elements} id="submit" className="w-full mt-3">
-              <span id="button-text">
-                {isLoading ? (
-                  <div className="spinner" id="spinner"></div>
-                ) : (
-                  "Pay now"
-                )}
-              </span>
-            </Button>
-            <div>
-            {message && <div id="payment-message" className="text-red-700">{message}</div>}
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+    <Card className="w-full">
+      <form id="payment-form" onSubmit={handleSubmit}>
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        <CardFooter>
+          <Button
+            disabled={isLoading || !stripe || !elements}
+            id="submit"
+            className="w-full mt-3"
+          >
+            <span id="button-text">
+              {isLoading ? (
+                <div className="spinner" id="spinner"></div>
+              ) : (
+                "Pay now"
+              )}
+            </span>
+          </Button>
+          <div>
+            {message && (
+              <div id="payment-message" className="text-red-700">
+                {message}
+              </div>
+            )}
+          </div>
+        </CardFooter>
+      </form>
+    </Card>
   );
 };
 

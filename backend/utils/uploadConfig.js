@@ -9,6 +9,8 @@ const videoStorage = multer.diskStorage({
     }
 });
 
+const uploadVideo = multer({ storage: videoStorage });
+
 const courseimageStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/course/images');
@@ -18,7 +20,6 @@ const courseimageStorage = multer.diskStorage({
     }
 })
 
-const uploadVideo = multer({ storage: videoStorage });
 const uploadCourseImage = multer({storage: courseimageStorage});
 
 export { uploadVideo, uploadCourseImage };

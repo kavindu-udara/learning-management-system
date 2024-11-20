@@ -1,5 +1,5 @@
 import express from "express";
-import { createCategory, createCourse, createCoursePart, createCourseSection, deleteCourse, deletePart, deleteSection, showCourseById, showCourseCategories, showCourses, showCoursesByTeacherId, updateCourse, updatePart, updateSection } from "../controllers/courseController.js";
+import { createCategory, createCourse, createCoursePart, createCourseSection, deleteCourse, deletePart, deleteSection, entrollCourse, showCourseById, showCourseCategories, showCourses, showCoursesByTeacherId, updateCourse, updatePart, updateSection } from "../controllers/courseController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 import { verifyTeacher } from "../utils/verifyTeacher.js";
 import { uploadCourseImage, uploadVideo } from "../utils/uploadConfig.js";
@@ -18,6 +18,9 @@ router.post('/create-section', verifyTeacher, createCourseSection);
 router.post('/create-part', verifyTeacher, uploadVideo.single('videoFile'), createCoursePart);
 
 router.get('/:id', showCourseById);
+
+// TODO create a separate entroll route to fetch course data and send watch history id for course part id
+router.get('/entroll/:courseId', verifyToken, entrollCourse);
 
 router.get('/teacher/:teacherId', showCoursesByTeacherId);
 

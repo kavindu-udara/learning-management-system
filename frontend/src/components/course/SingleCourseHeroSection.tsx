@@ -36,7 +36,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
             {title}
           </div>
           <p className="text-gray-500 font-montserrat">{description}</p>
-          <p className="text-dark-acent-color text-lg font-jua">${price}</p>
+          <p className="text-dark-acent-color my-5 font-jua text-3xl">${price}</p>
           {isEditable && (
             <Button className="bg-red-500" onClick={() => deleteBtnFunc?.()}>
               Delete Course
