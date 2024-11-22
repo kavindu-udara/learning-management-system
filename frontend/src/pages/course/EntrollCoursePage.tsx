@@ -4,18 +4,21 @@ import CourseTabs from "@/components/course/CourseTabs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import VideoPlayer from "@/components/video/VideoPlayer";
 
 const EntrollCoursePage: React.FC = () => {
   const { courseId } = useParams();
 
+  const navigate = useNavigate();
+
   const [course, setCourse] = useState([]);
   const [sections, setSections] = useState([]);
   const [courseParts, setCourseParts] = useState([]);
   const [currentPartId, setCurrentPardId] = useState<string>("");
   const [currentSectionId, setCurrentSectionId] = useState<string>("");
+  const [partDescription, setPartDescription] = useState<string>("");
 
   const [videoUrl, setVideoUrl] = useState<string>("");
 
@@ -56,25 +59,56 @@ const EntrollCoursePage: React.FC = () => {
         if (!res.data.isPurchased) {
           toast.error("You have to purchase first !");
         }
-        console.log(res);
         setCourse(res.data.course);
         setSections(res.data.courseSections);
-        // setCourseParts(res.data.courseParts);
         setCourseParts(res.data.watchHistoryParts);
       })
       .catch((err) => {
-        console.log(err);
+        if (
+          err.response.data.message == "Token not found" ||
+          err.response.data.message == "Wrong token"
+        ) {
+          toast.error("Please login First");
+          navigate("/login");
+        }
+      });
+  };
+
+  const getVideo = async (part: any) => {
+    setPartDescription(part.description);
+    setCurrentPardId(part._id.toString());
+    setVideoUrl(
+      `http://localhost:8000/api/v1/video/${part._id}?ts=${Date.now()}`
+    );
+    videoPlayerRef.current?.load();
+  };
+
+  const unlockVideo = async (partId: number) => {
+    apiClient
+      .get(`/video/unlock/${partId}`)
+      .then((res) => {
+        toast.success(res.data.message);
+        loadCourseData();
+      })
+      .catch((err) => {
         toast.error(err.response.data.message);
       });
   };
 
-  const getVideo = async (partId: string) => {
-    setCurrentPardId(partId.toString());
-    setVideoUrl(
-      `http://localhost:8000/api/v1/video/${partId}?ts=${Date.now()}`
-    );
-    videoPlayerRef.current?.load();
-  };
+  useEffect(() => {
+    if (courseParts.length > 0) {
+      if (!courseParts[0].isLocked) {
+        // setVideoUrl(
+        //   `http://localhost:8000/api/v1/video/${
+        //     courseParts[0]._id
+        //   }?ts=${Date.now()}`
+        // );
+        // videoPlayerRef.current?.load();
+      } else {
+        unlockVideo(courseParts[0]._id);
+      }
+    }
+  }, [courseParts]);
 
   useEffect(() => {
     loadCourseData();
@@ -115,6 +149,7 @@ const EntrollCoursePage: React.FC = () => {
                 parts={courseParts}
                 isEditable={false}
                 partTitleCallback={getVideo}
+                partTitleUnlockCallback={unlockVideo}
               />
             </div>
           </div>
@@ -123,9 +158,11 @@ const EntrollCoursePage: React.FC = () => {
           <div className="container mt-5">
             <CourseTabs />
             <div>
-              <div className="text-3xl font-bold my-5">Description</div>
+              <div className="text-3xl font-bold font-montserrat text-dark-acent-color my-5">
+                Description
+              </div>
               <div className="text-gray-500 text-lg my-5">
-                {course?.description}
+                {partDescription}
               </div>
             </div>
           </div>

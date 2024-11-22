@@ -1,6 +1,5 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store";
 import {
   Card,
   CardContent,
@@ -14,16 +13,21 @@ import apiClient from "@/axios/axios";
 import { toast } from "react-toastify";
 import { addUser } from "@/features/user/userSlice";
 import Header from "@/components/Header";
+import defaultProfilePic from "../../assets/header/default-profile-icon.png";
 
 const Profile: React.FC = () => {
   const [fname, setFname] = useState<string>("");
   const [lname, setLname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-
+  const [profileImage, setProfileImage] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const user = useSelector((state: RootState) => state.userReducer.user);
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : [];
+  const imageInputRef = useRef<HTMLInputElement>();
+
+  const user = useSelector((state: any) => state.userReducer.user);
+
+  const [profileImageUrl, setProfileImageUrl] =
+    useState<any>(user?.imageUrl);
 
   const dispatch = useDispatch();
 
@@ -49,9 +53,14 @@ const Profile: React.FC = () => {
         .put(
           `/user/${user?._id}`,
           {
+            userId: user?._id,
             fname,
             lname,
             email,
+            profileImage,
+          },
+          {
+            headers: { "Content-Type": "multipart/form-data" },
           }
         )
         .then((res) => {
@@ -63,6 +72,15 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e?.target?.files[0];
+    if (file) {
+      setProfileImage(file);
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImageUrl(imageUrl); // Update state with the new image URL
+    }
+  };
+
   const formSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     update();
@@ -70,57 +88,78 @@ const Profile: React.FC = () => {
 
   return (
     <>
-    <Header/>
-    <div className="flex bg-slate-200 h-screen justify-center items-center content-center">
-      <form onSubmit={(e) => formSubmit(e)}>
-        <Card className="w-[500px]">
-          <CardHeader>
-            <CardTitle>Profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <label htmlFor="fname">First Name</label>
-                <Input
-                  type="text"
-                  id="fname"
-                  name="fname"
-                  value={fname}
-                  onChange={(e) => setFname(e.target.value)}
-                  required
-                />
+      <Header />
+      <div className="flex bg-slate-200 h-screen justify-center items-center content-center">
+        <form onSubmit={(e) => formSubmit(e)}>
+          <Card className="w-[500px]">
+            <CardHeader>
+              <CardTitle className="font-montserrat text-dark-acent-color text-center">
+                Profile
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <div className="flex justify-center">
+                    <Input
+                      ref={imageInputRef}
+                      className="hidden"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageChange(e)}
+                    />
+                    <span
+                      className="bg-secondary-color rounded-full cursor-pointer border-2 border-primary-color"
+                      onClick={() => imageInputRef?.current?.click()}
+                    >
+                      <img
+                        src={profileImageUrl || defaultProfilePic}
+                        alt="profile-pic"
+                        className="w-[120px] h-[120px] rounded-full"
+                      />
+                    </span>
+                  </div>
+                  <label htmlFor="fname">First Name</label>
+                  <Input
+                    type="text"
+                    id="fname"
+                    name="fname"
+                    value={fname}
+                    onChange={(e) => setFname(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <label htmlFor="lname">Last Name</label>
+                  <Input
+                    type="text"
+                    id="lname"
+                    name="lname"
+                    value={lname}
+                    onChange={(e) => setLname(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <label htmlFor="lname">Email</label>
+                  <Input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <label htmlFor="lname">Last Name</label>
-                <Input
-                  type="text"
-                  id="lname"
-                  name="lname"
-                  value={lname}
-                  onChange={(e) => setLname(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <label htmlFor="lname">Email</label>
-                <Input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Loading..." : "Save Changes"}
-            </Button>
-          </CardFooter>
-        </Card>
-      </form>
-    </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Save Changes"}
+              </Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </div>
     </>
   );
 };

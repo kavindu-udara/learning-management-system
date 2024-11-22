@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -42,7 +41,8 @@ type Props = {
     description: string;
   }) => void;
   handleDeletePartButton?: (id: string) => void;
-  partTitleCallback?: () => void;
+  partTitleCallback?: (any) => void;
+  partTitleUnlockCallback?: (any) => void;
 };
 
 const CourseContentSectionsAccordion: React.FC<Props> = ({
@@ -55,6 +55,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
   handleEditPartButton,
   handleDeletePartButton,
   partTitleCallback,
+  partTitleUnlockCallback
 }: Props) => {
 
   return (
@@ -89,7 +90,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
             handleEditPartButton={handleEditPartButton}
             handleDeletePartButton={handleDeletePartButton}
             titleCallback={partTitleCallback}
-            isLocked={false}
+            partTitleUnlockCallback={partTitleUnlockCallback}
           />
 
           {isEditable && (

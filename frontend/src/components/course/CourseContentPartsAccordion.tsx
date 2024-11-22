@@ -15,12 +15,14 @@ type Props = {
           createdAt: string;
           updatedAt: string;
           __v: number;
+          isLocked: boolean;
         }
       ]
     | [];
   section: {
     _id: string;
   };
+
   isEditable: boolean | false;
   handleEditPartButton?: (part: {
     _id: string;
@@ -29,7 +31,7 @@ type Props = {
   }) => void;
   handleDeletePartButton?: (id: string) => void;
   titleCallback?: (titleId: string) => void;
-  isLocked: boolean;
+  partTitleUnlockCallback?: (titleId: string) => void;
 };
 
 const CourseContentPartsAccordion: React.FC<Props> = ({
@@ -39,9 +41,8 @@ const CourseContentPartsAccordion: React.FC<Props> = ({
   handleEditPartButton,
   handleDeletePartButton,
   titleCallback,
-  isLocked,
+  partTitleUnlockCallback
 }: Props) => {
-  
   return (
     <>
       {parts
@@ -55,17 +56,19 @@ const CourseContentPartsAccordion: React.FC<Props> = ({
               <div>
                 <span
                   onClick={() => {
-                    if (!isLocked) {
-                      titleCallback?.(part._id);
+                    if (!part.isLocked) {
+                      titleCallback?.(part);
+                    }else{
+                      partTitleUnlockCallback?.(part._id);
                     }
                   }}
                   className={`text-lg font-montserrat flex items-center gap-3 ${
-                    isLocked
+                    part.isLocked
                       ? "text-light-gray-color cursor-not-allowed"
                       : "text-primary-color cursor-pointer"
                   }`}
                 >
-                  {isLocked && <FaLock />}
+                  {part.isLocked && <FaLock />}
                   {part.title}
                 </span>
                 {isEditable && (
@@ -86,7 +89,7 @@ const CourseContentPartsAccordion: React.FC<Props> = ({
                 )}
               </div>
               <div className="text-light-gray-color">
-                {isLocked && "Locked"}
+                {part.isLocked && "Locked"}
               </div>
             </div>
           </AccordionContent>

@@ -11,9 +11,13 @@ export const showVideo = async (req, res, next) => {
     }
 
     const watchHistory = await WatchHistory.findById(historyId);
-    
-    if(!watchHistory){
+
+    if (!watchHistory) {
         return res.status(404).json({ message: "History not found" });
+    }
+
+    if (watchHistory.isLocked) {
+        return res.status(400).json({ message: "This video is locked" });
     }
 
     const partId = watchHistory.coursePartId;
@@ -59,4 +63,24 @@ export const showVideo = async (req, res, next) => {
             fs.createReadStream(videoPath).pipe(res);
         }
     }
+}
+
+export const unlockVideo = async (req, res, next) => {
+
+    const { historyId } = req.params;
+
+    if (!historyId) {
+        return res.status(400).json({ message: "History ID is required" });
+    }
+
+    const watchHistory = await WatchHistory.findById(historyId);
+
+    if (!watchHistory) {
+        return res.status(404).json({ message: "History not found" });
+    }
+
+    watchHistory.isLocked = false;
+    await watchHistory.save();
+
+    return res.status(200).json({ message: "History updated", watchHistory });
 }

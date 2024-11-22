@@ -1,8 +1,9 @@
 import express from "express";
-import { showImage } from "../controllers/imageController.js";
+import { showCourseImage, showImage } from "../controllers/imageController.js";
 
 const router = express.Router();
 
-router.get('/:fileName', showImage);
+router.get('/courseImage/:fileName', showImage);
+router.get('/userImage/:fileName', showCourseImage);
 
 export default router;

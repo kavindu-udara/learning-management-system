@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import apiClient from "../../axios/axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../features/user/userSlice";
 import { Input } from "@/components/ui/input";
@@ -34,12 +34,8 @@ const Login: React.FC = () => {
       })
       .then((res) => {
         setIsLoading(false);
-        toast.success(res.data.message);
-        // save user info
+        console.log(res.data.user);
         dispatch(addUser(res.data.user));
-        localStorage.clear();
-        localStorage.setItem("accessToken", res.data.user.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/");
       })
       .catch((err) => {
@@ -87,10 +83,13 @@ const Login: React.FC = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Loading..." : "Login"}
-            </Button>
+          <CardFooter className="grid grid-cols-1">
+            <div>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Login"}
+              </Button>
+            </div>
+            <Link to={'/register'} className="text-center mt-3 font-montserrat text-light-gray-color">don't have an account ?</Link>
           </CardFooter>
         </Card>
       </form>

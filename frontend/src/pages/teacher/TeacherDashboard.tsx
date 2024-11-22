@@ -4,7 +4,6 @@ import OverviewCard from "@/components/cards/OverviewCard";
 import MediumCourseCard from "@/components/course/MediumCourseCard";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { RootState } from "@reduxjs/toolkit/query";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -15,10 +14,7 @@ const TeacherDashboard: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const user = useSelector((state: RootState) => state.userReducer.user);
-  const categories = useSelector(
-    (state: RootState) => state.courseCategoriesReducer.categories
-  );
+  const user = useSelector((state: any) => state.userReducer.user);
 
   const goToCreateNewCourse = () => {
     navigate("/teacher/create-course");
@@ -29,6 +25,7 @@ const TeacherDashboard: React.FC = () => {
       .get(`/course/teacher/${user._id}`)
       .then((res) => {
         setMycourses(res.data.courses);
+        console.log(res.data);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -64,19 +61,13 @@ const TeacherDashboard: React.FC = () => {
         </div>
         <div className="container grid grid-cols-2 gap-5">
           {myCourses.map((myCourse) => {
-            const category = categories.find(
-              (cat) => cat._id === myCourse.categoryId
-            );
-
-            // If the category is found, use its name, otherwise default to ''
-            const categoryName = category ? category.name : "";
-
             return (
               <MediumCourseCard
-                categoryText={categoryName}
+                categoryText={myCourse.categoryName}
                 titleText={myCourse.title}
                 priceText={myCourse.price}
                 courseId={myCourse._id}
+                imageUrl={myCourse.imageUrl}
                 isEditable={true}
               />
             );

@@ -153,13 +153,6 @@ const EditCourse: React.FC = () => {
       });
   };
 
-  const getCourseCategory = () => {
-    const category = categories.find(
-      (cat: { _id: string }) => cat._id === course.categoryId
-    );
-    setCategory(category ? category.name : "");
-  };
-
   const updateCourse = () => {
     setIsSaving(true);
     if (courseTitle && courseDescription && coursePrice && categoryId) {
@@ -317,7 +310,6 @@ const EditCourse: React.FC = () => {
   useEffect(() => {
     loadCourseData();
     loadCourseCategories();
-    getCourseCategory();
   }, []);
 
   return (
@@ -325,12 +317,15 @@ const EditCourse: React.FC = () => {
       <Header />
 
       <SingleCourseHeroSection
-        category={currentCategory}
+        category={course?.categoryName}
         title={course?.title}
         description={course?.description}
         price={course?.price}
         onClickFunc={handleCourseEditButton}
         deleteBtnFunc={handleCourseDeleteButton}
+        imageUrl={course?.imageUrl}
+        teacherName={course?.teacher?.fname}
+        teacherImage={course?.teacher?.imageUrl}
         isEditable={true}
       />
 

@@ -99,6 +99,8 @@ const Home: React.FC = () => {
                 price={course?.price}
                 createdAt={course?.createdAt}
                 imageUrl = {course?.imageUrl}
+                teacherName={course?.teacher?.fname + " " + course?.teacher?.lname}
+                teacherImage={course?.teacher?.imageUrl}
                 isNew
               />
             );

@@ -13,6 +13,7 @@ import {
 import PaymentComponent from "../payments/PaymentComponent";
 import { toast } from "react-toastify";
 import apiClient from "@/axios/axios";
+import { useSelector } from "react-redux";
 
 type Props = {
   triggerRef: React.RefObject<HTMLButtonElement> | null;
@@ -30,6 +31,8 @@ const PurchaseCourse: React.FC<Props> = ({
   loadCourseData,
 }: Props) => {
     
+  const user = useSelector((state:any) => state.userReducer.user);
+
   const handleResponse = (res, paymentIntent) => {
     if (res.success) {
       toast.success("Payment successfull");
@@ -39,15 +42,16 @@ const PurchaseCourse: React.FC<Props> = ({
     }
   };
 
-  const handlepurchasedCourse = (paymentIntent) => {
+  const handlepurchasedCourse = (paymentIntent: any) => {
     apiClient
       .post(`/checkout/course-purchased`, {
         courseId,
-        userId: "673bf2ca4f512ed905e5a2ad",
+        userId: user._id,
         purchasedPrice: paymentIntent.amount,
       })
       .then((res) => {
         toast.success(res.data.message);
+        loadCourseData();
         triggerRef?.current?.click();
       })
       .catch((err) => {

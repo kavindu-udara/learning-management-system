@@ -1,12 +1,18 @@
 import CourseCategory from "../models/courseCategoryModel.js";
 import Course from "../models/courseModel.js";
+import User from "../models/userModel.js";
 import CoursePart from "../models/coursePartModel.js";
 import CourseSection from "../models/courseSectionModel.js";
 import PurchasedCourse from "../models/purchasedCourseModel.js";
 import jwt from "jsonwebtoken";
 import WatchHistory from "../models/watchHistoryModel.js";
+import dotenv from "dotenv";
 
-// ! need to delete this
+dotenv.config();
+
+const PORT = process.env.PORT;
+
+// ! create categories
 export const createCategory = () => {
 
     // ! need to delete this
@@ -31,33 +37,59 @@ export const createCategory = () => {
 }
 
 export const showCourseCategories = async (req, res, next) => {
-
     try {
         const categories = await CourseCategory.find();
         return res.status(200).json({ categories });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
+}
 
+const addCourseImageUrl = (item) => {
+    let baseUrl = "http://127.0.0.1:" + PORT + "/api/v1/image/courseImage/";
+    if (item.imageUrl) {
+        // Prepend the base URL to the existing imageUrl
+        item.imageUrl = `${baseUrl}${item.imageUrl}`;
+    } else {
+        // Add the default image URL if imageUrl does not exist
+        item.imageUrl = `${baseUrl}default.jpg`;
+    }
+}
+
+const addCourseTeacherImageUrl = (teacher) => {
+    let baseUrl = "http://127.0.0.1:" + PORT + "/api/v1/image/userImage/";
+    if (teacher.imageUrl) {
+        // Prepend the base URL to the existing imageUrl
+        teacher.imageUrl = `${baseUrl}${teacher.imageUrl}`;
+    } else {
+        // Add the default image URL if imageUrl does not exist
+        teacher.imageUrl = `${baseUrl}default.png`;
+    }
+}
+
+const addAdditionalDetailsToCourse = async (course) => {
+    const courseCategory = await CourseCategory.findById(course.categoryId);
+    const teacher = await User.findById(course.teacherId);
+
+    addCourseTeacherImageUrl(teacher);
+    addCourseImageUrl(course);
+
+    const { token, createdAt, password, role, ...teacherOthers } = teacher._doc;
+
+    return {
+        ...course._doc, categoryName: courseCategory.name, teacher: teacherOthers
+    }
 }
 
 export const showCourses = async (req, res, next) => {
     try {
         const courses = await Course.find();
 
-        let baseUrl = "http://127.0.0.1:8000/api/v1/image/";
-        // update image Url value
-        courses.forEach(item => {
-            if (item.imageUrl) {
-                // Prepend the base URL to the existing imageUrl
-                item.imageUrl = `${baseUrl}${item.imageUrl}`;
-            } else {
-                // Add the default image URL if imageUrl does not exist
-                item.imageUrl = `${baseUrl}default.jpg`;
-            }
-        });
+        const updatedCourses = await Promise.all(courses.map((course) => {
+            return addAdditionalDetailsToCourse(course);
+        }));
 
-        return res.status(200).json({ courses });
+        return res.status(200).json({ courses: updatedCourses });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -90,6 +122,8 @@ export const createCourse = async (req, res, next) => {
 
 }
 
+
+
 export const showCourseById = async (req, res, next) => {
     const id = req.params.id;
 
@@ -100,14 +134,7 @@ export const showCourseById = async (req, res, next) => {
             return res.status(404).json({ message: "Course not found" });
         }
 
-        let baseUrl = "http://127.0.0.1:8000/api/v1/image/";
-        if (course.imageUrl) {
-            // Prepend the base URL to the existing imageUrl
-            course.imageUrl = `${baseUrl}${course.imageUrl}`;
-        } else {
-            // Add the default image URL if imageUrl does not exist
-            course.imageUrl = `${baseUrl}default.jpg`;
-        }
+        const updatedCourse = await addAdditionalDetailsToCourse(course);
 
         const courseSections = await CourseSection.find({ courseId: id });
 
@@ -123,7 +150,7 @@ export const showCourseById = async (req, res, next) => {
             }
         }
 
-        return res.status(200).json({ course, courseSections, courseParts, isPurchased });
+        return res.status(200).json({ course: updatedCourse, courseSections, courseParts, isPurchased });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -150,7 +177,14 @@ export const showCoursesByTeacherId = async (req, res, next) => {
 
     try {
         const courses = await Course.find({ teacherId: teacherId });
-        return res.status(200).json({ courses });
+
+        const categories = await CourseCategory.find();
+
+        const updatedCourses = await Promise.all(courses.map((course) => {
+            return addAdditionalDetailsToCourse(course);
+        }));
+
+        return res.status(200).json({ courses: updatedCourses, categories });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -268,7 +302,6 @@ export const updateSection = async (req, res, next) => {
                     return res.status(401).json({ message: "Unauthorized" + course.teacherId });
                 }
 
-                // update
                 await CourseSection.updateOne({ _id: id }, { $set: { title } });
                 return res.status(200).json({ message: "Section updated successfully" });
             } catch (err) {
@@ -305,7 +338,6 @@ export const updatePart = async (req, res, next) => {
 
                     let videoUrl = part.videoUrl;
                     if (videoFile) {
-                        // upload.single(videoFile);
                         videoUrl = videoFile.filename;
                     }
 
@@ -437,14 +469,7 @@ export const entrollCourse = async (req, res, next) => {
             return res.status(404).json({ message: "Course not found" });
         }
 
-        let baseUrl = "http://127.0.0.1:8000/api/v1/image/";
-        if (course.imageUrl) {
-            // Prepend the base URL to the existing imageUrl
-            course.imageUrl = `${baseUrl}${course.imageUrl}`;
-        } else {
-            // Add the default image URL if imageUrl does not exist
-            course.imageUrl = `${baseUrl}default.jpg`;
-        }
+        addAdditionalDetailsToCourse(course);
 
         const courseSections = await CourseSection.find({ courseId });
 

@@ -5,7 +5,6 @@ import PurchaseCourse from "@/components/course/PurchaseCourse";
 import SingleCourseHeroSection from "@/components/course/SingleCourseHeroSection";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { RootState } from "@reduxjs/toolkit/query";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -49,7 +48,6 @@ type parts =
 
 const SingleCoursePage: React.FC = () => {
   const [course, setCourse] = useState<course>([]);
-  const [category, setCategory] = useState<string>("");
   const [sections, setSections] = useState<sections>([]);
   const [parts, setParts] = useState<parts>([]);
   const [isPurchased, setIsPurchased] = useState<boolean>(false);
@@ -58,13 +56,9 @@ const SingleCoursePage: React.FC = () => {
 
   const { id } = useParams();
 
-  // TODO : check use is logged if not payment will be show a error
+  const user = useSelector((state:any) => state.userReducer.user);
 
   const navigate = useNavigate();
-
-  const categories = useSelector(
-    (state: RootState) => state.courseCategoriesReducer.categories
-  );
 
   const loadCourseData = () => {
     apiClient
@@ -81,23 +75,22 @@ const SingleCoursePage: React.FC = () => {
       });
   };
 
-  const getCourseCategory = () => {
-    const category = categories.find((cat) => cat._id === course.categoryId);
-    setCategory(category ? category.name : "");
-  };
-
   const handleStartCourse = () => {
-    if (!isPurchased) {
-      toast.error("You have to buy this course first !");
-      payDialogRef.current?.click();
+    if (user?._id) {
+      if (!isPurchased) {
+        toast.error("You have to buy this course first !");
+        payDialogRef.current?.click();
+      } else {
+        navigate(`/course/entroll/${course?._id}`);
+      }
     } else {
-      navigate(`/course/entroll/${course?._id}`);
+      toast.error("Please Login First");
+      navigate("/login");
     }
   };
 
   useEffect(() => {
     loadCourseData();
-    getCourseCategory();
   }, []);
 
   return (
@@ -115,12 +108,14 @@ const SingleCoursePage: React.FC = () => {
       )}
 
       <SingleCourseHeroSection
-        category={category}
+        category={course?.categoryName}
         title={course?.title}
         description={course?.description}
         onClickFunc={() => handleStartCourse()}
         price={course?.price}
         imageUrl={course?.imageUrl}
+        teacherName={course?.teacher?.fname + " "+course?.teacher?.lname}
+        teacherImage={course?.teacher?.imageUrl}
       />
       <div className="flex justify-center mb-10">
         <div className="container mt-5">

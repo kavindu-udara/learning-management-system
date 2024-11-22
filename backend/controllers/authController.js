@@ -59,14 +59,24 @@ export const signin = async (req, res, next) => {
                     return res.status(400).json({ message: "Invalid credentials" });
                 } else {
 
-                    const { password, ...others } = user._doc;
+                    const { token, password, ...others } = user._doc;
 
-                    const token = generateToken(others._id, others.role);
+                    const accessToken = generateToken(others._id, others.role);
 
                     // update token in db
                     await User.updateOne({ _id: others._id }, { $set: { token } });
 
-                    return res.cookie("access_token", token, { httpOnly: true, sameSite: "none", secure: true, maxAge: 1000 * 60 * 60 * 24 * 7 }).status(200).json({ message: "User logged in successfully", user: others });
+                    let baseUrl = "http://127.0.0.1:8000/api/v1/image/userImage/";
+                    // update image Url value
+                    if (others.imageUrl) {
+                        // Prepend the base URL to the existing imageUrl
+                        others.imageUrl = `${baseUrl}${others.imageUrl}`;
+                    } else {
+                        // Add the default image URL if imageUrl does not exist
+                        others.imageUrl = `${baseUrl}default.png`;
+                    }
+
+                    return res.cookie("access_token", accessToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 1000 * 60 * 60 * 24 * 7 }).status(200).json({ message: "User logged in successfully", user: others });
                 }
             }
         } catch (err) {

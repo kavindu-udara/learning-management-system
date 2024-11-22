@@ -12,6 +12,8 @@ type Props = {
   deleteBtnFunc?: () => void;
   isEditable?: boolean;
   imageUrl: string;
+  teacherName: string;
+  teacherImage:string;
 };
 
 const SingleCourseHeroSection: React.FC<Props> = ({
@@ -22,7 +24,9 @@ const SingleCourseHeroSection: React.FC<Props> = ({
   onClickFunc,
   deleteBtnFunc,
   isEditable = false,
-  imageUrl
+  imageUrl,
+  teacherName,
+  teacherImage
 }: Props) => {
   console.log(imageUrl);
   return (
@@ -36,7 +40,17 @@ const SingleCourseHeroSection: React.FC<Props> = ({
             {title}
           </div>
           <p className="text-gray-500 font-montserrat">{description}</p>
-          <p className="text-dark-acent-color my-5 font-jua text-3xl">${price}</p>
+          <div className="flex items-center">
+          <img
+            src={teacherImage}
+            className="rounded-full w-[30px] mr-5"
+            alt="teacher-image"
+          />
+            <p className="text-dark-acent-color my-5 font-montserrat">{teacherName}</p>
+          </div>
+          <p className="text-dark-acent-color my-5 font-jua text-3xl">
+            ${price}
+          </p>
           {isEditable && (
             <Button className="bg-red-500" onClick={() => deleteBtnFunc?.()}>
               Delete Course

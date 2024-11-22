@@ -11,6 +11,8 @@ type Props = {
   createdAt: string;
   isNew?: boolean | false;
   imageUrl: string;
+  teacherName: string;
+  teacherImage: string;
 };
 
 const CourseCard: React.FC<Props> = ({
@@ -20,6 +22,8 @@ const CourseCard: React.FC<Props> = ({
   createdAt,
   isNew,
   imageUrl,
+  teacherName,
+  teacherImage,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -41,8 +45,7 @@ const CourseCard: React.FC<Props> = ({
       <div
         className="bg-cover rounded-t-[21px] h-[150px] w-full flex justify-end"
         style={{
-          backgroundImage:
-            `url(${imageUrl})`,
+          backgroundImage: `url(${imageUrl})`,
         }}
       >
         <div className="pt-3">
@@ -56,11 +59,11 @@ const CourseCard: React.FC<Props> = ({
       <div className="p-3 grid grid-cols-1 gap-2">
         <div className="flex items-center font-montserrat text-light-gray-color">
           <img
-            src="https://picsum.photos/100/100"
+            src={teacherImage}
             className="rounded-full w-[30px] mr-5"
             alt=""
           />
-          Kate william
+          {teacherName}
         </div>
         <div className="font-jua text-dark-acent-color text-[24px]">
           {title}

@@ -9,6 +9,7 @@ type Props = {
   priceText: string;
   courseId: string;
   isEditable?: boolean | false;
+  imageUrl: string;
 };
 
 const MediumCourseCard: React.FC<Props> = ({
@@ -17,6 +18,7 @@ const MediumCourseCard: React.FC<Props> = ({
   priceText,
   courseId,
   isEditable = false,
+  imageUrl,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ const MediumCourseCard: React.FC<Props> = ({
   return (
     <div className="rounded-[21px] bg-secondary-color flex flex-row p-5 cursor-pointer">
       <div className="basis-1/3 flex items-center justify-center">
-        <img src="https://picsum.photos/300/200" className="rounded-[21px]" alt="course-image" />
+        <img src={imageUrl} className="rounded-[21px]" alt="course-image" />
       </div>
       <div className="basis-2/3 pl-5 flex flex-col">
         <div>
@@ -42,7 +44,12 @@ const MediumCourseCard: React.FC<Props> = ({
         <p className="text-lg text-dark-acent-color font-jua">${priceText}</p>
         <div>
           {isEditable && (
-            <Button onClick={() => goToEditCoursePage()} className="rounded-[21px]">Edit</Button>
+            <Button
+              onClick={() => goToEditCoursePage()}
+              className="rounded-[21px]"
+            >
+              Edit
+            </Button>
           )}
         </div>
       </div>

@@ -1,18 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 const TeacherRoute: React.FC = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const user = localStorage.getItem("user");
+  const user = useSelector((state: any) => state.userReducer.user);
 
-  //   covert user to json
-  const userJson = JSON.parse(user!);
-
-  return !accessToken || userJson.role !== "teacher" ? (
-    <Navigate to="/" />
-  ) : (
-    <Outlet />
-  );
+  return user.role !== "teacher" ? <Navigate to="/" /> : <Outlet />;
 };
 
 export default TeacherRoute;
