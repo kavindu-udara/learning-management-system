@@ -10,53 +10,62 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-type course =
-  | {
-      _id: string;
-      title: string;
-      description: string;
-      categoryId: string;
-    }
-  | [];
+type Course = {
+  _id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  price: number;
+  imageUrl: string;
+  categoryName: string;
+  teacher: {
+    fname: string;
+    lname: string;
+    imageUrl: string;
+  };
+};
 
-type sections =
-  | [
-      {
-        _id: string;
-        title: string;
-        courseId: string;
-        createdAt: string;
-        updatedAt: string;
-      }
-    ]
-  | [];
+type Part = {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  sectionId: string;
+  isLocked: boolean;
+};
 
-type parts =
-  | [
-      {
-        _id: string;
-        title: string;
-        description: string;
-        videoUrl: string;
-        sectionId: string;
-        createdAt: string;
-        updatedAt: string;
-        __v: number;
-      }
-    ]
-  | [];
+type Sections = {
+  _id: string;
+  title: string;
+  courseId: string;
+  parts: Part[];
+}[];
 
 const SingleCoursePage: React.FC = () => {
-  const [course, setCourse] = useState<course>([]);
-  const [sections, setSections] = useState<sections>([]);
-  const [parts, setParts] = useState<parts>([]);
+  const defaultCourse: Course = {
+    _id: "",
+    title: "",
+    description: "",
+    categoryId: "",
+    price: 0,
+    imageUrl: "",
+    categoryName: "",
+    teacher: {
+      fname: "",
+      lname: "",
+      imageUrl: "",
+    },
+  };
+
+  const [course, setCourse] = useState<Course>(defaultCourse);
+  const [sections, setSections] = useState<Sections>([]);
   const [isPurchased, setIsPurchased] = useState<boolean>(false);
 
   const payDialogRef = React.useRef<HTMLButtonElement>(null);
 
   const { id } = useParams();
 
-  const user = useSelector((state:any) => state.userReducer.user);
+  const user = useSelector((state: any) => state.userReducer.user);
 
   const navigate = useNavigate();
 
@@ -65,10 +74,8 @@ const SingleCoursePage: React.FC = () => {
       .get(`/course/${id}`)
       .then((res) => {
         setCourse(res.data.course);
-        setSections(res.data.courseSections);
-        setParts(res.data.courseParts);
-        setIsPurchased(res.data.isPurchased);
-        console.log(res.data);
+        setSections(res.data.course.sections);
+        setIsPurchased(res.data.course.isPurchased);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -96,17 +103,15 @@ const SingleCoursePage: React.FC = () => {
   return (
     <>
       <Header />
-
       {!isPurchased && (
         <PurchaseCourse
           triggerRef={payDialogRef}
-          courseId={id}
+          courseId={id ?? ""} // Use the nullish coalescing operator to provide a default value if id is undefined
           coursePrice={course?.price}
           courseTitle={course?.title}
           loadCourseData={loadCourseData}
         />
       )}
-
       <SingleCourseHeroSection
         category={course?.categoryName}
         title={course?.title}
@@ -114,7 +119,7 @@ const SingleCoursePage: React.FC = () => {
         onClickFunc={() => handleStartCourse()}
         price={course?.price}
         imageUrl={course?.imageUrl}
-        teacherName={course?.teacher?.fname + " "+course?.teacher?.lname}
+        teacherName={course?.teacher?.fname + " " + course?.teacher?.lname}
         teacherImage={course?.teacher?.imageUrl}
       />
       <div className="flex justify-center mb-10">
@@ -123,13 +128,11 @@ const SingleCoursePage: React.FC = () => {
           <div>
             <CourseContentSectionsAccordion
               sections={sections}
-              parts={parts}
               isEditable={false}
             />
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

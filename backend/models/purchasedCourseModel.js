@@ -14,6 +14,11 @@ const purchasedCourseSchema = new mongoose.Schema({
     purchasedPrice: {
         type: Number,
         required: true
+    },
+    status: {
+        type: String,
+        required: true,
+        default: 'pending'
     }
 }, { timestamps: true });
 

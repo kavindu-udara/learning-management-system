@@ -19,7 +19,6 @@ router.post('/create-part', verifyTeacher, uploadVideo.single('videoFile'), crea
 
 router.get('/:id', showCourseById);
 
-// TODO create a separate entroll route to fetch course data and send watch history id for course part id
 router.get('/entroll/:courseId', verifyToken, entrollCourse);
 
 router.get('/teacher/:teacherId', showCoursesByTeacherId);

@@ -1,13 +1,11 @@
 import React from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import PaymentComponent from "../payments/PaymentComponent";
@@ -30,8 +28,7 @@ const PurchaseCourse: React.FC<Props> = ({
   coursePrice,
   loadCourseData,
 }: Props) => {
-    
-  const user = useSelector((state:any) => state.userReducer.user);
+  const user = useSelector((state: any) => state.userReducer.user);
 
   const handleResponse = (res, paymentIntent) => {
     if (res.success) {
@@ -43,6 +40,7 @@ const PurchaseCourse: React.FC<Props> = ({
   };
 
   const handlepurchasedCourse = (paymentIntent: any) => {
+    if (courseId == undefined || courseId == "" || courseId == null) return;
     apiClient
       .post(`/checkout/course-purchased`, {
         courseId,

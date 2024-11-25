@@ -23,7 +23,7 @@ function App() {
     <BrowserRouter>
       <ToastContainer />
       <Routes>
-        <Route path="/index" element={<Index/>}/>
+        <Route path="/index" element={<Index />} />
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -42,9 +42,9 @@ function App() {
           </Route>
         </Route>
 
-        <Route element={<PrivateRoute />}>
-          <Route path="/checkout/:courseId/*" element={<BuildCheckout />} />
-        </Route>
+        {/* <Route element={<PrivateRoute />}>
+          {/* <Route path="/checkout/:courseId/*" element={<BuildCheckout />} /> */}
+        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );

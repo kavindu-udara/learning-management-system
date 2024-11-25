@@ -3,26 +3,17 @@ import { AccordionContent } from "../ui/accordion";
 import { Button } from "../ui/button";
 import { FaLock } from "react-icons/fa";
 
-type Props = {
-  parts:
-    | [
-        {
-          _id: string;
-          title: string;
-          description: string;
-          videoUrl: string;
-          sectionId: string;
-          createdAt: string;
-          updatedAt: string;
-          __v: number;
-          isLocked: boolean;
-        }
-      ]
-    | [];
-  section: {
-    _id: string;
-  };
+type Part = {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  sectionId: string;
+  isLocked: boolean;
+};
 
+type Props = {
+  parts: Part[];
   isEditable: boolean | false;
   handleEditPartButton?: (part: {
     _id: string;
@@ -30,23 +21,24 @@ type Props = {
     description: string;
   }) => void;
   handleDeletePartButton?: (id: string) => void;
-  titleCallback?: (titleId: string) => void;
+  titleCallback?: (part: Part) => void;
   partTitleUnlockCallback?: (titleId: string) => void;
 };
 
 const CourseContentPartsAccordion: React.FC<Props> = ({
   parts,
-  section,
   isEditable,
   handleEditPartButton,
   handleDeletePartButton,
   titleCallback,
   partTitleUnlockCallback
 }: Props) => {
+
+  console.log(parts)
+
   return (
     <>
       {parts
-        .filter((part) => part.sectionId === section._id)
         .map((part) => (
           <AccordionContent
             className={isEditable ? "text-lg" : `text-md  font-montserrat`}

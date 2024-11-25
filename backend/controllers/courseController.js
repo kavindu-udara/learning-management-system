@@ -7,6 +7,8 @@ import PurchasedCourse from "../models/purchasedCourseModel.js";
 import jwt from "jsonwebtoken";
 import WatchHistory from "../models/watchHistoryModel.js";
 import dotenv from "dotenv";
+import logger from "../utils/logger.js";
+import fs from "fs";
 
 dotenv.config();
 
@@ -41,7 +43,8 @@ export const showCourseCategories = async (req, res, next) => {
         const categories = await CourseCategory.find();
         return res.status(200).json({ categories });
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while showing course categories", err);
+        return res.status(500).json({ message: "Error while showing course categories" });
     }
 }
 
@@ -67,6 +70,24 @@ const addCourseTeacherImageUrl = (teacher) => {
     }
 }
 
+const deleteCourseVideo = (videoFile) => {
+    const videoPath = "./public/course/videos/" + videoFile;
+    fs.unlink(videoPath, (err) => {
+        if (err) {
+            logger.error("While deleting video file", err);
+        }
+    });
+}
+
+const deleteCourseImage = (fileName) => {
+    const imagePath = "./public/course/images/" + fileName;
+    fs.unlink(imagePath, (err) => {
+        if (err) {
+            logger.error("While deleting course image", err);
+        }
+    });
+}
+
 const addAdditionalDetailsToCourse = async (course) => {
     const courseCategory = await CourseCategory.findById(course.categoryId);
     const teacher = await User.findById(course.teacherId);
@@ -81,9 +102,21 @@ const addAdditionalDetailsToCourse = async (course) => {
     }
 }
 
+const verifyToken = (token) => {
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return null;
+    }
+}
+
 export const showCourses = async (req, res, next) => {
     try {
         const courses = await Course.find();
+
+        if (!courses) {
+            return res.status(404).json({ message: "Courses not found" });
+        }
 
         const updatedCourses = await Promise.all(courses.map((course) => {
             return addAdditionalDetailsToCourse(course);
@@ -91,7 +124,8 @@ export const showCourses = async (req, res, next) => {
 
         return res.status(200).json({ courses: updatedCourses });
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while showing courses", err);
+        return res.status(500).json({ message: "Error while showing courses" });
     }
 }
 
@@ -113,16 +147,15 @@ export const createCourse = async (req, res, next) => {
                 await course.save();
                 return res.status(200).json({ message: "Course created successfully", course });
             } catch (err) {
-                return res.status(500).json({ message: err.message });
+                logger.error("Error while creating course", err);
+                return res.status(500).json({ message: "Error while creating course" });
             }
         }
     } else {
+        logger.error("Unauthorized");
         return res.status(401).json({ message: "Unauthorized" });
     }
-
 }
-
-
 
 export const showCourseById = async (req, res, next) => {
     const id = req.params.id;
@@ -150,26 +183,30 @@ export const showCourseById = async (req, res, next) => {
             }
         }
 
-        return res.status(200).json({ course: updatedCourse, courseSections, courseParts, isPurchased });
+        const updatedCourseSections = courseSections.map(section => {
+            const matchingCourseParts = courseParts.filter(part => part.sectionId.toString() == section._id.toString());
+            return { ...section._doc, parts: matchingCourseParts }
+        });
+
+        const finalCourse = { ...updatedCourse, sections: updatedCourseSections, isPurchased };
+
+        return res.status(200).json({ course: finalCourse });
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while showing course by id", err);
+        return res.status(500).json({ message: "Error while showing course" });
     }
 }
 
 const isUserPurchasedCourse = async (userId, courseId) => {
-    const purchasedCourse = await PurchasedCourse.findOne({ courseId: courseId, userId: userId });
-    if (purchasedCourse) {
-        return true;
+    try {
+        const purchasedCourse = await PurchasedCourse.findOne({ courseId: courseId, userId: userId });
+        if (purchasedCourse) {
+            return true;
+        }
+    } catch (err) {
+        logger.error("Error while checking if user purchased course", err);
     }
     return false;
-}
-
-const verifyToken = (token) => {
-    try {
-        return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-        return null;
-    }
 }
 
 export const showCoursesByTeacherId = async (req, res, next) => {
@@ -186,9 +223,9 @@ export const showCoursesByTeacherId = async (req, res, next) => {
 
         return res.status(200).json({ courses: updatedCourses, categories });
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while showing courses by teacher id", err);
+        return res.status(500).json({ message: "Error while showing courses" });
     }
-
 }
 export const createCourseSection = async (req, res, next) => {
 
@@ -211,7 +248,8 @@ export const createCourseSection = async (req, res, next) => {
             await courseSection.save();
             return res.status(201).json({ message: "Course section created successfully", courseSection });
         } catch (err) {
-            return res.status(500).json({ message: err.message });
+            logger.error("Error while creating course section", err);
+            return res.status(500).json({ message: "Section Creation Failed" });
         }
     }
 }
@@ -244,7 +282,8 @@ export const createCoursePart = async (req, res, next) => {
 
         return res.status(201).json({ message: "Course part created successfully", coursePart });
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while creating course part", err);
+        return res.status(500).json({ message: "Course part creation failed" });
     }
 
 }
@@ -272,11 +311,12 @@ export const updateCourse = async (req, res, next) => {
                 await Course.updateOne({ _id: courseId }, { $set: { title, description, price, categoryId } });
                 return res.status(200).json({ message: "Course updated successfully" });
             } catch (err) {
-                return res.status(500).json({ message: err.message });
+                logger.error("Error while updating course", err);
+                return res.status(500).json({ message: "Course update failed" });
             }
         }
     } else {
-        return res.status(401).json({ message: "Unauthorized" + role });
+        return res.status(401).json({ message: "Unauthorized" });
     }
 }
 
@@ -291,7 +331,6 @@ export const updateSection = async (req, res, next) => {
         return res.status(400).json({ message: "All fields are required" });
     }
 
-    // get section
     const section = await CourseSection.findById(id);
 
     if (section) {
@@ -299,13 +338,14 @@ export const updateSection = async (req, res, next) => {
         if (course) {
             try {
                 if (course.teacherId != teacherId) {
-                    return res.status(401).json({ message: "Unauthorized" + course.teacherId });
+                    return res.status(401).json({ message: "Unauthorized" });
                 }
 
                 await CourseSection.updateOne({ _id: id }, { $set: { title } });
                 return res.status(200).json({ message: "Section updated successfully" });
             } catch (err) {
-                return res.status(500).json({ message: err.message });
+                logger.error("Error while updating section", err);
+                return res.status(500).json({ message: "Section update failed" });
             }
         } else {
             return res.status(404).json({ message: "Course not found" });
@@ -342,10 +382,10 @@ export const updatePart = async (req, res, next) => {
                     }
 
                     await CoursePart.updateOne({ _id: id }, { $set: { title, description, videoUrl } });
-                    return res.status(200).json({ message: "Course updated successfully" });
+                    return res.status(200).json({ message: "Part updated successfully" });
 
                 } else {
-                    return res.status(404).json({ message: "Course not found" });
+                    return res.status(404).json({ message: "Part not found" });
                 }
             } else {
                 return res.status(404).json({ message: "Section not found" });
@@ -353,11 +393,10 @@ export const updatePart = async (req, res, next) => {
         } else {
             return res.status(404).json({ message: "Part not found" });
         }
-
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while updating part", err);
+        return res.status(500).json({ message: "Part update failed" });
     }
-
 }
 
 // Delete routes
@@ -367,26 +406,37 @@ export const deleteSection = async (req, res, next) => {
     const { user } = req;
     const teacherId = user.id;
 
-    // get section
-    const section = await CourseSection.findById(sectionId);
+    try {
+        const section = await CourseSection.findById(sectionId);
 
-    if (section) {
-        const course = await Course.findById(section.courseId);
-        if (course) {
+        if (section) {
+            const course = await Course.findById(section.courseId);
+            if (course) {
 
-            if (course.teacherId != teacherId) {
-                return res.status(401).json({ message: "Unauthorized" + course.teacherId });
+                if (course.teacherId != teacherId) {
+                    return res.status(401).json({ message: "Unauthorized" });
+                }
+
+                const parts = await CoursePart.find({ sectionId: sectionId });
+                for (const part of parts) {
+                    if (part.videoUrl) {
+                        deleteCourseVideo(part.videoUrl);
+                    }
+                }
+
+                await CoursePart.deleteMany({ sectionId: sectionId });
+                await CourseSection.deleteOne({ _id: sectionId });
+                return res.status(200).json({ message: "Section deleted successfully" });
+
+            } else {
+                return res.status(404).json({ message: "Course not found" });
             }
-
-            await CoursePart.deleteMany({ sectionId: sectionId });
-            await CourseSection.deleteOne({ _id: sectionId });
-            return res.status(200).json({ message: "Section deleted successfully" });
-
         } else {
-            return res.status(404).json({ message: "Course not found" });
+            return res.status(404).json({ message: "Section not found" });
         }
-    } else {
-        return res.status(404).json({ message: "Section not found" });
+    } catch (err) {
+        logger.error("Error while deleting section", err);
+        return res.status(500).json({ message: "Section deletion failed" });
     }
 }
 
@@ -396,28 +446,36 @@ export const deletePart = async (req, res, next) => {
     const { user } = req;
     const teacherId = user.id;
 
-    // get part
-    const part = await CoursePart.findById(partId);
+    try {
+        const part = await CoursePart.findById(partId);
 
-    if (part) {
-        const section = await CourseSection.findById(part.sectionId);
-        if (section) {
-            const course = await Course.findById(section.courseId);
-            if (course) {
-                if (course.teacherId != teacherId) {
-                    return res.status(401).json({ message: "Unauthorized" + course.teacherId });
+        if (part) {
+            const section = await CourseSection.findById(part.sectionId);
+            if (section) {
+                const course = await Course.findById(section.courseId);
+                if (course) {
+                    if (course.teacherId != teacherId) {
+                        return res.status(401).json({ message: "Unauthorized" });
+                    }
+
+                    if (part.videoUrl) {
+                        deleteCourseVideo(part.videoUrl);
+                    }
+
+                    await CoursePart.deleteOne({ _id: partId });
+                    return res.status(200).json({ message: "Part deleted successfully" });
+                } else {
+                    return res.status(404).json({ message: "Course not found" });
                 }
-
-                await CoursePart.deleteOne({ _id: partId });
-                return res.status(200).json({ message: "Part deleted successfully" });
             } else {
-                return res.status(404).json({ message: "Course not found" });
+                return res.status(404).json({ message: "Course section not found" });
             }
         } else {
-            return res.status(404).json({ message: "Course section not found" });
+            return res.status(404).json({ message: "Course part not found" });
         }
-    } else {
-        return res.status(404).json({ message: "Course part not found" });
+    } catch (err) {
+        logger.error("While deleting part : ", err);
+        return res.status(500).json({ message: "Part deletion failed" });
     }
 }
 
@@ -427,24 +485,47 @@ export const deleteCourse = async (req, res, next) => {
     const { user } = req;
     const teacherId = user.id;
 
-    const course = await Course.findById(courseId);
+    try {
+        const course = await Course.findById(courseId);
 
-    if (course) {
-        if (course.teacherId != teacherId) {
-            return res.status(401).json({ message: "Unauthorized" + course.teacherId });
+        if (course) {
+            if (course.teacherId != teacherId) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+
+            const sections = await CourseSection.find({ courseId: course._id });
+
+            for (const section of sections) {
+                const courseParts = await CoursePart.find({ sectionId: { $in: section._id } });
+                for (const part of courseParts) {
+                    // delete video file
+                    if (part.videoUrl) {
+                        deleteCourseVideo(part.videoUrl);
+                    }
+                }
+                await CoursePart.deleteMany({ sectionId: { $in: section._id } });
+                await CourseSection.deleteOne({ _id: section._id });
+            }
+
+            // delete course image
+            if (course.courseImage) {
+                deleteCourseImage(course.courseImage);
+            }
+
+            const purchasedCourses = await PurchasedCourse.find({ courseId: { $in: course._id } });
+
+            for (const purchasedCourse of purchasedCourses) {
+                await purchasedCourse.updateOne({ status: "deleted" });
+            }
+
+            await Course.deleteOne({ _id: course._id });
+            return res.status(200).json({ message: "Course deleted successfully" });
+        } else {
+            return res.status(404).json({ message: "Course not found" });
         }
-
-        const sections = await CourseSection.find({ courseId: course._id });
-
-        for (const section of sections) {
-            await CoursePart.deleteMany({ sectionId: { $in: section._id } });
-            await CourseSection.deleteOne({ _id: section._id });
-        };
-
-        await Course.deleteOne({ _id: course._id });
-        return res.status(200).json({ message: "Course deleted successfully" });
-    } else {
-        return res.status(404).json({ message: "Course part not found" });
+    } catch (err) {
+        logger.error("Error while deleting course", err);
+        return res.status(500).json({ message: "Course deletion failed" });
     }
 }
 
@@ -477,24 +558,36 @@ export const entrollCourse = async (req, res, next) => {
 
         const courseParts = await CoursePart.find({ sectionId: { $in: sectionIds } });
 
-        let watchHistoryParts = await WatchHistory.find({ coursePartId: { $in: courseParts.map(part => part._id) }, userId });
+        const watchHistoryParts = await WatchHistory.find({ coursePartId: { $in: courseParts.map(part => part._id) }, userId });
 
         if (!watchHistoryParts) {
             return res.status(404).json({ message: "Course part not found" });
         }
 
         const updatedWatchHistoryParts = watchHistoryParts.map(watchPart => {
-            const matchingCoursePart = courseParts.find(coursePart => coursePart._id.toString() === watchPart.coursePartId.toString());
+            const matchingCoursePart = courseParts.find(coursePart => coursePart._id.toString() == watchPart.coursePartId.toString());
             if (matchingCoursePart) {
                 return { ...watchPart._doc, title: matchingCoursePart.title, description: matchingCoursePart.description, sectionId: matchingCoursePart.sectionId };
             }
         });
 
-        let isPurchased = true;
+        const updatedCourseSections = courseSections.map(section => {
+            const matchingCourseParts = updatedWatchHistoryParts.filter(part =>
+                part.sectionId.toString() == section._id.toString()
+            );
+            return { ...section._doc, parts: matchingCourseParts }
+        });
 
-        return res.status(200).json({ course, courseSections, watchHistoryParts: updatedWatchHistoryParts, isPurchased });
+
+        let isPurchased = false;
+        isPurchased = await isUserPurchasedCourse(userId, courseId);
+
+        const updatedCourse = { ...course, sections: updatedCourseSections, isPurchased };
+
+        return res.status(200).json({ course: updatedCourse });
 
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        logger.error("Error while entrolling course", err);
+        return res.status(500).json({ message: "Course entrollment failed" });
     }
 }

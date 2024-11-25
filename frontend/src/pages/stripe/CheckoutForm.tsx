@@ -54,7 +54,7 @@ const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink, successCallBack }: Prop
     layout: "accordion",
   };
 
-  const handlePaymentSuccess = (paymentIntent) => {
+  const handlePaymentSuccess = (paymentIntent: any) => {
       console.log(paymentIntent);
       successCallBack({success: true, message: "Payment successfull"}, paymentIntent);
   }

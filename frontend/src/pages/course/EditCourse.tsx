@@ -89,8 +89,8 @@ const EditCourse: React.FC = () => {
       .get(`/course/${id}`)
       .then((res) => {
         setCourse(res.data.course);
-        setCourseSections(res.data.courseSections);
-        setCoursParts(res.data.courseParts);
+        setCourseSections(res.data.course.sections);
+        // setCoursParts(res.data.courseParts);
 
         // fill edit course values
         setCourseTitle(res.data.course.title);
@@ -346,7 +346,6 @@ const EditCourse: React.FC = () => {
 
             <CourseContentSectionsAccordion
               sections={courseSections}
-              parts={courseParts}
               handleEditSectionButton={handleEditSectionButton}
               handleDeletesectionButton={handleDeletesectionButton}
               handleAddPartDialog={handleAddPartDialog}

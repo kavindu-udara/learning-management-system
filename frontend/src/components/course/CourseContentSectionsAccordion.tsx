@@ -8,30 +8,23 @@ import { Button } from "../ui/button";
 import CourseContentPartsAccordion from "./CourseContentPartsAccordion";
 import { FaPlus } from "react-icons/fa6";
 
+type Part = {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  sectionId: string;
+  isLocked: boolean;
+};
+
 type Props = {
-  sections:
-    | [
-        {
-          _id: string;
-          title: string;
-        }
-      ]
-    | [];
+  sections: {
+    _id: string;
+    title: string;
+    courseId: string;
+    parts: Part[];
+  }[];
   isEditable: boolean | false;
-  parts:
-    | [
-        {
-          _id: string;
-          title: string;
-          description: string;
-          videoUrl: string;
-          sectionId: string;
-          createdAt: string;
-          updatedAt: string;
-          __v: number;
-        }
-      ]
-    | [];
   handleEditSectionButton?: (section: { _id: string; title: string }) => void;
   handleDeletesectionButton?: (id: string) => void;
   handleAddPartDialog?: (id: string) => void;
@@ -41,27 +34,28 @@ type Props = {
     description: string;
   }) => void;
   handleDeletePartButton?: (id: string) => void;
-  partTitleCallback?: (any) => void;
-  partTitleUnlockCallback?: (any) => void;
+  partTitleCallback?: (part: Part) => void;
+  partTitleUnlockCallback?: (partId: number) => void;
 };
 
 const CourseContentSectionsAccordion: React.FC<Props> = ({
   sections,
   isEditable,
-  parts,
   handleEditSectionButton,
   handleDeletesectionButton,
   handleAddPartDialog,
   handleEditPartButton,
   handleDeletePartButton,
   partTitleCallback,
-  partTitleUnlockCallback
+  partTitleUnlockCallback,
 }: Props) => {
-
   return (
     <Accordion type="single" collapsible className="w-full">
       {sections.map((section) => (
-        <AccordionItem value={section._id} className="text-xl bg-secondary-color p-3 rounded-[21px]">
+        <AccordionItem
+          value={section._id}
+          className="text-xl bg-secondary-color p-3 rounded-[21px]"
+        >
           <AccordionTrigger className="text-xl">
             <div className="flex flex-row items-center gap-5 font-bahnschrift text-dark-acent-color text-xl">
               {section.title}
@@ -84,8 +78,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
           </AccordionContent>
 
           <CourseContentPartsAccordion
-            parts={parts}
-            section={section}
+            parts={section.parts}
             isEditable={isEditable}
             handleEditPartButton={handleEditPartButton}
             handleDeletePartButton={handleDeletePartButton}

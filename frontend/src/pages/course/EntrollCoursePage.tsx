@@ -8,60 +8,52 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import VideoPlayer from "@/components/video/VideoPlayer";
 
+type Course = {
+  title: string;
+};
+
+type Part = {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  sectionId: string;
+  isLocked: boolean;
+};
+
+type Sections = {
+  _id: string;
+  title: string;
+  courseId: string;
+  parts: Part[];
+}[];
+
 const EntrollCoursePage: React.FC = () => {
   const { courseId } = useParams();
 
   const navigate = useNavigate();
 
-  const [course, setCourse] = useState([]);
-  const [sections, setSections] = useState([]);
-  const [courseParts, setCourseParts] = useState([]);
-  const [currentPartId, setCurrentPardId] = useState<string>("");
-  const [currentSectionId, setCurrentSectionId] = useState<string>("");
+  const [course, setCourse] = useState<Course>({ title: "" });
+  const [sections, setSections] = useState<Sections>([]);
   const [partDescription, setPartDescription] = useState<string>("");
 
   const [videoUrl, setVideoUrl] = useState<string>("");
 
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
 
-  const getNextCoursePartId = (currentId: string) => {
-    if (courseParts.length > 0 && currentId !== "" && currentSectionId !== "") {
-      const filteredParts = courseParts.filter(
-        (part) => part.sectionId === currentSectionId
-      );
-      const currentIndex = filteredParts.findIndex(
-        (part) => part._id === currentId
-      );
-      if (currentIndex !== -1 && currentIndex < filteredParts.length - 1) {
-        return filteredParts[currentIndex + 1]._id;
-      }
-    }
-
-    return "";
-  };
-
   const finished = () => {
     toast.success("Finished");
-    if (currentPartId !== "" && courseParts.length > 0) {
-      const currentIndex = courseParts.findIndex(
-        (part) => part._id === currentPartId
-      );
-      setCurrentSectionId(courseParts[currentIndex].sectionId);
-      const nextPartId = getNextCoursePartId(currentPartId);
-      nextPartId !== "" && getVideo(nextPartId);
-    }
   };
 
   const loadCourseData = () => {
     apiClient
       .get(`/course/entroll/${courseId}`)
       .then((res) => {
-        if (!res.data.isPurchased) {
+        if (!res.data.course.isPurchased) {
           toast.error("You have to purchase first !");
         }
         setCourse(res.data.course);
-        setSections(res.data.courseSections);
-        setCourseParts(res.data.watchHistoryParts);
+        setSections(res.data.course.sections);
       })
       .catch((err) => {
         if (
@@ -70,15 +62,16 @@ const EntrollCoursePage: React.FC = () => {
         ) {
           toast.error("Please login First");
           navigate("/login");
+        } else {
+          toast.error("Something went wrong!");
         }
       });
   };
 
   const getVideo = async (part: any) => {
     setPartDescription(part.description);
-    setCurrentPardId(part._id.toString());
     setVideoUrl(
-      `http://localhost:8000/api/v1/video/${part._id}?ts=${Date.now()}`
+      `${import.meta.env.VITE_API_BASE_URL}/video/${part._id}?ts=${Date.now()}`
     );
     videoPlayerRef.current?.load();
   };
@@ -96,30 +89,7 @@ const EntrollCoursePage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (courseParts.length > 0) {
-      if (!courseParts[0].isLocked) {
-        // setVideoUrl(
-        //   `http://localhost:8000/api/v1/video/${
-        //     courseParts[0]._id
-        //   }?ts=${Date.now()}`
-        // );
-        // videoPlayerRef.current?.load();
-      } else {
-        unlockVideo(courseParts[0]._id);
-      }
-    }
-  }, [courseParts]);
-
-  useEffect(() => {
     loadCourseData();
-    if (courseParts.length > 0) {
-      setVideoUrl(
-        `http://localhost:8000/api/v1/video/${
-          courseParts[0]._id
-        }?ts=${Date.now()}`
-      );
-      videoPlayerRef.current?.load();
-    }
   }, []);
 
   return (
@@ -146,7 +116,6 @@ const EntrollCoursePage: React.FC = () => {
             <div>
               <CourseContentSectionsAccordion
                 sections={sections}
-                parts={courseParts}
                 isEditable={false}
                 partTitleCallback={getVideo}
                 partTitleUnlockCallback={unlockVideo}
