@@ -79,7 +79,7 @@ const VideoPlayerController: React.FC<Props> = ({
         </div>
 
         <div className="ml-10 flex items-center justify-start">
-          <div className="flex px-0 items-center w-1/2">
+          <div className=" grid lg:grid-cols-6 grid-cols-5 px-0 items-center lg:w-1/2">
             <div className="icon__btn" onClick={playPauseHandler}>
               {isPlaying ? (
                 <FaPause
@@ -90,7 +90,6 @@ const VideoPlayerController: React.FC<Props> = ({
                 <FaPlay className=" text-white text-2xl cursor-pointer" />
               )}
             </div>
-
             <div className="py-0 px-5  text-white">
               <MdFastRewind className="text-white text-2xl cursor-pointer" />
             </div>
@@ -100,7 +99,6 @@ const VideoPlayerController: React.FC<Props> = ({
             <div className="py-0 px-5  text-white">
               <IoIosFastforward className="text-white text-2xl cursor-pointer" />
             </div>
-
             <div className="py-0 px-5  text-white" onClick={handleFullScreen}>
               {!isInFullScreen ? (
                 <FaCompress className="text-white text-2xl cursor-pointer" />
@@ -108,24 +106,27 @@ const VideoPlayerController: React.FC<Props> = ({
                 <FaExpand className="text-white text-2xl cursor-pointer" />
               )}
             </div>
+            <div className="lg:py-0 py-3 flex items-center w-full justify-start">
+              <div className="py-0 px-5  text-white" onClick={handleMute}>
+                {isMuted ? (
+                  <FaVolumeMute className="text-white text-2xl cursor-pointer" />
+                ) : (
+                  <FaVolumeUp className="text-white text-2xl cursor-pointer" />
+                )}
+              </div>
 
-            <div className="py-0 px-5  text-white" onClick={handleMute}>
-              {isMuted ? (
-                <FaVolumeMute className="text-white text-2xl cursor-pointer" />
-              ) : (
-                <FaVolumeUp className="text-white text-2xl cursor-pointer" />
-              )}
+              <div>
+                <Slider
+                  defaultValue={[33]}
+                  max={100}
+                  step={1}
+                  value={[volume * 100]}
+                  onValueChange={(value) => onVolumeChangeHandler(value[0])}
+                  onValueCommit={(value) => onVolumeSeekUp(value[0])}
+                  className="w-[100px]"
+                />
+              </div>
             </div>
-
-            <Slider
-              defaultValue={[33]}
-              max={100}
-              step={1}
-              value={[volume * 100]}
-              onValueChange={(value) => onVolumeChangeHandler(value[0])}
-              onValueCommit={(value) => onVolumeSeekUp(value[0])}
-              className="max-w-[100px]"
-            />
           </div>
         </div>
       </div>

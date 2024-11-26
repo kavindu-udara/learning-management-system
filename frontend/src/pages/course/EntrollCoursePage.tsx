@@ -95,16 +95,16 @@ const EntrollCoursePage: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="w-full my-5">
-        <div className="flex justify-center my-5">
-          <div className="container font-jua text-dark-acent-color text-2xl">
+      <div className="w-full my-5 lg:mx-0 ">
+        <div className="lg:flex lg:justify-center my-5">
+          <div className="lg:container font-jua text-dark-acent-color text-2xl">
             {course?.title}
           </div>
         </div>
-        <div className="flex justify-center mb-10">
-          <div className="container grid grid-cols-3 gap-3">
+        <div className="lg:flex lg:justify-center lg:mb-10">
+          <div className="lg:container grid lg:grid-cols-3 gap-3 lg:mx-0 mx-5">
             <div
-              className="col-span-2"
+              className="lg:col-span-2 "
               onContextMenu={(e) => e.preventDefault()}
             >
               <VideoPlayer
@@ -124,7 +124,7 @@ const EntrollCoursePage: React.FC = () => {
           </div>
         </div>
         <div className="flex justify-center mb-10">
-          <div className="container mt-5">
+          <div className="w-full lg:container mt-5 lg:mx-0 mx-5">
             <CourseTabs />
             <div>
               <div className="text-3xl font-bold font-montserrat text-dark-acent-color my-5">
