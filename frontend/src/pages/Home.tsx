@@ -71,7 +71,7 @@ const Home: React.FC = () => {
     <>
       <Header />
 
-      <div className="flex flex-col justify-center items-center gap-5 py-10">
+      <div className="flex flex-col justify-center items-center gap-5 py-10 mx-5 lg:mx-0">
         {user?.role === "teacher" && (
           <LargeGetCard
             title="Get Started"
@@ -89,10 +89,10 @@ const Home: React.FC = () => {
           />
         )}
 
-        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
+        <div className="font-jua container text-start text-primary-color text-[40px] my-5 lg:mx-0 mx-5">
           Newest Courses
         </div>
-        <div className="grid grid-cols-4 gap-5 container">
+        <div className="grid lg:grid-cols-4 gap-5 container">
           {courses.map((course: any) => {
             return (
               <CourseCard
@@ -114,7 +114,7 @@ const Home: React.FC = () => {
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Trending Courses
         </div>
-        <div className="grid grid-cols-4 gap-5 container">
+        <div className="grid lg:grid-cols-4 gap-5 container">
           {Array(4)
             .fill(null)
             .map((_) => (
@@ -133,7 +133,7 @@ const Home: React.FC = () => {
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Trending Categories
         </div>
-        <div className="grid grid-cols-6 gap-5 container">
+        <div className="grid lg:grid-cols-6 gap-5 container">
           {courseCategories.map((category) => (
             <CourseCategoryCard title={category?.name} />
           ))}
@@ -142,7 +142,7 @@ const Home: React.FC = () => {
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Best Selling Courses
         </div>
-        <div className="grid grid-cols-4 gap-5 container">
+        <div className="grid lg:grid-cols-4 gap-5 container">
           {Array(4)
             .fill(null)
             .map((_) => (
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Free Courses
         </div>
-        <div className="grid grid-cols-4 gap-5 container">
+        <div className="grid lg:grid-cols-4 gap-5 container">
           {Array(4)
             .fill(null)
             .map((_) => (
