@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -44,9 +43,7 @@ const Register: React.FC = () => {
           })
           .then((res) => {
             toast.success(res.data.message);
-            navigate("/");
-
-            console.log(res);
+            navigate("/home");
           })
           .catch((err) => toast.error(err.response.data.message));
         setIsLoading(false);

@@ -11,10 +11,6 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import CreateCourse from "./pages/teacher/CreateCourse";
 import EditCourse from "./pages/course/EditCourse";
 import EntrollCoursePage from "./pages/course/EntrollCoursePage";
-import BuildCheckout from "./pages/stripe/BuildCheckout";
-import PaymentComplete from "./pages/stripe/PaymentComplete";
-import PrivateRoute from "./routes/PrivateRoute";
-import CompletePage from "./pages/stripe/CompletePage";
 import TeacherRoute from "./routes/TeacherRoute";
 import Index from "./pages/LandingPage";
 
@@ -23,8 +19,8 @@ function App() {
     <BrowserRouter>
       <ToastContainer />
       <Routes>
-        <Route path="/index" element={<Index />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
@@ -41,10 +37,6 @@ function App() {
             <Route path="edit-course/:id" element={<EditCourse />} />
           </Route>
         </Route>
-
-        {/* <Route element={<PrivateRoute />}>
-          {/* <Route path="/checkout/:courseId/*" element={<BuildCheckout />} /> */}
-        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );

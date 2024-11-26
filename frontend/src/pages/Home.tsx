@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import LargeCourseCard from "@/components/course/LargeCourseCard";
 import LargeGetCard from "@/components/cards/LargeGetCard";
 import apiClient from "@/axios/axios";
 import { toast } from "react-toastify";
@@ -12,13 +11,17 @@ import Footer from "@/components/Footer";
 import CourseCard from "@/components/course/CourseCard";
 import CourseCategoryCard from "@/components/course/CourseCategoryCard";
 
+type Category = {
+  name: string;
+}[];
+
 const Home: React.FC = () => {
-  const user = useSelector((state: RootState) => state.userReducer.user);
+  const user = useSelector((state: any) => state.userReducer.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [courses, setCourses] = useState([]);
-  const [courseCategories, setCourseCategories] = useState([]);
+  const [courseCategories, setCourseCategories] = useState<Category>([]);
 
   const loadCourseCategories = async () => {
     apiClient
@@ -27,8 +30,8 @@ const Home: React.FC = () => {
         dispatch(addCourseCategories(res.data.categories));
         setCourseCategories(res.data.categories);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        toast.error("Category loading failed");
       });
   };
 
@@ -36,11 +39,10 @@ const Home: React.FC = () => {
     apiClient
       .get(`/course`)
       .then((res) => {
-        console.log(res.data.courses);
         setCourses(res.data.courses);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        toast.error("Courses loading failed");
       });
   };
 
@@ -98,8 +100,10 @@ const Home: React.FC = () => {
                 title={course?.title}
                 price={course?.price}
                 createdAt={course?.createdAt}
-                imageUrl = {course?.imageUrl}
-                teacherName={course?.teacher?.fname + " " + course?.teacher?.lname}
+                imageUrl={course?.imageUrl}
+                teacherName={
+                  course?.teacher?.fname + " " + course?.teacher?.lname
+                }
                 teacherImage={course?.teacher?.imageUrl}
                 isNew
               />
@@ -111,34 +115,19 @@ const Home: React.FC = () => {
           Trending Courses
         </div>
         <div className="grid grid-cols-4 gap-5 container">
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
+          {Array(4)
+            .fill(null)
+            .map((_) => (
+              <CourseCard
+                id="1"
+                title="Title"
+                price="100"
+                createdAt="2024-10-22T22:13:22.147Z"
+                imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+                teacherImage=""
+                teacherName=""
+              />
+            ))}
         </div>
 
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
@@ -154,68 +143,38 @@ const Home: React.FC = () => {
           Best Selling Courses
         </div>
         <div className="grid grid-cols-4 gap-5 container">
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
+          {Array(4)
+            .fill(null)
+            .map((_) => (
+              <CourseCard
+                id="1"
+                title="Title"
+                price="100"
+                createdAt="2024-10-22T22:13:22.147Z"
+                imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+                teacherImage=""
+                teacherName=""
+              />
+            ))}
         </div>
 
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Free Courses
         </div>
         <div className="grid grid-cols-4 gap-5 container">
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
-          <CourseCard
-            id="1"
-            title="Title"
-            price="100"
-            createdAt="2024-10-22T22:13:22.147Z"
-            imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-          />
+          {Array(4)
+            .fill(null)
+            .map((_) => (
+              <CourseCard
+                id="1"
+                title="Title"
+                price="100"
+                createdAt="2024-10-22T22:13:22.147Z"
+                imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
+                teacherImage=""
+                teacherName=""
+              />
+            ))}
         </div>
       </div>
       <Footer />

@@ -43,7 +43,7 @@ const Index: React.FC = () => {
               <div className="flex lg:justify-start justify-center">
                 <GetStartedButton
                   onClickCallback={() => {
-                    navigate("/");
+                    navigate("/home");
                   }}
                 />
               </div>

@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RootState } from "@reduxjs/toolkit/query";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -46,12 +45,11 @@ const CreateCourse: React.FC = () => {
   const [courseImage, setCourseImage] = useState<any>(null);
 
   const categories = useSelector(
-    (state: RootState) => state.courseCategoriesReducer.categories
+    (state: any) => state.courseCategoriesReducer.categories
   );
 
   const createCourse = () => {
     setIsLoading(true);
-    console.log(courseImage)
     if (validateFields()) {
       apiClient
         .post(`/course/create`, {
@@ -66,7 +64,6 @@ const CreateCourse: React.FC = () => {
           navigate(`/teacher/edit-course/${res.data.course._id}`);
         })
         .catch((err) => {
-          console.log(err);
           toast.error(err.response.data.message);
         });
     }else{

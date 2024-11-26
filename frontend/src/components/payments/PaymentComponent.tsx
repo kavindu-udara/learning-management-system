@@ -8,7 +8,13 @@ import CheckoutForm from "@/pages/stripe/CheckoutForm";
 
 type Props = {
   courseId: string;
-  successCallBack: ({}) => void;
+  successCallBack: ({
+    success,
+    message,
+  }: {
+    success: boolean;
+    message: string;
+  }) => void;
 };
 
 type course =
@@ -59,7 +65,7 @@ const PaymentComponent: React.FC<Props> = ({
         setDpmCheckerLink(res.data.dpmCheckerLink);
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(err.response.data.message);
       });
   };
 

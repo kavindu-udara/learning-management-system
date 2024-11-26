@@ -10,11 +10,19 @@ import { Card, CardFooter } from "@/components/ui/card";
 type Props = {
   dpmCheckerLink?: string;
   successCallBack: ({
-  }) => void
+    success,
+    message,
+  }: {
+    success: boolean;
+    message: string;
+  }) => void;
 };
 // import "../../stripe.css";
 
-const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink, successCallBack }: Props) => {
+const CheckoutForm: React.FC<Props> = ({
+  dpmCheckerLink,
+  successCallBack,
+}: Props) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -55,7 +63,6 @@ const CheckoutForm: React.FC<Props> = ({ dpmCheckerLink, successCallBack }: Prop
   };
 
   const handlePaymentSuccess = (paymentIntent: any) => {
-      console.log(paymentIntent);
       successCallBack({success: true, message: "Payment successfull"}, paymentIntent);
   }
 

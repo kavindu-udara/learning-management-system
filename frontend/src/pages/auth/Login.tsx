@@ -34,9 +34,8 @@ const Login: React.FC = () => {
       })
       .then((res) => {
         setIsLoading(false);
-        console.log(res.data.user);
         dispatch(addUser(res.data.user));
-        navigate("/");
+        navigate("/home");
       })
       .catch((err) => {
         toast.error(err.response.data.message);

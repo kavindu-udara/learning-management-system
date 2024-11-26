@@ -9,8 +9,16 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+type MyCourse = {
+  categoryName: string;
+  title: string;
+  price: string;
+  _id: string;
+  imageUrl: string;
+}[];
+
 const TeacherDashboard: React.FC = () => {
-  const [myCourses, setMycourses] = useState([]);
+  const [myCourses, setMycourses] = useState<MyCourse>([]);
 
   const navigate = useNavigate();
 
@@ -25,7 +33,6 @@ const TeacherDashboard: React.FC = () => {
       .get(`/course/teacher/${user._id}`)
       .then((res) => {
         setMycourses(res.data.courses);
-        console.log(res.data);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -56,7 +63,9 @@ const TeacherDashboard: React.FC = () => {
           <OverviewCard title="Total Courses" count={myCourses.length} />
         </div>
         <div className="container grid grid-cols-2 font-semibold">
-          <div className="text-xl font-bold text-dark-acent-color">My Courses</div>
+          <div className="text-xl font-bold text-dark-acent-color">
+            My Courses
+          </div>
           <div className="underline text-[#2563EB] text-end">View all</div>
         </div>
         <div className="container grid grid-cols-2 gap-5">

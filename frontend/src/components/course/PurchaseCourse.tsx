@@ -30,7 +30,7 @@ const PurchaseCourse: React.FC<Props> = ({
 }: Props) => {
   const user = useSelector((state: any) => state.userReducer.user);
 
-  const handleResponse = (res, paymentIntent) => {
+  const handleResponse = (res: any, paymentIntent: string) => {
     if (res.success) {
       toast.success("Payment successfull");
       handlepurchasedCourse(paymentIntent);

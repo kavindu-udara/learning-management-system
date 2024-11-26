@@ -21,7 +21,6 @@ export const createPaymentIntent = async (req, res, next) => {
 
     const {user} = req;
     const userId = user.id;
-
     
     if(!userId || !courseId) {
         return res.status(401).json({ message: "Unauthorized" });

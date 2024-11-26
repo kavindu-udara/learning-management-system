@@ -19,7 +19,7 @@ const Header: React.FC = () => {
 
   const logOutUser = () => {
     dispatch(removeUser());
-    navigate("/");
+    navigate("/home");
   };
 
   return (
@@ -28,7 +28,7 @@ const Header: React.FC = () => {
         <div className="flex lg:flex-1">
           <span
             className="font-jua text-primary-color text-3xl cursor-pointer"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             Purrfect
           </span>
