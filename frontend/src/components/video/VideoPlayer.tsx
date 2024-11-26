@@ -137,7 +137,7 @@ const VideoPlayer: React.FC<Props> = ({
 
   return (
     <div className="" onContextMenu={(e) => e.preventDefault()} ref={divRef}>
-      <div className="w-full bg-black lg:min-h-[300px] lg:m-h-[300px]">
+      <div className="w-full bg-black min-h-[300px] lg:m-h-[300px]">
         <ReactPlayer
           ref={videoPlayerRef}
           url={url}
