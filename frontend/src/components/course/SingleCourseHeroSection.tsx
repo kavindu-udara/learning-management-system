@@ -31,7 +31,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
   return (
     <div className="bg-white grid grid-cols-1 lg:flex justify-center">
       <div className="container flex lg:flex-row flex-col-reverse py-10 gap-10">
-        <div className="lg:basis-1/2 lg:mx-0 mx-5">
+        <div className="lg:basis-1/2 lg:mx-0 mx-5 text-center lg:text-start ">
           <Badge variant="outline" className="bg-white">
             {category}
           </Badge>
@@ -39,7 +39,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
             {title}
           </div>
           <p className="text-gray-500 font-montserrat">{description}</p>
-          <div className="flex items-center">
+          <div className="flex items-center justify-center lg:justify-start">
             <img
               src={teacherImage}
               className="rounded-full w-[30px] mr-5"
@@ -59,7 +59,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
           )}
         </div>
         <div className="lg:basis-1/2 lg:flex lg:justify-end mx-5 lg:mx-0">
-          <div className="flex items-center h-full">
+          <div className="flex items-center h-full justify-center">
             <div className="flex flex-col w-[500px] bg-secondary-color rounded-[21px]">
               <div
                 className="h-[200px] w-full rounded-t-[21px]"
