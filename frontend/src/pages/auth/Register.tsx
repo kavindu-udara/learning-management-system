@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import apiClient from "../../axios/axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -44,9 +43,7 @@ const Register: React.FC = () => {
           })
           .then((res) => {
             toast.success(res.data.message);
-            navigate("/");
-
-            console.log(res);
+            navigate("/home");
           })
           .catch((err) => toast.error(err.response.data.message));
         setIsLoading(false);
@@ -69,7 +66,6 @@ const Register: React.FC = () => {
         <Card className="w-[500px]">
           <CardHeader>
             <CardTitle>Register</CardTitle>
-            <CardDescription>Enter an email and password</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
@@ -130,10 +126,11 @@ const Register: React.FC = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="grid grid-cols-1">
             <Button className="w-full" type="submit" disabled={isLoading}>
               {isLoading ? "Loading" : "Register"}
             </Button>
+            <Link to={'/login'} className="text-center mt-3 font-montserrat text-light-gray-color">Already have an account ?</Link>
           </CardFooter>
         </Card>
       </form>

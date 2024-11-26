@@ -12,15 +12,52 @@ import ConfirmationDialog from "@/components/alerts/ConfirmationDialog";
 import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
 import CourseTabs from "@/components/course/CourseTabs";
 
+type Teacher = {
+  fname: string;
+  lname: string;
+  imageUrl: string;
+};
+
+type Course = {
+  title: string;
+  categoryName: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  teacher: Teacher;
+};
+
+type Part = {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  sectionId: string;
+  isLocked: boolean;
+};
+
+type Sections = {
+  _id: string;
+  title: string;
+  courseId: string;
+  parts: Part[];
+}[];
+
 const EditCourse: React.FC = () => {
   const [categories, setCategories] = useState([]);
-  const [currentCategory, setCurrentCategory] = useState<string>("");
-
-  const [course, setCourse] = useState([]);
-  const [courseSections, setCourseSections] = useState([]);
-  const [courseParts, setCoursParts] = useState([]);
-
-  const [category, setCategory] = useState<string>("");
+  const [course, setCourse] = useState<Course>({
+    title: "",
+    categoryName: "",
+    description: "",
+    price: 0,
+    imageUrl: "",
+    teacher: {
+      fname: "",
+      lname: "",
+      imageUrl: "",
+    },
+  });
+  const [courseSections, setCourseSections] = useState<Sections>([]);
 
   const [sectionName, setSectionName] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -60,8 +97,10 @@ const EditCourse: React.FC = () => {
   };
 
   const handlePartFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target?.files[0];
-    setPartFile(file);
+    if (e.target && e.target.files) {
+      const file = e.target.files[0];
+      setPartFile(file);
+    }
   };
 
   const handleCourseEditButton = () => {
@@ -73,14 +112,9 @@ const EditCourse: React.FC = () => {
       .get(`/course/categories`)
       .then((res) => {
         setCategories(res.data.categories);
-        categories.find((category) => {
-          if (category._id === course.categoryId) {
-            setCurrentCategory(category.name);
-          }
-        });
       })
       .catch((err) => {
-        //
+        toast.error(err.response.data.message);
       });
   };
 
@@ -89,8 +123,7 @@ const EditCourse: React.FC = () => {
       .get(`/course/${id}`)
       .then((res) => {
         setCourse(res.data.course);
-        setCourseSections(res.data.courseSections);
-        setCoursParts(res.data.courseParts);
+        setCourseSections(res.data.course.sections);
 
         // fill edit course values
         setCourseTitle(res.data.course.title);
@@ -143,7 +176,7 @@ const EditCourse: React.FC = () => {
           },
         }
       )
-      .then((res) => {
+      .then(() => {
         loadCourseData();
         setIsSaving(false);
       })
@@ -151,13 +184,6 @@ const EditCourse: React.FC = () => {
         toast.error(err.response.data.message);
         setIsSaving(false);
       });
-  };
-
-  const getCourseCategory = () => {
-    const category = categories.find(
-      (cat: { _id: string }) => cat._id === course.categoryId
-    );
-    setCategory(category ? category.name : "");
   };
 
   const updateCourse = () => {
@@ -317,7 +343,6 @@ const EditCourse: React.FC = () => {
   useEffect(() => {
     loadCourseData();
     loadCourseCategories();
-    getCourseCategory();
   }, []);
 
   return (
@@ -325,12 +350,15 @@ const EditCourse: React.FC = () => {
       <Header />
 
       <SingleCourseHeroSection
-        category={currentCategory}
+        category={course?.categoryName}
         title={course?.title}
         description={course?.description}
         price={course?.price}
         onClickFunc={handleCourseEditButton}
         deleteBtnFunc={handleCourseDeleteButton}
+        imageUrl={course?.imageUrl}
+        teacherName={course?.teacher?.fname}
+        teacherImage={course?.teacher?.imageUrl}
         isEditable={true}
       />
 
@@ -351,7 +379,6 @@ const EditCourse: React.FC = () => {
 
             <CourseContentSectionsAccordion
               sections={courseSections}
-              parts={courseParts}
               handleEditSectionButton={handleEditSectionButton}
               handleDeletesectionButton={handleDeletesectionButton}
               handleAddPartDialog={handleAddPartDialog}

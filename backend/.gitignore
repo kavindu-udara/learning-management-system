@@ -26,4 +26,13 @@ dist-ssr
 .env
 
 /public/uploads/*
+/public/course/images/*
+/public/course/videos/*
 !/public/uploads/.gitkeep
+!/public/course/images/.gitkeep
+!/public/course/videos/.gitkeep
+!/public/course/images/default.jpg
+
+/public/user/profileImages/*
+!/public/user/profileImages/default.png
+!/public/user/profileImages/.gitkeep

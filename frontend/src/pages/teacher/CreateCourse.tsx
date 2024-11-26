@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RootState } from "@reduxjs/toolkit/query";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -43,9 +42,10 @@ const CreateCourse: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<string>('');
   const [categoryId, setCategoryId] = useState<string>('');
+  const [courseImage, setCourseImage] = useState<any>(null);
 
   const categories = useSelector(
-    (state: RootState) => state.courseCategoriesReducer.categories
+    (state: any) => state.courseCategoriesReducer.categories
   );
 
   const createCourse = () => {
@@ -56,8 +56,9 @@ const CreateCourse: React.FC = () => {
           title,
           description,
           price,
-          categoryId
-        })
+          categoryId,
+          courseImage
+        }, {headers: {"Content-Type": "multipart/form-data"}})
         .then((res) => {
           toast.success(res.data.message);
           navigate(`/teacher/edit-course/${res.data.course._id}`);
@@ -87,10 +88,10 @@ const CreateCourse: React.FC = () => {
     <>
       <Header />
       <div className=" flex flex-col justify-center items-center">
-        <form onSubmit={(e) => formSubmit(e)}>
+        <form onSubmit={(e) => formSubmit(e)} >
           <Card className="w-[700px]">
             <CardHeader>
-              <CardTitle>Create Course</CardTitle>
+              <CardTitle className="text-dark-acent-color">Create Course</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 w-full items-center gap-4 mb-4">
@@ -141,6 +142,16 @@ const CreateCourse: React.FC = () => {
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-1.5">
+                  <Label>Course Image</Label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setCourseImage(e.target.files![0])}
+                    required
                   />
                 </div>
               </div>

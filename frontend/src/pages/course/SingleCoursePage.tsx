@@ -1,123 +1,138 @@
 import apiClient from "@/axios/axios";
 import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
 import CourseTabs from "@/components/course/CourseTabs";
+import PurchaseCourse from "@/components/course/PurchaseCourse";
 import SingleCourseHeroSection from "@/components/course/SingleCourseHeroSection";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { RootState } from "@reduxjs/toolkit/query";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-type course =
-  | {
-      _id: string;
-      title: string;
-      description: string;
-      categoryId: string;
-    }
-  | [];
+type Course = {
+  _id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  price: number;
+  imageUrl: string;
+  categoryName: string;
+  teacher: {
+    fname: string;
+    lname: string;
+    imageUrl: string;
+  };
+};
 
-type sections =
-  | [
-      {
-        _id: string;
-        title: string;
-        courseId: string;
-        createdAt: string;
-        updatedAt: string;
-      }
-    ]
-  | [];
+type Part = {
+  _id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  sectionId: string;
+  isLocked: boolean;
+};
 
-type parts =
-  | [
-      {
-        _id: string;
-        title: string;
-        description: string;
-        videoUrl: string;
-        sectionId: string;
-        createdAt: string;
-        updatedAt: string;
-        __v: number;
-      }
-    ]
-  | [];
+type Sections = {
+  _id: string;
+  title: string;
+  courseId: string;
+  parts: Part[];
+}[];
 
 const SingleCoursePage: React.FC = () => {
-  const [course, setCourse] = useState<course>([]);
-  const [category, setCategory] = useState<string>("");
-  const [sections, setSections] = useState<sections>([]);
-  const [parts, setParts] = useState<parts>([]);
+  const defaultCourse: Course = {
+    _id: "",
+    title: "",
+    description: "",
+    categoryId: "",
+    price: 0,
+    imageUrl: "",
+    categoryName: "",
+    teacher: {
+      fname: "",
+      lname: "",
+      imageUrl: "",
+    },
+  };
+
+  const [course, setCourse] = useState<Course>(defaultCourse);
+  const [sections, setSections] = useState<Sections>([]);
+  const [isPurchased, setIsPurchased] = useState<boolean>(false);
+
+  const payDialogRef = React.useRef<HTMLButtonElement>(null);
 
   const { id } = useParams();
 
-  const navigate = useNavigate();
+  const user = useSelector((state: any) => state.userReducer.user);
 
-  const categories = useSelector(
-    (state: RootState) => state.courseCategoriesReducer.categories
-  );
+  const navigate = useNavigate();
 
   const loadCourseData = () => {
     apiClient
       .get(`/course/${id}`)
       .then((res) => {
         setCourse(res.data.course);
-        setSections(res.data.courseSections);
-        setParts(res.data.courseParts);
+        setSections(res.data.course.sections);
+        setIsPurchased(res.data.course.isPurchased);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
   };
 
-  const getCourseCategory = () => {
-    const category = categories.find((cat) => cat._id === course.categoryId);
-    setCategory(category ? category.name : "");
+  const handleStartCourse = () => {
+    if (user?._id) {
+      if (!isPurchased) {
+        toast.error("You have to buy this course first !");
+        payDialogRef.current?.click();
+      } else {
+        navigate(`/course/entroll/${course?._id}`);
+      }
+    } else {
+      toast.error("Please Login First");
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
     loadCourseData();
-    getCourseCategory();
   }, []);
 
   return (
     <>
       <Header />
-
+      {!isPurchased && (
+        <PurchaseCourse
+          triggerRef={payDialogRef}
+          courseId={id ?? ""} // Use the nullish coalescing operator to provide a default value if id is undefined
+          coursePrice={course?.price}
+          courseTitle={course?.title}
+          loadCourseData={loadCourseData}
+        />
+      )}
       <SingleCourseHeroSection
-        category={category}
+        category={course?.categoryName}
         title={course?.title}
         description={course?.description}
-        onClickFunc={() => {
-          navigate(`/checkout/${course?._id}`);
-        }}
+        onClickFunc={() => handleStartCourse()}
         price={course?.price}
+        imageUrl={course?.imageUrl}
+        teacherName={course?.teacher?.fname + " " + course?.teacher?.lname}
+        teacherImage={course?.teacher?.imageUrl}
       />
-
       <div className="flex justify-center mb-10">
         <div className="container mt-5">
           <CourseTabs />
-
-          <div>
-            <div className="text-3xl font-bold my-5">Description</div>
-            <div className="text-gray-500 text-lg my-5">
-              {course?.description}
-            </div>
-          </div>
-
           <div>
             <CourseContentSectionsAccordion
               sections={sections}
-              parts={parts}
               isEditable={false}
             />
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

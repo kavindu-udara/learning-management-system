@@ -1,14 +1,40 @@
 import multer from "multer";
 
-const storage = multer.diskStorage({
+const formatFilename = (filename) => {
+    return filename.replace(/\s+/g, '-'); // Replace one or more spaces with "-"
+};
+
+const videoStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads');
+        cb(null, 'public/course/videos');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+        const formatedFilename = formatFilename(file.originalname);
+        cb(null, Date.now() + '-' + formatedFilename);
     }
 });
+const uploadVideo = multer({ storage: videoStorage });
 
-const upload = multer({ storage: storage });
+const courseimageStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/course/images');
+    },
+    filename: (req, file, cb) => {
+        const formatedFilename = formatFilename(file.originalname);
+        cb(null, Date.now() + '-' + formatedFilename);
+    }
+})
+const uploadCourseImage = multer({ storage: courseimageStorage });
 
-export default upload;
+const profileImageStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/user/profileImages');
+    },
+    filename: (req, file, cb) => {
+        const formatedFilename = formatFilename(file.originalname);
+        cb(null, Date.now() + '-' + req.body.userId + formatedFilename);
+    }
+});
+const uploadProfileImage = multer({ storage: profileImageStorage });
+
+export { uploadVideo, uploadCourseImage, uploadProfileImage };

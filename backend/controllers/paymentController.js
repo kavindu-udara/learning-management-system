@@ -21,31 +21,18 @@ export const createPaymentIntent = async (req, res, next) => {
 
     const {user} = req;
     const userId = user.id;
-
     
     if(!userId || !courseId) {
         return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const course = Course.findById(courseId);
+    const course = await Course.findById(courseId);
 
     if(!course){
         return res.status(401).json({ message: "Course not found" });
     }
 
-    const coursePrice = course.price;
-
-    // let totalPrice = 0;
-
-    // items.map((item) => {
-    //     let itemPrice = parseInt(item.price, 10);
-    //     totalPrice += itemPrice * 100;
-    // });
-
-    // const price = getCoursePrice(courseId);
-
-    // return res.status(200).json({ items: items[0].price });
-
+    const coursePrice =  course.price * 100;
 
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({

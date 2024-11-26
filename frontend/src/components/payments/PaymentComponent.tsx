@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useParams,
-} from "react-router-dom";
 import apiClient from "@/axios/axios";
-import CheckoutForm from "./CheckoutForm";
-import CompletePage from "./CompletePage";
 import { toast } from "react-toastify";
+import CheckoutForm from "@/pages/stripe/CheckoutForm";
 
-// ! this part automatically run twise need to fix it
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+type Props = {
+  courseId: string;
+  successCallBack: ({
+    success,
+    message,
+  }: {
+    success: boolean;
+    message: string;
+  }) => void;
+};
 
 type course =
   | {
@@ -25,13 +26,16 @@ type course =
     }
   | [];
 
-const BuildCheckout: React.FC = () => {
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+const PaymentComponent: React.FC<Props> = ({
+  courseId,
+  successCallBack,
+}: Props) => {
   const [clientSecret, setClientSecret] = useState("");
   const [dpmCheckerLink, setDpmCheckerLink] = useState("");
   const [course, setCourse] = useState<course>([]);
   const [currentCourseId, setCurrentCourseId] = useState<string>("");
-
-  const { courseIdParam } = useParams();
 
   const appearance = {
     theme: "flat",
@@ -43,7 +47,6 @@ const BuildCheckout: React.FC = () => {
     await apiClient
       .get(`/course/${currentCourseId}`)
       .then((res) => {
-        console.log(res);
         setCourse(res.data.course);
         createPaymentIntent(res.data.course);
       })
@@ -54,48 +57,37 @@ const BuildCheckout: React.FC = () => {
 
   const createPaymentIntent = async (course) => {
     await apiClient
-      .post(`/stripe/create-payment-intent/${courseIdParam}`, {
+      .post(`/checkout/create-payment-intent/${courseId}`, {
         items: [course],
       })
       .then((res) => {
-        console.log(res);
         setClientSecret(res.data.clientSecret);
         setDpmCheckerLink(res.data.dpmCheckerLink);
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(err.response.data.message);
       });
   };
 
   useEffect(() => {
-    // console.log(currentCourseId + " " + courseIdParam);
-    if (courseIdParam != "complete") {
-      setCurrentCourseId(courseIdParam);
-    }
     loadCourseData();
-    console.log(course);
   }, []);
 
-  // TODO : item is null
-
   return (
-    <div className="App">
+    <div>
       {clientSecret && (
         <Elements
           options={{ clientSecret, appearance, loader }}
           stripe={stripePromise}
         >
-          <Routes>
-            <Route
-              path="/"
-              element={<CheckoutForm dpmCheckerLink={dpmCheckerLink} />}
-            />
-            <Route path="/complete" element={<CompletePage />} />
-          </Routes>
+          <CheckoutForm
+            dpmCheckerLink={dpmCheckerLink}
+            successCallBack={successCallBack}
+          />
         </Elements>
       )}
     </div>
   );
 };
 
-export default BuildCheckout;
+export default PaymentComponent;

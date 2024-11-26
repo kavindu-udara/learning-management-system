@@ -60,7 +60,9 @@ const CreateCourseDialog: React.FC<Props> = ({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>{isEditable ? "Edit Course Details" : "Add Course Details"} </DialogTitle>
+          <DialogTitle>
+            {isEditable ? "Edit Course Details" : "Add Course Details"}{" "}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 w-full items-center gap-4 mb-4">
           <div className="grid w-full items-center gap-4">

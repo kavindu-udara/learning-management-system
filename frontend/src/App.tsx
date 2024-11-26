@@ -11,40 +11,32 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import CreateCourse from "./pages/teacher/CreateCourse";
 import EditCourse from "./pages/course/EditCourse";
 import EntrollCoursePage from "./pages/course/EntrollCoursePage";
-import BuildCheckout from "./pages/stripe/BuildCheckout";
-import PaymentComplete from "./pages/stripe/PaymentComplete";
-import PrivateRoute from "./routes/PrivateRoute";
-import CompletePage from "./pages/stripe/CompletePage";
+import TeacherRoute from "./routes/TeacherRoute";
+import Index from "./pages/LandingPage";
 
 function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
 
         <Route path="/course">
           <Route path=":id" element={<SingleCoursePage />} />
-          <Route path="entroll/:id" element={<EntrollCoursePage />} />
+          <Route path="entroll/:courseId" element={<EntrollCoursePage />} />
         </Route>
 
-        <Route path="/teacher">
-          <Route index element={<TeacherDashboard />} />
-          <Route path="create-course" element={<CreateCourse />} />
-          <Route path="edit-course/:id" element={<EditCourse />} />
+        <Route element={<TeacherRoute />}>
+          <Route path="/teacher">
+            <Route index element={<TeacherDashboard />} />
+            <Route path="create-course" element={<CreateCourse />} />
+            <Route path="edit-course/:id" element={<EditCourse />} />
+          </Route>
         </Route>
-
-        {/* <Route path="/checkout/*" element={<PrivateRoute />}/> */}
-        {/* Add the new route for Stripe Checkout */}
-        <Route element={<PrivateRoute />}>
-          <Route path="/checkout/:courseId/*" element={<BuildCheckout />} />
-        </Route>
-        {/* <Route path="/payment-complete" element={<PaymentComplete />} /> */}
-        {/* <Route path="/payment-complete" element={<CompletePage />} /> */}
-
       </Routes>
     </BrowserRouter>
   );
