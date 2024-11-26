@@ -26,14 +26,11 @@ router.get('/teacher/:teacherId', showCoursesByTeacherId);
 // update routes
 router.put('/:id', verifyTeacher, updateCourse);
 router.put('/section/:id', verifyTeacher, updateSection);
-router.post('/update-part/:id', verifyTeacher, uploadVideo.single('videoFile'), updatePart);
+router.post('/update-part/:id', verifyTeacher, uploadVideo.single('videoFile'), updatePart);       
 
 // delete routes
 router.delete('/:id', verifyTeacher, deleteCourse);
 router.delete('/section/:id', verifyTeacher, deleteSection);
 router.delete('/part/:id', verifyTeacher, deletePart);
-
-// purchase course
-router.post('/purchase', verifyToken);
 
 export default router;

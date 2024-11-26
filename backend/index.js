@@ -35,9 +35,14 @@ app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT || 3000}.`);
 });
 
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/course", courseRouter);
-app.use("/api/v1/checkout", paymentRouter);
-app.use("/api/v1/video", videoRouter);
-app.use("/api/v1/image", imageRouter);
+const apiRouter = express.Router();
+
+apiRouter.use('/auth', authRouter);
+apiRouter.use('/user', userRouter);
+apiRouter.use('/course', courseRouter);
+apiRouter.use('/checkout', paymentRouter);
+apiRouter.use('/video', videoRouter);
+apiRouter.use('/image', imageRouter);
+
+// Attach the /api/v1 router to the app
+app.use('/api/v1', apiRouter);
