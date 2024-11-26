@@ -10,6 +10,7 @@ import videoRouter from "./routes/videoRouter.js";
 import imageRouter from "./routes/imageRouter.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import logger from "./utils/logger.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ dotenv.config();
 mongoose.connect(process.env.MONGODB_URL).then(() => {
     console.log("Connected to mongoDB");
 }).catch((err) => {
+    logger.error("MongoDB Connection Failed : " + err);
     console.log(err);
 })
 
