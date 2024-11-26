@@ -29,9 +29,9 @@ const SingleCourseHeroSection: React.FC<Props> = ({
   teacherImage,
 }: Props) => {
   return (
-    <div className="bg-white flex justify-center">
-      <div className="container flex flex-row py-10 gap-10">
-        <div className="basis-1/2">
+    <div className="bg-white grid grid-cols-1 lg:flex justify-center">
+      <div className="container flex lg:flex-row flex-col-reverse py-10 gap-10">
+        <div className="lg:basis-1/2 lg:mx-0 mx-5">
           <Badge variant="outline" className="bg-white">
             {category}
           </Badge>
@@ -58,7 +58,7 @@ const SingleCourseHeroSection: React.FC<Props> = ({
             </Button>
           )}
         </div>
-        <div className="basis-1/2 flex justify-end">
+        <div className="lg:basis-1/2 lg:flex lg:justify-end mx-5 lg:mx-0">
           <div className="flex items-center h-full">
             <div className="flex flex-col w-[500px] bg-secondary-color rounded-[21px]">
               <div

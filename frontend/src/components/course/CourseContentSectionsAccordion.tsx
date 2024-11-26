@@ -53,6 +53,7 @@ const CourseContentSectionsAccordion: React.FC<Props> = ({
     <Accordion type="single" collapsible className="w-full">
       {sections.map((section) => (
         <AccordionItem
+          key={section._id}
           value={section._id}
           className="text-xl bg-secondary-color p-3 rounded-[21px]"
         >

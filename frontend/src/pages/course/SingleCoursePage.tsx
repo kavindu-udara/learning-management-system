@@ -123,7 +123,7 @@ const SingleCoursePage: React.FC = () => {
         teacherImage={course?.teacher?.imageUrl}
       />
       <div className="flex justify-center mb-10">
-        <div className="container mt-5">
+        <div className="container lg:mt-5 lg:mx-0 mx-5">
           <CourseTabs />
           <div>
             <CourseContentSectionsAccordion
