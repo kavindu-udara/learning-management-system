@@ -63,7 +63,7 @@ const Register: React.FC = () => {
   return (
     <div className="flex h-screen bg-slate-200 items-center content-center justify-center">
       <form onSubmit={(e) => formSubmit(e)}>
-        <Card className="w-[500px]">
+        <Card className="lg:w-[500px] w-full">
           <CardHeader>
             <CardTitle>Register</CardTitle>
           </CardHeader>

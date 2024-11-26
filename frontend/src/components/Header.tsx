@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-secondary-color w-full flex justify-center">
-      <nav className="container flex items-center justify-between py-3 lg:px-8">
+      <nav className="container flex items-center justify-between py-3 lg:px-8 lg:mx-0 mx-5">
         <div className="flex lg:flex-1">
           <span
             className="font-jua text-primary-color text-3xl cursor-pointer"

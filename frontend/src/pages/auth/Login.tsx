@@ -51,7 +51,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex h-screen bg-slate-100 items-center content-center justify-center">
       <form onSubmit={(e) => formSubmit(e)}>
-        <Card className="w-[500px]">
+        <Card className="lg:w-[500px] w-full">
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>Enter your email and password</CardDescription>

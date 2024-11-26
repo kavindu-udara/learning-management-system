@@ -46,7 +46,7 @@ const TeacherDashboard: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="flex flex-col justify-center items-center gap-5 my-10">
+      <div className="flex flex-col justify-center items-center gap-5 my-10 lg:mx-0 mx-5">
         <div className="container">
           <div className="text-3xl text-dark-acent-color font-jua">
             Hi, {user?.fname} !
@@ -68,7 +68,7 @@ const TeacherDashboard: React.FC = () => {
           </div>
           <div className="underline text-[#2563EB] text-end">View all</div>
         </div>
-        <div className="container grid grid-cols-2 gap-5">
+        <div className="container grid lg:grid-cols-2 gap-5">
           {myCourses.map((myCourse) => {
             return (
               <MediumCourseCard

@@ -362,7 +362,7 @@ const EditCourse: React.FC = () => {
         isEditable={true}
       />
 
-      <div className="flex justify-center">
+      <div className="flex justify-center lg:mx-0 mx-5">
         <div className="container mt-5">
           <CourseTabs />
 

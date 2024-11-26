@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
       <Header />
       <div className="flex bg-slate-200 h-screen justify-center items-center content-center">
         <form onSubmit={(e) => formSubmit(e)}>
-          <Card className="w-[500px]">
+          <Card className="lg:w-[500px] w-full">
             <CardHeader>
               <CardTitle className="font-montserrat text-dark-acent-color text-center">
                 Profile

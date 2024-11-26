@@ -29,7 +29,11 @@ const MediumCourseCard: React.FC<Props> = ({
   return (
     <div className="rounded-[21px] bg-secondary-color flex flex-row p-5 cursor-pointer">
       <div className="basis-1/3 flex items-center justify-center">
-        <img src={imageUrl} className="rounded-[21px]" alt="course-image" />
+        <div className=" w-full h-full rounded-l-lg bg-cover" style={{
+          backgroundImage: `url(${imageUrl})`,
+        }}>
+
+        </div>
       </div>
       <div className="basis-2/3 pl-5 flex flex-col">
         <div>
