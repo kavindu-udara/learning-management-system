@@ -3,6 +3,7 @@ import { FaStar } from "react-icons/fa6";
 import { LuClock } from "react-icons/lu";
 import { BsFillCalendar3WeekFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
 type Props = {
   id: string;
@@ -13,6 +14,10 @@ type Props = {
   imageUrl: string;
   teacherName: string;
   teacherImage: string;
+  addToCartCallBack?: (id: string) => void;
+  removeFromCartCallBack?: (id: string) => void;
+  showCart?: boolean;
+  isInCart?: boolean;
 };
 
 const CourseCard: React.FC<Props> = ({
@@ -24,6 +29,10 @@ const CourseCard: React.FC<Props> = ({
   imageUrl,
   teacherName,
   teacherImage,
+  addToCartCallBack,
+  removeFromCartCallBack,
+  showCart = false,
+  isInCart,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -38,15 +47,13 @@ const CourseCard: React.FC<Props> = ({
   });
 
   return (
-    <div
-      className="rounded-[21px] bg-secondary-color flex flex-col cursor-pointer hover:shadow-lg"
-      onClick={() => navigate(`/course/${id}`)}
-    >
+    <div className="rounded-[21px] bg-secondary-color flex flex-col cursor-pointer hover:shadow-lg">
       <div
         className="bg-cover rounded-t-[21px] h-[150px] w-full flex justify-end"
         style={{
           backgroundImage: `url(${imageUrl})`,
         }}
+        onClick={() => navigate(`/course/${id}`)}
       >
         <div className="pt-3">
           {isNew && (
@@ -90,6 +97,19 @@ const CourseCard: React.FC<Props> = ({
         </div>
         <div className="text-dark-acent-color font-jua text-[24px]">
           ${price}
+        </div>
+        <div>
+          {showCart && (
+            <Button
+              onClick={() =>
+                !isInCart
+                  ? addToCartCallBack && addToCartCallBack(id)
+                  : removeFromCartCallBack && removeFromCartCallBack(id)
+              }
+            >
+              {isInCart ? "Remove from cart" : "Add to cart"}
+            </Button>
+          )}
         </div>
       </div>
     </div>
