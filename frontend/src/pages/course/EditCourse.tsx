@@ -457,7 +457,6 @@ const EditCourse: React.FC = () => {
         isSaving={isSaving}
         categories={categories}
         imageRef={courseImageInputRef}
-        imageUrl={course.imageUrl}
         setCourseImage={setCourseImage}
       />
 
