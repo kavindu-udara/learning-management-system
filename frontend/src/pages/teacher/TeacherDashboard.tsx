@@ -66,7 +66,7 @@ const TeacherDashboard: React.FC = () => {
           <div className="text-xl font-bold text-dark-acent-color">
             My Courses
           </div>
-          <div className="underline text-[#2563EB] text-end">View all</div>
+          <div className="underline text-primary-color text-end ">View all</div>
         </div>
         <div className="container grid lg:grid-cols-2 gap-5">
           {myCourses.map((myCourse) => {

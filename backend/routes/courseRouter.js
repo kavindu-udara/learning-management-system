@@ -24,7 +24,7 @@ router.get('/entroll/:courseId', verifyToken, entrollCourse);
 router.get('/teacher/:teacherId', showCoursesByTeacherId);
 
 // update routes
-router.put('/:id', verifyTeacher, updateCourse);
+router.put('/:id', verifyTeacher, uploadCourseImage.single('courseImage'), updateCourse);
 router.put('/section/:id', verifyTeacher, updateSection);
 router.post('/update-part/:id', verifyTeacher, uploadVideo.single('videoFile'), updatePart);       
 

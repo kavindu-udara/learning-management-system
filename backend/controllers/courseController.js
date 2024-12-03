@@ -308,7 +308,14 @@ export const updateCourse = async (req, res, next) => {
                     return res.status(401).json({ message: "Unauthorized" });
                 }
 
-                await Course.updateOne({ _id: courseId }, { $set: { title, description, price, categoryId } });
+                const courseImage = req.file;
+                let imageName = course.imageUrl;
+                if (courseImage) {
+                    imageName = courseImage.filename;
+                    deleteCourseImage(course.imageUrl);
+                }
+
+                await Course.updateOne({ _id: courseId }, { $set: { title, description, price, categoryId, imageUrl: imageName } });
                 return res.status(200).json({ message: "Course updated successfully" });
             } catch (err) {
                 logger.error("Error while updating course", err);

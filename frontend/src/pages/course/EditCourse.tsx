@@ -76,6 +76,8 @@ const EditCourse: React.FC = () => {
   const [coursePrice, setCoursePrice] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
 
+  const courseImageInputRef = useRef<HTMLInputElement>(null);
+
   const createSectionButtonRef = useRef<HTMLButtonElement>(null);
   const editSectionButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -86,6 +88,8 @@ const EditCourse: React.FC = () => {
   const deleteCourseButtonRef = useRef<HTMLButtonElement>(null);
   const deleteSecConfirmDialogRef = useRef<HTMLButtonElement>(null);
   const deletePartConfirmDialogRef = useRef<HTMLButtonElement>(null);
+
+  const [courseImage, setCourseImage] = useState<any>(null);
 
   const { id } = useParams();
 
@@ -189,13 +193,19 @@ const EditCourse: React.FC = () => {
   const updateCourse = () => {
     setIsSaving(true);
     if (courseTitle && courseDescription && coursePrice && categoryId) {
+      const data = {
+        title: courseTitle,
+        description: courseDescription,
+        price: coursePrice,
+        categoryId,
+        courseId: id,
+        courseImage: courseImage && courseImage,
+      };
       apiClient
-        .put(`/course/${id}`, {
-          title: courseTitle,
-          description: courseDescription,
-          price: coursePrice,
-          categoryId,
-          courseId: id,
+        .put(`/course/${id}`, data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((res) => {
           toast.success(res.data.message);
@@ -446,6 +456,9 @@ const EditCourse: React.FC = () => {
         submitFunc={updateCourse}
         isSaving={isSaving}
         categories={categories}
+        imageRef={courseImageInputRef}
+        imageUrl={course.imageUrl}
+        setCourseImage={setCourseImage}
       />
 
       {/* delete course confirmation dialog */}

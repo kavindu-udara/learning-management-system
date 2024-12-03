@@ -20,8 +20,14 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 
+type Category = {
+  _id: string;
+  name: string;
+};
+
 type Props = {
   buttonRef: React.RefObject<HTMLButtonElement>;
+  imageRef: React.RefObject<HTMLInputElement>;
   setCourseTitle: React.Dispatch<React.SetStateAction<string>>;
   setCategoryId: React.Dispatch<React.SetStateAction<string>>;
   categoryId: string;
@@ -32,8 +38,9 @@ type Props = {
   coursePrice: string;
   submitFunc: () => void;
   isSaving: boolean;
-  categories: { id: string; name: string }[];
+  categories: Category[];
   isEditable?: boolean | false;
+  setCourseImage: React.Dispatch<React.SetStateAction<any>>;
 };
 
 const CreateCourseDialog: React.FC<Props> = ({
@@ -50,7 +57,15 @@ const CreateCourseDialog: React.FC<Props> = ({
   submitFunc,
   isSaving,
   isEditable,
+  imageRef,
+  setCourseImage,
 }: Props) => {
+  const imageInputRef = imageRef;
+
+  const handleCourseImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCourseImage(e.target.files![0]);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -84,7 +99,7 @@ const CreateCourseDialog: React.FC<Props> = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {categories.map((category: categoryType) => {
+                  {categories.map((category: Category) => {
                     return (
                       <SelectItem value={category._id} key={category._id}>
                         {category.name}
@@ -114,6 +129,15 @@ const CreateCourseDialog: React.FC<Props> = ({
               min={0}
               max={1000000}
               step={10}
+            />
+          </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label>Course Image</Label>
+            <Input
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => handleCourseImageInput(e)}
             />
           </div>
         </div>

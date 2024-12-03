@@ -37,7 +37,7 @@ const MediumCourseCard: React.FC<Props> = ({
       </div>
       <div className="basis-2/3 pl-5 flex flex-col">
         <div>
-          <Badge>{categoryText}</Badge>
+          <Badge className="bg-white text-black hover:bg-white hover:text-black shadow-none">{categoryText}</Badge>
         </div>
         <Link
           to={`/course/${courseId}`}
