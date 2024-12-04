@@ -17,6 +17,7 @@ const EntrollCoursePage = lazy(
 import TeacherRoute from "./routes/TeacherRoute";
 import Index from "./pages/LandingPage";
 import LoadingPage from "./pages/LoadingPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
             <Route path=":id" element={<SingleCoursePage />} />
             <Route path="entroll/:courseId" element={<EntrollCoursePage />} />
           </Route>
+
+          <Route path="/cart" element={<CartPage />} />
 
           <Route element={<TeacherRoute />}>
             <Route path="/teacher">

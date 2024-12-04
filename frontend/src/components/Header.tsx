@@ -52,7 +52,13 @@ const Header: React.FC = () => {
               >
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  !user?._id ? navigate("/login") : navigate("/cart");
+                }}
+              >
+                Cart
+              </DropdownMenuItem>
               <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuItem onClick={() => logOutUser()}>
                 Logout

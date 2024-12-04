@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -8,53 +7,40 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import React from "react";
 import PaymentComponent from "../payments/PaymentComponent";
 import { toast } from "react-toastify";
 import apiClient from "@/axios/axios";
-import { useSelector } from "react-redux";
 
 interface Props {
   triggerRef: React.RefObject<HTMLButtonElement> | null;
-  courseId: string;
-  coursePrice: number;
-  courseTitle: string;
-  loadCourseData: () => void;
-};
+  successCallback: () => void;
+}
 
-const PurchaseCourse: React.FC<Props> = ({
-  triggerRef,
-  courseId,
-  courseTitle,
-  coursePrice,
-  loadCourseData,
-}: Props) => {
-  const user = useSelector((state: any) => state.userReducer.user);
-
-  const handleResponse = (res: any, paymentIntent: string) => {
-    if (res.success) {
-      toast.success("Payment successfull");
-      handlepurchasedCourse(paymentIntent);
-    } else {
-      toast.error(res.message);
-    }
-  };
-  const handlepurchasedCourse = (paymentIntent: any) => {
-    if (courseId == undefined || courseId == "" || courseId == null) return;
+const CartPayDialog: React.FC<Props> = ({ triggerRef, successCallback }: Props) => {
+  const handleCartPurchaseSuccess = (paymentIntent: any) => {
+    toast.success("Cart Purchase Success !!");
     apiClient
-      .post(`/checkout/course-purchased`, {
-        courseId,
-        userId: user._id,
+      .post(`/checkout/cart-purchased`, {
         purchasedPrice: paymentIntent.amount,
       })
       .then((res) => {
         toast.success(res.data.message);
-        loadCourseData();
         triggerRef?.current?.click();
+        successCallback();
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
-    loadCourseData();
+  };
+
+  const handleResponse = (res: any, paymentIntent: string) => {
+    if (res.success) {
+      toast.success("Payment successfull");
+      handleCartPurchaseSuccess(paymentIntent);
+    } else {
+      toast.error(res.message);
+    }
   };
 
   return (
@@ -68,10 +54,10 @@ const PurchaseCourse: React.FC<Props> = ({
             <div className="grid grid-cols-1">
               <div>
                 <div className="font-jua text-primary-color text-3xl">
-                  {courseTitle}
+                  Cart Pay
                 </div>
                 <div className="font-jua text-dark-acent-color text-xl">
-                  ${coursePrice}
+                  $ 100
                 </div>
               </div>
               <div className="py-5">
@@ -79,8 +65,8 @@ const PurchaseCourse: React.FC<Props> = ({
                   Enter Your Payment Details :{" "}
                 </div>
                 <PaymentComponent
-                  courseId={courseId}
                   successCallBack={handleResponse}
+                  cartPay={true}
                 />
               </div>
             </div>
@@ -94,4 +80,4 @@ const PurchaseCourse: React.FC<Props> = ({
   );
 };
 
-export default PurchaseCourse;
+export default CartPayDialog;

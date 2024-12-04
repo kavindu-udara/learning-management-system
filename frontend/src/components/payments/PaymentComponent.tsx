@@ -6,48 +6,47 @@ import apiClient from "@/axios/axios";
 import { toast } from "react-toastify";
 import CheckoutForm from "@/pages/stripe/CheckoutForm";
 
-type Props = {
-  courseId: string;
-  successCallBack: ({
-    success,
-    message,
-  }: {
-    success: boolean;
-    message: string;
-  }) => void;
-};
+interface Props {
+  courseId?: string;
+  successCallBack: (
+    res: {
+      success: boolean;
+      message: string;
+    },
+    paymentIntent: string
+  ) => void;
+  cartPay?: boolean;
+}
 
-type course =
-  | {
-      _id: string;
-      title: string;
-      description: string;
-      categoryId: string;
-    }
-  | [];
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+}
+
+interface Appearance {}
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const PaymentComponent: React.FC<Props> = ({
   courseId,
   successCallBack,
+  cartPay = false,
 }: Props) => {
   const [clientSecret, setClientSecret] = useState("");
   const [dpmCheckerLink, setDpmCheckerLink] = useState("");
-  const [course, setCourse] = useState<course>([]);
-  const [currentCourseId, setCurrentCourseId] = useState<string>("");
 
-  const appearance = {
-    theme: "flat",
+  const appearance: Appearance = {
+    theme: "flat" as const,
   };
   // Enable the skeleton loader UI for optimal loading.
   const loader = "auto";
 
   const loadCourseData = async () => {
     await apiClient
-      .get(`/course/${currentCourseId}`)
+      .get(`/course/${courseId}`)
       .then((res) => {
-        setCourse(res.data.course);
         createPaymentIntent(res.data.course);
       })
       .catch((err) => {
@@ -55,9 +54,9 @@ const PaymentComponent: React.FC<Props> = ({
       });
   };
 
-  const createPaymentIntent = async (course) => {
+  const createPaymentIntent = async (course: Course) => {
     await apiClient
-      .post(`/checkout/create-payment-intent/${courseId}`, {
+      .post(`/checkout/create-payment-intent/course/${courseId}`, {
         items: [course],
       })
       .then((res) => {
@@ -69,8 +68,21 @@ const PaymentComponent: React.FC<Props> = ({
       });
   };
 
+  const createCartPaymentIntent = async () => {
+    await apiClient
+      .post(`/checkout/create-payment-intent/cart`)
+      .then((res) => {
+        console.log(res);
+        setClientSecret(res.data.clientSecret);
+        setDpmCheckerLink(res.data.dpmCheckerLink);
+      })
+      .catch(() => {
+        toast.error("Payment failed");
+      });
+  };
+
   useEffect(() => {
-    loadCourseData();
+    !cartPay ? loadCourseData() : createCartPaymentIntent();
   }, []);
 
   return (

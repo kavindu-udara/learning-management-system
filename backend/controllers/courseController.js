@@ -9,6 +9,7 @@ import WatchHistory from "../models/watchHistoryModel.js";
 import dotenv from "dotenv";
 import logger from "../utils/logger.js";
 import fs from "fs";
+import { isInCart } from "./CartController.js";
 
 dotenv.config();
 
@@ -88,7 +89,7 @@ const deleteCourseImage = (fileName) => {
     });
 }
 
-const addAdditionalDetailsToCourse = async (course) => {
+export const addAdditionalDetailsToCourse = async (course, inCart) => {
     const courseCategory = await CourseCategory.findById(course.categoryId);
     const teacher = await User.findById(course.teacherId);
 
@@ -98,7 +99,7 @@ const addAdditionalDetailsToCourse = async (course) => {
     const { token, createdAt, password, role, ...teacherOthers } = teacher._doc;
 
     return {
-        ...course._doc, categoryName: courseCategory.name, teacher: teacherOthers
+        ...course._doc, categoryName: courseCategory.name, teacher: teacherOthers, inCart
     }
 }
 
@@ -118,8 +119,15 @@ export const showCourses = async (req, res, next) => {
             return res.status(404).json({ message: "Courses not found" });
         }
 
-        const updatedCourses = await Promise.all(courses.map((course) => {
-            return addAdditionalDetailsToCourse(course);
+        const updatedCourses = await Promise.all(courses.map(async (course) => {
+            let inCart = false;
+            if (req.cookies.access_token) {
+                const user = verifyToken(req.cookies.access_token)
+                if (user) {
+                    inCart = await isInCart(user.id, course._id);
+                }
+            }
+            return addAdditionalDetailsToCourse(course, inCart);
         }));
 
         return res.status(200).json({ courses: updatedCourses });
@@ -167,7 +175,15 @@ export const showCourseById = async (req, res, next) => {
             return res.status(404).json({ message: "Course not found" });
         }
 
-        const updatedCourse = await addAdditionalDetailsToCourse(course);
+        let inCart = false;
+        if (req.cookies.access_token) {
+            const user = verifyToken(req.cookies.access_token)
+            if (user) {
+                inCart = await isInCart(user.id, course._id);
+            }
+        }
+
+        const updatedCourse = await addAdditionalDetailsToCourse(course, inCart);
 
         const courseSections = await CourseSection.find({ courseId: id });
 
@@ -218,7 +234,7 @@ export const showCoursesByTeacherId = async (req, res, next) => {
         const categories = await CourseCategory.find();
 
         const updatedCourses = await Promise.all(courses.map((course) => {
-            return addAdditionalDetailsToCourse(course);
+            return addAdditionalDetailsToCourse(course, false);
         }));
 
         return res.status(200).json({ courses: updatedCourses, categories });
@@ -557,7 +573,12 @@ export const entrollCourse = async (req, res, next) => {
             return res.status(404).json({ message: "Course not found" });
         }
 
-        addAdditionalDetailsToCourse(course);
+        let inCart = false;
+        if (user) {
+            inCart = await isInCart(user.id, course._id);
+        }
+
+        addAdditionalDetailsToCourse(course, inCart);
 
         const courseSections = await CourseSection.find({ courseId });
 

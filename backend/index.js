@@ -2,15 +2,17 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import logger from "./utils/logger.js";
+
 import authRouter from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
 import courseRouter from "./routes/courseRouter.js";
 import paymentRouter from "./routes/paymentRouter.js";
 import videoRouter from "./routes/videoRouter.js";
 import imageRouter from "./routes/imageRouter.js";
-import mongoose from "mongoose";
-import cookieParser from "cookie-parser";
-import logger from "./utils/logger.js";
+import cartRouter from "./routes/cartRouter.js";
 
 dotenv.config();
 
@@ -45,6 +47,6 @@ apiRouter.use('/course', courseRouter);
 apiRouter.use('/checkout', paymentRouter);
 apiRouter.use('/video', videoRouter);
 apiRouter.use('/image', imageRouter);
+apiRouter.use('/cart', cartRouter);
 
-// Attach the /api/v1 router to the app
 app.use('/api/v1', apiRouter);

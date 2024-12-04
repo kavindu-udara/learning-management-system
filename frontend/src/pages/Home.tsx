@@ -8,7 +8,7 @@ import { addUser } from "@/features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { addCourseCategories } from "@/features/course/courseCategoriesSlice";
 import Footer from "@/components/Footer";
-import CourseCard from "@/components/course/CourseCard";
+import CourseCard from "@/components/cards/CourseCard";
 import CourseCategoryCard from "@/components/course/CourseCategoryCard";
 
 type Category = {
@@ -62,6 +62,32 @@ const Home: React.FC = () => {
     navigate("/teacher");
   };
 
+  const handleAddToCart = (courseId: string) => {
+    apiClient
+      .post(`/cart/add`, {
+        courseId,
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+        loadCourses();
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  };
+
+  const handleRemoveFromCart = (courseId: string) => {
+    apiClient
+      .delete(`/cart/${courseId}`)
+      .then((res) => {
+        toast.success(res.data.message);
+        loadCourses();
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  };
+
   useEffect(() => {
     loadCourseCategories();
     loadCourses();
@@ -105,7 +131,11 @@ const Home: React.FC = () => {
                   course?.teacher?.fname + " " + course?.teacher?.lname
                 }
                 teacherImage={course?.teacher?.imageUrl}
+                addToCartCallBack={handleAddToCart}
+                removeFromCartCallBack={handleRemoveFromCart}
                 isNew
+                isInCart={course?.inCart}
+                showCart={user?.role === "user"}
               />
             );
           })}
@@ -177,6 +207,7 @@ const Home: React.FC = () => {
             ))}
         </div>
       </div>
+
       <Footer />
     </>
   );
