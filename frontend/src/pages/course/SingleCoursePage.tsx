@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-type Course = {
+interface Course {
   _id: string;
   title: string;
   description: string;
@@ -23,23 +23,23 @@ type Course = {
     lname: string;
     imageUrl: string;
   };
-};
+}
 
-type Part = {
+interface Part {
   _id: string;
   title: string;
   description: string;
   videoUrl: string;
   sectionId: string;
   isLocked: boolean;
-};
+}
 
-type Sections = {
+interface SectionItem {
   _id: string;
   title: string;
   courseId: string;
   parts: Part[];
-}[];
+};
 
 const SingleCoursePage: React.FC = () => {
   const defaultCourse: Course = {
@@ -58,7 +58,7 @@ const SingleCoursePage: React.FC = () => {
   };
 
   const [course, setCourse] = useState<Course>(defaultCourse);
-  const [sections, setSections] = useState<Sections>([]);
+  const [sections, setSections] = useState<SectionItem[]>([]);
   const [isPurchased, setIsPurchased] = useState<boolean>(false);
 
   const payDialogRef = React.useRef<HTMLButtonElement>(null);
@@ -107,7 +107,7 @@ const SingleCoursePage: React.FC = () => {
       {!isPurchased && (
         <PurchaseCourse
           triggerRef={payDialogRef}
-          courseId={id ?? ""} // Use the nullish coalescing operator to provide a default value if id is undefined
+          courseId={id ?? ""}
           coursePrice={course?.price}
           courseTitle={course?.title}
           loadCourseData={loadCourseData}

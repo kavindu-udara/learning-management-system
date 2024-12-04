@@ -6,25 +6,25 @@ import apiClient from "@/axios/axios";
 import { toast } from "react-toastify";
 import CheckoutForm from "@/pages/stripe/CheckoutForm";
 
-type Props = {
+interface Props {
   courseId: string;
-  successCallBack: ({
-    success,
-    message,
-  }: {
-    success: boolean;
-    message: string;
-  }) => void;
-};
+  successCallBack: (
+    res: {
+      success: boolean;
+      message: string;
+    },
+    paymentIntent: string
+  ) => void;
+}
 
-type course =
-  | {
-      _id: string;
-      title: string;
-      description: string;
-      categoryId: string;
-    }
-  | [];
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+}
+
+interface Appearance {}
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -34,11 +34,11 @@ const PaymentComponent: React.FC<Props> = ({
 }: Props) => {
   const [clientSecret, setClientSecret] = useState("");
   const [dpmCheckerLink, setDpmCheckerLink] = useState("");
-  const [course, setCourse] = useState<course>([]);
+  const [course, setCourse] = useState<Course[]>([]);
   const [currentCourseId, setCurrentCourseId] = useState<string>("");
 
-  const appearance = {
-    theme: "flat",
+  const appearance: Appearance = {
+    theme: "flat" as const,
   };
   // Enable the skeleton loader UI for optimal loading.
   const loader = "auto";
@@ -55,7 +55,7 @@ const PaymentComponent: React.FC<Props> = ({
       });
   };
 
-  const createPaymentIntent = async (course) => {
+  const createPaymentIntent = async (course: Course) => {
     await apiClient
       .post(`/checkout/create-payment-intent/${courseId}`, {
         items: [course],

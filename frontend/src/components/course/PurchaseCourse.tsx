@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import apiClient from "@/axios/axios";
 import { useSelector } from "react-redux";
 
-type Props = {
+interface Props {
   triggerRef: React.RefObject<HTMLButtonElement> | null;
   courseId: string;
   coursePrice: number;
@@ -38,7 +38,6 @@ const PurchaseCourse: React.FC<Props> = ({
       toast.error(res.message);
     }
   };
-
   const handlepurchasedCourse = (paymentIntent: any) => {
     if (courseId == undefined || courseId == "" || courseId == null) return;
     apiClient

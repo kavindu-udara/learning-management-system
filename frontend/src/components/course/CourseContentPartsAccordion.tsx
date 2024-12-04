@@ -2,16 +2,16 @@ import { AccordionContent } from "../ui/accordion";
 import { Button } from "../ui/button";
 import { FaLock } from "react-icons/fa";
 
-type Part = {
+interface Part {
   _id: string;
   title: string;
   description: string;
   videoUrl: string;
   sectionId: string;
   isLocked: boolean;
-};
+}
 
-type Props = {
+interface Props {
   parts: Part[];
   isEditable: boolean | false;
   handleEditPartButton?: (part: {
@@ -22,7 +22,7 @@ type Props = {
   handleDeletePartButton?: (id: string) => void;
   titleCallback?: (part: Part) => void;
   partTitleUnlockCallback?: (titleId: string) => void;
-};
+}
 
 const CourseContentPartsAccordion: React.FC<Props> = ({
   parts,

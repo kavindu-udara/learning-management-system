@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import CourseContentPartsAccordion from "./CourseContentPartsAccordion";
 import { FaPlus } from "react-icons/fa6";
 
-type Part = {
+interface Part {
   _id: string;
   title: string;
   description: string;
@@ -17,7 +17,7 @@ type Part = {
   isLocked: boolean;
 };
 
-type Props = {
+interface Props  {
   sections: {
     _id: string;
     title: string;
@@ -35,7 +35,7 @@ type Props = {
   }) => void;
   handleDeletePartButton?: (id: string) => void;
   partTitleCallback?: (part: Part) => void;
-  partTitleUnlockCallback?: (partId: number) => void;
+  partTitleUnlockCallback?: (partId: string) => void;
 };
 
 const CourseContentSectionsAccordion: React.FC<Props> = ({

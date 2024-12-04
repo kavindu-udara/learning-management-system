@@ -7,16 +7,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter } from "@/components/ui/card";
 
-type Props = {
+interface Res {
+  success: boolean;
+  message: string;
+}
+
+interface Props {
   dpmCheckerLink?: string;
-  successCallBack: ({
-    success,
-    message,
-  }: {
-    success: boolean;
-    message: string;
-  }) => void;
-};
+  successCallBack: (
+    res: Res,
+    paymentIntent: string
+  ) => void;
+}
 // import "../../stripe.css";
 
 const CheckoutForm: React.FC<Props> = ({
@@ -26,7 +28,7 @@ const CheckoutForm: React.FC<Props> = ({
   const stripe = useStripe();
   const elements = useElements();
 
-  const [message, setMessage] = useState<string | undefined | null>(null);
+  const [message, setMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,17 +40,21 @@ const CheckoutForm: React.FC<Props> = ({
 
     setIsLoading(true);
 
-    const { error, paymentIntent  } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         // return_url: "http://localhost:5173/checkout/complete",
       },
-      redirect: 'if_required', 
+      redirect: "if_required",
     });
-    
+
     if (error?.type === "card_error" || error?.type === "validation_error") {
-      setMessage(error.message);
-      successCallBack({success:false, message: error.message});
+      if (error?.message) {
+        setMessage(error.message);
+      } else {
+        setMessage("An unknown error occurred.");
+      }
+      successCallBack({ success: false, message: error?.message || "" }, "");
     } else if (paymentIntent && paymentIntent?.status === "succeeded") {
       handlePaymentSuccess(paymentIntent);
     } else {
@@ -63,8 +69,11 @@ const CheckoutForm: React.FC<Props> = ({
   };
 
   const handlePaymentSuccess = (paymentIntent: any) => {
-      successCallBack({success: true, message: "Payment successfull"}, paymentIntent);
-  }
+    successCallBack(
+      { success: true, message: "Payment successfull" },
+      paymentIntent
+    );
+  };
 
   return (
     <Card className="w-full">
