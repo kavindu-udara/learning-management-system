@@ -89,7 +89,7 @@ const deleteCourseImage = (fileName) => {
     });
 }
 
-const addAdditionalDetailsToCourse = async (course, inCart) => {
+export const addAdditionalDetailsToCourse = async (course, inCart) => {
     const courseCategory = await CourseCategory.findById(course.categoryId);
     const teacher = await User.findById(course.teacherId);
 

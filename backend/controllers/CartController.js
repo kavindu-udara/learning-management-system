@@ -2,6 +2,38 @@ import Cart from "../models/CartModel.js";
 import Course from "../models/courseModel.js";
 import User from "../models/userModel.js";
 import logger from "../utils/logger.js";
+import { addAdditionalDetailsToCourse } from "./courseController.js";
+
+
+export const showCart = async (req, res) => {
+
+    const userId = req.user.id;
+
+    if (!userId) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    try {
+        const cart = await Cart.find({ userId: userId });
+
+        let total = 0;
+        // set course data to each cart object
+        for (let i = 0; i < cart.length; i++) {
+            const course = await Course.findById(cart[i].courseId);
+
+            const updatedCourse = await addAdditionalDetailsToCourse(course, true);
+
+            total = total + course.price;
+
+            cart[i] = { ...cart[i]._doc, course: updatedCourse};
+        }
+
+        return res.status(200).json({ message: "Cart Fetched Successfully", cart, total  });
+    } catch (err) {
+        logger.error("while show cart : ", err);
+        return res.status(500).json({ message: "Error while fetching cart" });
+    };
+}
 
 export const createCart = async (req, res) => {
 
