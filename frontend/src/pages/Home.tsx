@@ -84,7 +84,6 @@ const Home: React.FC = () => {
         loadCourses();
       })
       .catch((err) => {
-        console.log(err);
         toast.error(err.response.data.message);
       });
   };

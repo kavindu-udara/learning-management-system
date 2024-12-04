@@ -1,9 +1,34 @@
 import Cart from "../models/CartModel.js";
 import Course from "../models/courseModel.js";
+import PurchasedCourse from "../models/purchasedCourseModel.js";
 import User from "../models/userModel.js";
 import logger from "../utils/logger.js";
 import { addAdditionalDetailsToCourse } from "./courseController.js";
+import { addCoursePartsToWatchHistory } from "./purchasedCourseController.js";
 
+
+export const getCartByUserId = async (userId) => {
+    const cart = await Cart.find({ userId: userId });
+    return cart;
+}
+
+export const getCartTotalPrice = async (cart) => {
+    let total = 0;
+    // set course data to each cart object
+    for (let i = 0; i < cart.length; i++) {
+        const course = await Course.findById(cart[i].courseId);
+        total = total + course.price;
+    }
+    return total;
+}
+
+export const isInCart = async (userId, courseId) => {
+    const cart = await Cart.find({ userId, courseId });
+    if (cart.length > 0) {
+        return true;
+    }
+    return false;
+}
 
 export const showCart = async (req, res) => {
 
@@ -14,21 +39,21 @@ export const showCart = async (req, res) => {
     }
 
     try {
-        const cart = await Cart.find({ userId: userId });
+        // const cart = await Cart.find({ userId: userId });
+        const cart = await getCartByUserId(userId);
 
-        let total = 0;
+        const total = await getCartTotalPrice(cart);
+
         // set course data to each cart object
         for (let i = 0; i < cart.length; i++) {
             const course = await Course.findById(cart[i].courseId);
 
             const updatedCourse = await addAdditionalDetailsToCourse(course, true);
 
-            total = total + course.price;
-
-            cart[i] = { ...cart[i]._doc, course: updatedCourse};
+            cart[i] = { ...cart[i]._doc, course: updatedCourse };
         }
 
-        return res.status(200).json({ message: "Cart Fetched Successfully", cart, total  });
+        return res.status(200).json({ message: "Cart Fetched Successfully", cart, total });
     } catch (err) {
         logger.error("while show cart : ", err);
         return res.status(500).json({ message: "Error while fetching cart" });
@@ -90,10 +115,35 @@ export const deleteCart = async (req, res) => {
 
 }
 
-export const isInCart = async (userId, courseId) => {
-    const cart = await Cart.find({ userId, courseId });
-    if (cart.length > 0) {
-        return true;
+
+export const createPurchasedCart = async (req, res) => {
+
+    const userId = req.user.id;
+
+    if (!userId) {
+        return res.status(400).json({ message: "All fields are required" });
     }
-    return false;
+
+    try {
+        const cart = await getCartByUserId(userId);
+        if (cart) {
+            // set course data to each cart object
+            for (let i = 0; i < cart.length; i++) {
+                const course = await Course.findById(cart[i].courseId);
+
+                const purchasedCourse = new PurchasedCourse({ userId, courseId: course._id, purchasedPrice: course.price });
+                await purchasedCourse.save();
+
+                await addCoursePartsToWatchHistory(course._id, userId);
+
+                await Cart.deleteOne({ _id: cart[i]._id });
+
+            }
+            return res.status(201).json({ message: "Cart purchased success" });
+        }
+    }
+    catch (err) {
+        logger.error("while purchase cart : ", err);
+        return res.status(500).json({ message: "Error while purchasing cart" });
+    };
 }

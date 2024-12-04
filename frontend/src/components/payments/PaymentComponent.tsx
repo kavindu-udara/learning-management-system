@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import CheckoutForm from "@/pages/stripe/CheckoutForm";
 
 interface Props {
-  courseId: string;
+  courseId?: string;
   successCallBack: (
     res: {
       success: boolean;
@@ -15,6 +15,7 @@ interface Props {
     },
     paymentIntent: string
   ) => void;
+  cartPay?: boolean;
 }
 
 interface Course {
@@ -31,11 +32,10 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const PaymentComponent: React.FC<Props> = ({
   courseId,
   successCallBack,
+  cartPay = false,
 }: Props) => {
   const [clientSecret, setClientSecret] = useState("");
   const [dpmCheckerLink, setDpmCheckerLink] = useState("");
-  const [course, setCourse] = useState<Course[]>([]);
-  const [currentCourseId, setCurrentCourseId] = useState<string>("");
 
   const appearance: Appearance = {
     theme: "flat" as const,
@@ -45,9 +45,8 @@ const PaymentComponent: React.FC<Props> = ({
 
   const loadCourseData = async () => {
     await apiClient
-      .get(`/course/${currentCourseId}`)
+      .get(`/course/${courseId}`)
       .then((res) => {
-        setCourse(res.data.course);
         createPaymentIntent(res.data.course);
       })
       .catch((err) => {
@@ -57,7 +56,7 @@ const PaymentComponent: React.FC<Props> = ({
 
   const createPaymentIntent = async (course: Course) => {
     await apiClient
-      .post(`/checkout/create-payment-intent/${courseId}`, {
+      .post(`/checkout/create-payment-intent/course/${courseId}`, {
         items: [course],
       })
       .then((res) => {
@@ -69,8 +68,21 @@ const PaymentComponent: React.FC<Props> = ({
       });
   };
 
+  const createCartPaymentIntent = async () => {
+    await apiClient
+      .post(`/checkout/create-payment-intent/cart`)
+      .then((res) => {
+        console.log(res);
+        setClientSecret(res.data.clientSecret);
+        setDpmCheckerLink(res.data.dpmCheckerLink);
+      })
+      .catch(() => {
+        toast.error("Payment failed");
+      });
+  };
+
   useEffect(() => {
-    loadCourseData();
+    !cartPay ? loadCourseData() : createCartPaymentIntent();
   }, []);
 
   return (

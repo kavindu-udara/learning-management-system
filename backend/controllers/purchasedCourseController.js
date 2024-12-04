@@ -1,4 +1,3 @@
-import Course from "../models/courseModel.js";
 import CoursePart from "../models/coursePartModel.js";
 import CourseSection from "../models/courseSectionModel.js";
 import PurchasedCourse from "../models/purchasedCourseModel.js";
@@ -25,7 +24,7 @@ export const createPurchasedCourse = async (req, res, next) => {
     }
 }
 
-const addCoursePartsToWatchHistory = async (courseId, userId) => {
+export const addCoursePartsToWatchHistory = async (courseId, userId) => {
     const courseParts = await findPartsByCourseId(courseId);
     courseParts.map((part) => {
         const watchHistory = new WatchHistory({ userId, coursePartId: part._id });
