@@ -4,8 +4,6 @@ import courseCategoriesReducer from "../features/course/courseCategoriesSlice";
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Provider } from 'react-redux';
 
 // Configure persist
 const persistConfig = {

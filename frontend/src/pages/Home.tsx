@@ -11,9 +11,9 @@ import Footer from "@/components/Footer";
 import CourseCard from "@/components/cards/CourseCard";
 import CourseCategoryCard from "@/components/course/CourseCategoryCard";
 
-type Category = {
+interface Category {
   name: string;
-}[];
+}
 
 const Home: React.FC = () => {
   const user = useSelector((state: any) => state.userReducer.user);
@@ -21,7 +21,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const [courses, setCourses] = useState([]);
-  const [courseCategories, setCourseCategories] = useState<Category>([]);
+  const [courseCategories, setCourseCategories] = useState<Category[]>([]);
 
   const loadCourseCategories = async () => {
     apiClient

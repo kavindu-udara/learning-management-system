@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import WhiteRoundedBtn from "../buttons/WhiteRoundedBtn";
 
-type Props = {
+interface Props {
   id: string;
   title: string;
   description: string;

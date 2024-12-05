@@ -1,7 +1,7 @@
 import React from "react";
 import WhiteRoundedBtn from "../buttons/WhiteRoundedBtn";
 
-type Props = {
+interface Props {
     title: string,
     description: string,
     buttonText: string,

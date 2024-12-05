@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 
-type Props = {
+interface Props {
   categoryText: string;
   titleText: string;
   priceText: string;
