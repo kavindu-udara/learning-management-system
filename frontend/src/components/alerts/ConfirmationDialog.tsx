@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,12 +11,12 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 
-type Props = {
+interface Props {
   title: string;
   description: string;
   confirmFunc: () => void;
   alertTriggerButtonRef: React.RefObject<HTMLButtonElement>;
-};
+}
 
 const ConfirmationDialog: React.FC<Props> = ({
   title,

@@ -5,7 +5,7 @@ import { BsFillCalendar3WeekFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 
-type Props = {
+interface Props {
   id: string;
   title: string;
   price: string;

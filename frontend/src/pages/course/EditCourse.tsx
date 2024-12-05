@@ -12,36 +12,36 @@ import ConfirmationDialog from "@/components/alerts/ConfirmationDialog";
 import CourseContentSectionsAccordion from "@/components/course/CourseContentSectionsAccordion";
 import CourseTabs from "@/components/course/CourseTabs";
 
-type Teacher = {
+interface Teacher {
   fname: string;
   lname: string;
   imageUrl: string;
-};
+}
 
-type Course = {
+interface Course {
   title: string;
   categoryName: string;
   description: string;
   price: number;
   imageUrl: string;
   teacher: Teacher;
-};
+}
 
-type Part = {
+interface Part {
   _id: string;
   title: string;
   description: string;
   videoUrl: string;
   sectionId: string;
   isLocked: boolean;
-};
+}
 
-type Sections = {
+interface Sections {
   _id: string;
   title: string;
   courseId: string;
   parts: Part[];
-}[];
+};
 
 const EditCourse: React.FC = () => {
   const [categories, setCategories] = useState([]);
@@ -57,7 +57,7 @@ const EditCourse: React.FC = () => {
       imageUrl: "",
     },
   });
-  const [courseSections, setCourseSections] = useState<Sections>([]);
+  const [courseSections, setCourseSections] = useState<Sections[]>([]);
 
   const [sectionName, setSectionName] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);

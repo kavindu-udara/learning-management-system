@@ -1,5 +1,5 @@
 import React from "react";
-import { MdFastRewind, MdSkipNext } from "react-icons/md";
+import { MdFastRewind } from "react-icons/md";
 import { IoIosFastforward } from "react-icons/io";
 import {
   FaPause,
@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 import { Slider } from "../ui/slider";
 
-type Props = {
+interface Props {
   title: string;
   playPauseHandler: () => void;
   isPlaying: boolean;
@@ -28,7 +28,7 @@ type Props = {
   handleMute: () => void;
   isInFullScreen: boolean;
   handleFullScreen: () => void;
-};
+}
 
 const VideoPlayerController: React.FC<Props> = ({
   title,

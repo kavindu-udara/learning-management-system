@@ -8,25 +8,25 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import VideoPlayer from "@/components/video/VideoPlayer";
 
-type Course = {
+interface Course {
   title: string;
-};
+}
 
-type Part = {
+interface Part {
   _id: string;
   title: string;
   description: string;
   videoUrl: string;
   sectionId: string;
   isLocked: boolean;
-};
+}
 
-type Sections = {
+interface Sections {
   _id: string;
   title: string;
   courseId: string;
   parts: Part[];
-}[];
+};
 
 const EntrollCoursePage: React.FC = () => {
   const { courseId } = useParams();
@@ -34,7 +34,7 @@ const EntrollCoursePage: React.FC = () => {
   const navigate = useNavigate();
 
   const [course, setCourse] = useState<Course>({ title: "" });
-  const [sections, setSections] = useState<Sections>([]);
+  const [sections, setSections] = useState<Sections[]>([]);
   const [partDescription, setPartDescription] = useState<string>("");
 
   const [videoUrl, setVideoUrl] = useState<string>("");
@@ -76,7 +76,7 @@ const EntrollCoursePage: React.FC = () => {
     videoPlayerRef.current?.load();
   };
 
-  const unlockVideo = async (partId: number) => {
+  const unlockVideo = async (partId: string) => {
     apiClient
       .get(`/video/unlock/${partId}`)
       .then((res) => {

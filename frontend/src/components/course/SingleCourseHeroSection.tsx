@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { FaCircleDot } from "react-icons/fa6";
 
-type Props = {
+interface Props {
   category: string;
   title: string;
   description: string;

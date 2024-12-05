@@ -20,7 +20,7 @@ const BlogCard: React.FC = () => {
         nisi accusamus et suscipit voluptatibus veniam vero itaque culpa fugit?
         Corpor
       </div>
-      <div className="border-t-2 border-dark-acent-color grid grid-cols-2 pt-3 flex">
+      <div className="border-t-2 border-dark-acent-color grid grid-cols-2 pt-3 ">
         <div className="font-jua inline-flex items-center">
           <IoPersonCircle className="text-primary-color mr-2 text-[34px]" />
           <span className="font-jua text-[14px] text-dark-acent-color">

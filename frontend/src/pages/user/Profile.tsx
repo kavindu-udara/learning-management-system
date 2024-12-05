@@ -22,12 +22,11 @@ const Profile: React.FC = () => {
   const [profileImage, setProfileImage] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const imageInputRef = useRef<HTMLInputElement>();
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const user = useSelector((state: any) => state.userReducer.user);
 
-  const [profileImageUrl, setProfileImageUrl] =
-    useState<any>(user?.imageUrl);
+  const [profileImageUrl, setProfileImageUrl] = useState<any>(user?.imageUrl);
 
   const dispatch = useDispatch();
 
@@ -73,11 +72,13 @@ const Profile: React.FC = () => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e?.target?.files[0];
-    if (file) {
-      setProfileImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImageUrl(imageUrl); // Update state with the new image URL
+    if (e.target && e.target.files) {
+      const file = e.target.files[0];
+      if (file) {
+        setProfileImage(file);
+        const imageUrl = URL.createObjectURL(file);
+        setProfileImageUrl(imageUrl); // Update state with the new image URL
+      }
     }
   };
 

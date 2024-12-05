@@ -12,7 +12,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 
-type Props = {
+interface Props {
   buttonRef: React.RefObject<HTMLButtonElement>;
   nameValue: string;
   setNameValue: React.Dispatch<React.SetStateAction<string>>;

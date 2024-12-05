@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
-type Props = {
+interface Props {
   buttonRef: React.RefObject<HTMLButtonElement>;
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;

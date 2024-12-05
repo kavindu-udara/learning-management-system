@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import VideoPlayerController from "./VideoPlayerController";
 
-type Props = {
+interface Props {
   title: string;
   url: string;
   finishedCallback: () => void;
-};
+}
 
 const VideoPlayer: React.FC<Props> = ({
   title,
@@ -48,9 +48,11 @@ const VideoPlayer: React.FC<Props> = ({
 
   const seekMouseUpHandler = (value: number) => {
     setVideoState({ ...videoState, seeking: false });
-    videoPlayerRef.current.seekTo(value / 100);
+    if (videoPlayerRef.current) {
+      videoPlayerRef.current.seekTo(value / 100);
+    }
   };
-
+  
   const volumeChangeHandler = (value: number) => {
     const newVolume = parseFloat(value) / 100;
     setCurrentVolume(newVolume);

@@ -9,16 +9,16 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-type MyCourse = {
+interface MyCourse {
   categoryName: string;
   title: string;
   price: string;
   _id: string;
   imageUrl: string;
-}[];
+};
 
 const TeacherDashboard: React.FC = () => {
-  const [myCourses, setMycourses] = useState<MyCourse>([]);
+  const [myCourses, setMycourses] = useState<MyCourse[]>([]);
 
   const navigate = useNavigate();
 

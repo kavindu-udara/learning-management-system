@@ -20,12 +20,12 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 
-type Category = {
+interface Category {
   _id: string;
   name: string;
 };
 
-type Props = {
+interface Props {
   buttonRef: React.RefObject<HTMLButtonElement>;
   imageRef: React.RefObject<HTMLInputElement>;
   setCourseTitle: React.Dispatch<React.SetStateAction<string>>;

@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-type categoryType = {
+interface categoryType {
   _id: string;
   name: string;
   createdAt: string;
