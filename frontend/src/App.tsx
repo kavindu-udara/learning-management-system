@@ -42,11 +42,11 @@ function App() {
 
           <Route element={<TeacherRoute />}>
             <Route path="/teacher">
-            <Route element={<TeacherLayout/>}>
-              {/* <Route index element={<TeacherDashboard />} /> */}
-              <Route index element={<NewTeacherDashboard />} />
-              <Route path="create-course" element={<CreateCourse />} />
-              <Route path="edit-course/:id" element={<EditCourse />} />
+              <Route element={<TeacherLayout />}>
+                <Route index element={<NewTeacherDashboard />} />
+                <Route path="courses" element={<TeacherDashboard />} />
+                <Route path="create-course" element={<CreateCourse />} />
+                <Route path="edit-course/:id" element={<EditCourse />} />
               </Route>
             </Route>
           </Route>

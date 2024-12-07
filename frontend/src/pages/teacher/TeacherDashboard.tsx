@@ -43,7 +43,7 @@ const TeacherDashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center gap-5 my-10 lg:mx-0 mx-5">
-      <div className="w-full">
+      <div className="container">
         <div className="text-3xl text-dark-acent-color font-jua">
           Hi, {user?.fname} !
         </div>

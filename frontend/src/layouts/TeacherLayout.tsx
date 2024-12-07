@@ -16,22 +16,25 @@ import { RiPlayList2Fill } from "react-icons/ri";
 import { PiVideoBold } from "react-icons/pi";
 import { AiOutlineLike } from "react-icons/ai";
 import { IoCut } from "react-icons/io5";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const TeacherLayout: React.FC = () => {
+
+  const naviagate = useNavigate();
+
   return (
     <>
       <Header />
-      <div className="grid grid-cols-7 h-screen">
-        <div className="bg-gray-600 grid grid-cols-1 overflow-y-scroll  text-lg">
-          <div className="bg-black px-5 flex flex-col justify-center gap-1">
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
+      <div className="grid grid-cols-7 ">
+        <div className=" grid grid-cols-1 bg-black text-lg">
+          <div className=" px-5 flex flex-col justify-center gap-1">
+            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center" onClick={() => naviagate('/teacher')}>
               <IoMdHome />
               Home
             </button>
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
+            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center" onClick={() => naviagate('/teacher/courses')}>
               <SiYoutubeshorts />
-              Shorts
+              Courses
             </button>
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               <MdOutlineSubscriptions />
@@ -40,7 +43,7 @@ const TeacherLayout: React.FC = () => {
             <hr />
           </div>
 
-          <div className="bg-black px-5 flex flex-col justify-center gap-1">
+          <div className=" px-5 flex flex-col justify-center gap-1">
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               You
               <IoIosArrowForward />
@@ -83,7 +86,7 @@ const TeacherLayout: React.FC = () => {
             <hr />
           </div>
 
-          <div className="bg-black px-5 flex flex-col justify-center gap-1">
+          <div className=" px-5 flex flex-col justify-center gap-1">
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               <IoMdSettings />
               Settings

@@ -1,5 +1,4 @@
 import apiClient from "@/axios/axios";
-import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -86,8 +85,7 @@ const CreateCourse: React.FC = () => {
 
   return (
     <>
-      <Header />
-      <div className=" flex flex-col justify-center items-center">
+      <div className=" flex flex-col justify-center items-center h-full">
         <form onSubmit={(e) => formSubmit(e)} >
           <Card className="w-[700px]">
             <CardHeader>
