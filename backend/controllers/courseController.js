@@ -39,7 +39,7 @@ export const createCategory = () => {
     )
 }
 
-export const showCourseCategories = async (req, res, next) => {
+export const showCourseCategories = async (req, res) => {
     try {
         const categories = await CourseCategory.find();
         return res.status(200).json({ categories });
@@ -89,7 +89,7 @@ const deleteCourseImage = (fileName) => {
     });
 }
 
-export const addAdditionalDetailsToCourse = async (course, inCart) => {
+export const addAdditionalDetailsToCourse = async (course, inCart, isPurchased) => {
     const courseCategory = await CourseCategory.findById(course.categoryId);
     const teacher = await User.findById(course.teacherId);
 
@@ -99,7 +99,7 @@ export const addAdditionalDetailsToCourse = async (course, inCart) => {
     const { token, createdAt, password, role, ...teacherOthers } = teacher._doc;
 
     return {
-        ...course._doc, categoryName: courseCategory.name, teacher: teacherOthers, inCart
+        ...course._doc, categoryName: courseCategory.name, teacher: teacherOthers, inCart, isPurchased
     }
 }
 
@@ -111,7 +111,7 @@ const verifyToken = (token) => {
     }
 }
 
-export const showCourses = async (req, res, next) => {
+export const showCourses = async (req, res) => {
     try {
         const courses = await Course.find();
 
@@ -121,13 +121,15 @@ export const showCourses = async (req, res, next) => {
 
         const updatedCourses = await Promise.all(courses.map(async (course) => {
             let inCart = false;
+            let isPurchased = false;
             if (req.cookies.access_token) {
                 const user = verifyToken(req.cookies.access_token)
                 if (user) {
                     inCart = await isInCart(user.id, course._id);
+                    isPurchased = await isUserPurchasedCourse(user.id, course._id);
                 }
             }
-            return addAdditionalDetailsToCourse(course, inCart);
+            return addAdditionalDetailsToCourse(course, inCart, isPurchased);
         }));
 
         return res.status(200).json({ courses: updatedCourses });
@@ -176,14 +178,16 @@ export const showCourseById = async (req, res, next) => {
         }
 
         let inCart = false;
+        let isPurchased = false;
         if (req.cookies.access_token) {
             const user = verifyToken(req.cookies.access_token)
             if (user) {
                 inCart = await isInCart(user.id, course._id);
+                isPurchased = await isUserPurchasedCourse(user.id, course._id)
             }
         }
 
-        const updatedCourse = await addAdditionalDetailsToCourse(course, inCart);
+        const updatedCourse = await addAdditionalDetailsToCourse(course, inCart, isPurchased);
 
         const courseSections = await CourseSection.find({ courseId: id });
 
@@ -191,20 +195,12 @@ export const showCourseById = async (req, res, next) => {
 
         const courseParts = await CoursePart.find({ sectionId: { $in: sectionIds } });
 
-        let isPurchased = false;
-        if (req.cookies.access_token) {
-            const user = verifyToken(req.cookies.access_token)
-            if (user) {
-                isPurchased = await isUserPurchasedCourse(user.id, id)
-            }
-        }
-
         const updatedCourseSections = courseSections.map(section => {
             const matchingCourseParts = courseParts.filter(part => part.sectionId.toString() == section._id.toString());
             return { ...section._doc, parts: matchingCourseParts }
         });
 
-        const finalCourse = { ...updatedCourse, sections: updatedCourseSections, isPurchased };
+        const finalCourse = { ...updatedCourse, sections: updatedCourseSections };
 
         return res.status(200).json({ course: finalCourse });
     } catch (err) {
@@ -234,7 +230,7 @@ export const showCoursesByTeacherId = async (req, res, next) => {
         const categories = await CourseCategory.find();
 
         const updatedCourses = await Promise.all(courses.map((course) => {
-            return addAdditionalDetailsToCourse(course, false);
+            return addAdditionalDetailsToCourse(course, false, false);
         }));
 
         return res.status(200).json({ courses: updatedCourses, categories });
@@ -555,7 +551,7 @@ export const deleteCourse = async (req, res, next) => {
 export const entrollCourse = async (req, res, next) => {
     const { courseId } = req.params;
     const { user } = req;
-    const userId = user.id;
+    const userId = req.user.id;
 
     try {
         if (!courseId || !userId) {
@@ -574,11 +570,12 @@ export const entrollCourse = async (req, res, next) => {
         }
 
         let inCart = false;
-        if (user) {
-            inCart = await isInCart(user.id, course._id);
+        if (userId) {
+            inCart = await isInCart(userId, course._id);
         }
 
-        addAdditionalDetailsToCourse(course, inCart);
+        let isPurchased = false;
+        isPurchased = await isUserPurchasedCourse(userId, courseId);
 
         const courseSections = await CourseSection.find({ courseId });
 
@@ -606,9 +603,6 @@ export const entrollCourse = async (req, res, next) => {
             return { ...section._doc, parts: matchingCourseParts }
         });
 
-
-        let isPurchased = false;
-        isPurchased = await isUserPurchasedCourse(userId, courseId);
 
         const updatedCourse = { ...course, sections: updatedCourseSections, isPurchased };
 

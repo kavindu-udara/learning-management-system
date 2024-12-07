@@ -73,7 +73,6 @@ const SingleCoursePage: React.FC = () => {
     apiClient
       .get(`/course/${id}`)
       .then((res) => {
-        console.log(res.data);
         setCourse(res.data.course);
         setSections(res.data.course.sections);
         setIsPurchased(res.data.course.isPurchased);

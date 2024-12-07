@@ -109,7 +109,7 @@ const Home: React.FC = () => {
         {user?.role === "user" && (
           <LargeGetCard
             title="Become a Teacher"
-            description="We all start somewhere. For programming, this series is that first"
+            description="Be a teacher and earn money !"
             buttonText="make me a teacher"
             buttonAction={updateToTeacher}
           />
@@ -120,6 +120,7 @@ const Home: React.FC = () => {
         </div>
         <div className="grid lg:grid-cols-4 gap-5 container">
           {courses.map((course: any) => {
+            console.log(course.isPurchased);
             return (
               <CourseCard
                 id={course?._id}
@@ -135,7 +136,7 @@ const Home: React.FC = () => {
                 removeFromCartCallBack={handleRemoveFromCart}
                 isNew
                 isInCart={course?.inCart}
-                showCart={user?.role === "user"}
+                showCart={user?.role === "user" && !course.isPurchased}
               />
             );
           })}
