@@ -18,6 +18,8 @@ import TeacherRoute from "./routes/TeacherRoute";
 import Index from "./pages/LandingPage";
 import LoadingPage from "./pages/LoadingPage";
 import CartPage from "./pages/CartPage";
+import TeacherLayout from "./layouts/TeacherLayout";
+import NewTeacherDashboard from "./pages/teacher/NewTeacherDashboard";
 
 function App() {
   return (
@@ -40,9 +42,12 @@ function App() {
 
           <Route element={<TeacherRoute />}>
             <Route path="/teacher">
-              <Route index element={<TeacherDashboard />} />
+            <Route element={<TeacherLayout/>}>
+              {/* <Route index element={<TeacherDashboard />} /> */}
+              <Route index element={<NewTeacherDashboard />} />
               <Route path="create-course" element={<CreateCourse />} />
               <Route path="edit-course/:id" element={<EditCourse />} />
+              </Route>
             </Route>
           </Route>
         </Routes>
