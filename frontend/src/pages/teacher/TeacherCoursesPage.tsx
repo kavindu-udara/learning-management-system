@@ -15,7 +15,7 @@ interface MyCourse {
   imageUrl: string;
 }
 
-const TeacherDashboard: React.FC = () => {
+const TeacherCoursesPage: React.FC = () => {
   const [myCourses, setMycourses] = useState<MyCourse[]>([]);
 
   const navigate = useNavigate();
@@ -82,4 +82,4 @@ const TeacherDashboard: React.FC = () => {
   );
 };
 
-export default TeacherDashboard;
+export default TeacherCoursesPage;

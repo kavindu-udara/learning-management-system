@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/user/Profile"));
 const SingleCoursePage = lazy(() => import("./pages/course/SingleCoursePage"));
-const TeacherDashboard = lazy(() => import("./pages/teacher/TeacherDashboard"));
+const TeacherCoursesPage = lazy(() => import("./pages/teacher/TeacherCoursesPage"));
 const CreateCourse = lazy(() => import("./pages/teacher/CreateCourse"));
 const EditCourse = lazy(() => import("./pages/course/EditCourse"));
 const EntrollCoursePage = lazy(
@@ -44,7 +44,7 @@ function App() {
             <Route path="/teacher">
               <Route element={<TeacherLayout />}>
                 <Route index element={<NewTeacherDashboard />} />
-                <Route path="courses" element={<TeacherDashboard />} />
+                <Route path="courses" element={<TeacherCoursesPage />} />
                 <Route path="create-course" element={<CreateCourse />} />
                 <Route path="edit-course/:id" element={<EditCourse />} />
               </Route>

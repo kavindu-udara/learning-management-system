@@ -5,6 +5,7 @@ import User from "../models/userModel.js";
 import logger from "../utils/logger.js";
 import { addAdditionalDetailsToCourse } from "./courseController.js";
 import { addCoursePartsToWatchHistory } from "./purchasedCourseController.js";
+import { storeTeacherEarnings } from "./teacherEarningController.js";
 
 
 export const getCartByUserId = async (userId) => {
@@ -133,6 +134,9 @@ export const createPurchasedCart = async (req, res) => {
 
                 const purchasedCourse = new PurchasedCourse({ userId, courseId: course._id, purchasedPrice: course.price });
                 await purchasedCourse.save();
+
+                const teacherEarning = (course.price * 80) / 100;
+                await storeTeacherEarnings(course.teacherId, userId, course._id, teacherEarning);
 
                 await addCoursePartsToWatchHistory(course._id, userId);
 

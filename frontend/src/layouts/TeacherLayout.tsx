@@ -1,89 +1,38 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React from "react";
-import { IoMdHome, IoIosArrowForward, IoMdSettings } from "react-icons/io";
-import { SiYoutubeshorts } from "react-icons/si";
+import { IoMdHome, IoMdSettings } from "react-icons/io";
 import {
   MdOutlineSubscriptions,
-  MdPodcasts,
-  MdOutlineAccessTime,
   MdOutlineOutlinedFlag,
   MdOutlineHelpOutline,
   MdOutlineFeedback,
 } from "react-icons/md";
-import { FaHistory } from "react-icons/fa";
-import { RiPlayList2Fill } from "react-icons/ri";
-import { PiVideoBold } from "react-icons/pi";
-import { AiOutlineLike } from "react-icons/ai";
-import { IoCut } from "react-icons/io5";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const TeacherLayout: React.FC = () => {
-
   const naviagate = useNavigate();
 
   return (
     <>
       <Header />
-      <div className="grid grid-cols-7 ">
-        <div className=" grid grid-cols-1 bg-black text-lg">
+      <div className="grid grid-cols-7 h-screen">
+        <div className=" flex flex-col justify-between bg-dark-acent-color text-lg">
           <div className=" px-5 flex flex-col justify-center gap-1">
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center" onClick={() => naviagate('/teacher')}>
+            <button
+              className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-primary-color/40 flex justify-start gap-5 items-center"
+              onClick={() => naviagate("/teacher")}
+            >
               <IoMdHome />
               Home
             </button>
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center" onClick={() => naviagate('/teacher/courses')}>
-              <SiYoutubeshorts />
+            <button
+              className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-primary-color/40 flex justify-start gap-5 items-center"
+              onClick={() => naviagate("/teacher/courses")}
+            >
+              <MdOutlineSubscriptions />
               Courses
             </button>
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <MdOutlineSubscriptions />
-              Subscription
-            </button>
-            <hr />
-          </div>
-
-          <div className=" px-5 flex flex-col justify-center gap-1">
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              You
-              <IoIosArrowForward />
-            </button>
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <RiPlayList2Fill />
-              Playlist
-            </button>
-
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <FaHistory />
-              History
-            </button>
-
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <PiVideoBold />
-              Your Videos
-            </button>
-
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <MdPodcasts />
-              Your Podcasts
-            </button>
-
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <MdOutlineAccessTime />
-              Watch Later
-            </button>
-
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <AiOutlineLike />
-              Liked Videos
-            </button>
-
-            <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
-              <IoCut />
-              Your Clips
-            </button>
-
-            <hr />
           </div>
 
           <div className=" px-5 flex flex-col justify-center gap-1">
