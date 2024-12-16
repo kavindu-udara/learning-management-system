@@ -13,6 +13,7 @@ import PieChartComponent from "@/components/charts/PieChartComponent";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import RecentSalesCard from "@/components/cards/RecentSalesCard";
 import apiClient from "@/axios/axios";
+import { toast } from "react-toastify";
 
 interface Data {
   courses?: any;
@@ -32,11 +33,10 @@ const NewTeacherDashboard: React.FC = () => {
       .get("/teacher/overview")
       .then((res) => {
         // TODO : update chart
-        console.log(res.data);
         setData(res.data);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        toast.error("Something went wrong");
       });
   };
 

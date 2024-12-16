@@ -28,6 +28,7 @@ const chartData = [
   { month: "August", desktop: 214, mobile: 140 },
   { month: "September", desktop: 214, mobile: 140 }, 
 ];
+
 const BarChartComponent: React.FC = () => {
   return (
     <ChartContainer config={chartConfig} className="max-h-[300px] w-full">
