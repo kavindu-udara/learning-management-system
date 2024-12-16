@@ -16,46 +16,40 @@ const TeacherLayout: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="grid grid-cols-7 h-screen">
-        <div className=" flex flex-col justify-between bg-dark-acent-color text-lg">
-          <div className=" px-5 flex flex-col justify-center gap-1">
+      <div className="flex flex-row h-screen">
+        <div className="flex flex-col justify-between bg-dark-acent-color text-lg min-w-[60px]">
+          <div className="  flex flex-col justify-center gap-1">
             <button
               className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-primary-color/40 flex justify-start gap-5 items-center"
               onClick={() => naviagate("/teacher")}
             >
               <IoMdHome />
-              Home
             </button>
             <button
               className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-primary-color/40 flex justify-start gap-5 items-center"
               onClick={() => naviagate("/teacher/courses")}
             >
               <MdOutlineSubscriptions />
-              Courses
             </button>
           </div>
 
-          <div className=" px-5 flex flex-col justify-center gap-1">
+          <div className=" flex flex-col justify-center gap-1">
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               <IoMdSettings />
-              Settings
             </button>
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               <MdOutlineOutlinedFlag />
-              Report History
             </button>
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               <MdOutlineHelpOutline />
-              Help
             </button>
             <button className="text-white rounded-md pt-3 pb-3 pl-5 hover:bg-slate-600/40 flex justify-start gap-5 items-center">
               <MdOutlineFeedback />
-              Send Feedback
             </button>
             <hr />
           </div>
         </div>
-        <div className="col-span-6">
+        <div className="w-full">
           <Outlet />
         </div>
       </div>

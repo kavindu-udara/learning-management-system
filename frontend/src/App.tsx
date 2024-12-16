@@ -20,6 +20,7 @@ import LoadingPage from "./pages/LoadingPage";
 import CartPage from "./pages/CartPage";
 import TeacherLayout from "./layouts/TeacherLayout";
 import NewTeacherDashboard from "./pages/teacher/NewTeacherDashboard";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -50,6 +51,9 @@ function App() {
               </Route>
             </Route>
           </Route>
+
+          {/* Add this Route at the end */} 
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
