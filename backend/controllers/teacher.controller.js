@@ -1,8 +1,8 @@
-import Course from "../models/courseModel.js";
-import TeacherEarning from "../models/teacherEarningModel.js";
-import User from "../models/userModel.js";
+import Course from "../models/course.model.js";
+import TeacherEarning from "../models/teacherEarning.model.js";
+import User from "../models/user.model.js";
 import logger from "../utils/logger.js";
-import { addUserProfileUrl } from "./userController.js";
+import { addUserProfileUrl } from "./user.controller.js";
 
 export const getTeacherOverview = async (req, res) => {
     try {

@@ -6,14 +6,14 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import logger from "./utils/logger.js";
 
-import authRouter from "./routes/authRoute.js";
-import userRouter from "./routes/userRoute.js";
-import courseRouter from "./routes/courseRouter.js";
-import paymentRouter from "./routes/paymentRouter.js";
-import videoRouter from "./routes/videoRouter.js";
-import imageRouter from "./routes/imageRouter.js";
-import cartRouter from "./routes/cartRouter.js";
-import teacherRouter from "./routes/teacherRoute.js";
+import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
+import courseRouter from "./routes/course.route.js";
+import paymentRouter from "./routes/payment.route.js";
+import videoRouter from "./routes/video.router.js";
+import imageRouter from "./routes/image.route.js";
+import cartRouter from "./routes/cart.route.js";
+import teacherRouter from "./routes/teacher.route.js";
 
 dotenv.config();
 

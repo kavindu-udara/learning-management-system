@@ -1,5 +1,5 @@
 import express from "express";
-import { updateToTeacher, updateUser } from "../controllers/userController.js";
+import { updateToTeacher, updateUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 import { uploadProfileImage } from "../utils/uploadConfig.js";
 

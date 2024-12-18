@@ -1,15 +1,15 @@
-import CourseCategory from "../models/courseCategoryModel.js";
-import Course from "../models/courseModel.js";
-import User from "../models/userModel.js";
-import CoursePart from "../models/coursePartModel.js";
-import CourseSection from "../models/courseSectionModel.js";
-import PurchasedCourse from "../models/purchasedCourseModel.js";
+import CourseCategory from "../models/courseCategory.model.js";
+import Course from "../models/course.model.js";
+import User from "../models/user.model.js";
+import CoursePart from "../models/coursePart.model.js";
+import CourseSection from "../models/courseSection.model.js";
+import PurchasedCourse from "../models/purchasedCourse.model.js";
 import jwt from "jsonwebtoken";
-import WatchHistory from "../models/watchHistoryModel.js";
+import WatchHistory from "../models/watchHistory.model.js";
 import dotenv from "dotenv";
 import logger from "../utils/logger.js";
 import fs from "fs";
-import { isInCart } from "./CartController.js";
+import { isInCart } from "./cart.controller.js";
 
 dotenv.config();
 

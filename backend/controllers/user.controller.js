@@ -1,4 +1,4 @@
-import User from "../models/userModel.js";
+import User from "../models/user.model.js";
 
 export const addUserProfileUrl = (imageUrl) => {
     let baseUrl = "http://127.0.0.1:8000/api/v1/image/userImage/";

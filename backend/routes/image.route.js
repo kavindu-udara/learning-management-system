@@ -1,5 +1,5 @@
 import express from "express";
-import { showCourseImage, showImage } from "../controllers/imageController.js";
+import { showCourseImage, showImage } from "../controllers/image.controller.js";
 
 const router = express.Router();
 
