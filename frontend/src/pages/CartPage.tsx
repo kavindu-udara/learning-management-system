@@ -61,6 +61,9 @@ const CartPage: React.FC = () => {
   return (
     <>
       <Header />
+
+      {}
+
       {cart && (
         <CartPayDialog
           triggerRef={payDialogRef}
@@ -73,6 +76,7 @@ const CartPage: React.FC = () => {
             <div className="text-3xl text-dark-acent-color font-jua">
               My Cart
             </div>
+            {cart.length > 0 ? (
             <div className="grid gap-3 grid-cols-2 my-5">
               {cart.map((item) => {
                 return (
@@ -87,6 +91,11 @@ const CartPage: React.FC = () => {
                 );
               })}
             </div>
+            ):(
+              <div className="w-full justify-center h-[400px] flex items-center ">
+                Your Cart is Empty
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -96,7 +105,7 @@ const CartPage: React.FC = () => {
           <div className="text-dark-acent-color font-jua text-2xl">
             ${total}
           </div>
-          <Button onClick={() => payDialogRef.current?.click()}>
+          <Button onClick={() => cart.length > 0 ?  payDialogRef.current?.click() : toast.error('cart is empty')}>
             Checkout
           </Button>
         </div>

@@ -1,5 +1,4 @@
 import apiClient from "@/axios/axios";
-import Header from "@/components/Header";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -357,7 +356,6 @@ const EditCourse: React.FC = () => {
 
   return (
     <>
-      <Header />
 
       <SingleCourseHeroSection
         category={course?.categoryName}

@@ -19,6 +19,7 @@ interface Course {
   imageUrl: string;
   categoryName: string;
   teacher: {
+    _id: string,
     fname: string;
     lname: string;
     imageUrl: string;
@@ -39,7 +40,7 @@ interface SectionItem {
   title: string;
   courseId: string;
   parts: Part[];
-};
+}
 
 const SingleCoursePage: React.FC = () => {
   const defaultCourse: Course = {
@@ -51,6 +52,7 @@ const SingleCoursePage: React.FC = () => {
     imageUrl: "",
     categoryName: "",
     teacher: {
+      _id: "",
       fname: "",
       lname: "",
       imageUrl: "",
@@ -84,11 +86,15 @@ const SingleCoursePage: React.FC = () => {
 
   const handleStartCourse = () => {
     if (user?._id) {
-      if (!isPurchased) {
-        toast.error("You have to buy this course first !");
-        payDialogRef.current?.click();
-      } else {
+      if (course?.teacher?._id === user._id) {
         navigate(`/course/entroll/${course?._id}`);
+      } else {
+        if (!isPurchased) {
+          toast.error("You have to buy this course first !");
+          payDialogRef.current?.click();
+        } else {
+          navigate(`/course/entroll/${course?._id}`);
+        }
       }
     } else {
       toast.error("Please Login First");

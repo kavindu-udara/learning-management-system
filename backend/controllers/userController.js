@@ -1,5 +1,17 @@
 import User from "../models/userModel.js";
 
+export const addUserProfileUrl = (imageUrl) => {
+    let baseUrl = "http://127.0.0.1:8000/api/v1/image/userImage/";
+    // update image Url value
+    if (imageUrl) {
+        // Prepend the base URL to the existing imageUrl
+        return`${baseUrl}${imageUrl}`;
+    } else {
+        // Add the default image URL if imageUrl does not exist
+        return `${baseUrl}default.png`;
+    }
+}
+
 export const updateUser = async (req, res, next) => {
     const { fname, lname, email } = req.body;
 
@@ -26,16 +38,16 @@ export const updateUser = async (req, res, next) => {
                 await user.save();
 
                 const { token, password, ...others } = user._doc;
-
-                let baseUrl = "http://127.0.0.1:8000/api/v1/image/userImage/";
-                // update image Url value
-                if (others.imageUrl) {
-                    // Prepend the base URL to the existing imageUrl
-                    others.imageUrl = `${baseUrl}${others.imageUrl}`;
-                } else {
-                    // Add the default image URL if imageUrl does not exist
-                    others.imageUrl = `${baseUrl}default.png`;
-                }
+                others.imageUrl = addUserProfileUrl(others.imageUrl);
+                // let baseUrl = "http://127.0.0.1:8000/api/v1/image/userImage/";
+                // // update image Url value
+                // if (others.imageUrl) {
+                //     // Prepend the base URL to the existing imageUrl
+                //     others.imageUrl = `${baseUrl}${others.imageUrl}`;
+                // } else {
+                //     // Add the default image URL if imageUrl does not exist
+                //     others.imageUrl = `${baseUrl}default.png`;
+                // }
 
                 return res.status(200).json({ message: "User updated successfully", user: others });
             }

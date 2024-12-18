@@ -550,7 +550,6 @@ export const deleteCourse = async (req, res, next) => {
 
 export const entrollCourse = async (req, res, next) => {
     const { courseId } = req.params;
-    const { user } = req;
     const userId = req.user.id;
 
     try {

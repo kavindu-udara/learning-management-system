@@ -13,6 +13,7 @@ import paymentRouter from "./routes/paymentRouter.js";
 import videoRouter from "./routes/videoRouter.js";
 import imageRouter from "./routes/imageRouter.js";
 import cartRouter from "./routes/cartRouter.js";
+import teacherRouter from "./routes/teacherRoute.js";
 
 dotenv.config();
 
@@ -48,5 +49,6 @@ apiRouter.use('/checkout', paymentRouter);
 apiRouter.use('/video', videoRouter);
 apiRouter.use('/image', imageRouter);
 apiRouter.use('/cart', cartRouter);
+apiRouter.use('/teacher', teacherRouter);
 
 app.use('/api/v1', apiRouter);

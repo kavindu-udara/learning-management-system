@@ -1,7 +1,9 @@
+import Course from "../models/courseModel.js";
 import CoursePart from "../models/coursePartModel.js";
 import CourseSection from "../models/courseSectionModel.js";
 import PurchasedCourse from "../models/purchasedCourseModel.js";
 import WatchHistory from "../models/watchHistoryModel.js";
+import { storeTeacherEarnings } from "./teacherEarningController.js";
 
 export const createPurchasedCourse = async (req, res, next) => {
 
@@ -15,9 +17,19 @@ export const createPurchasedCourse = async (req, res, next) => {
     }
 
     try {
+
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+
         const purchasedCourse = new PurchasedCourse({ userId, courseId, purchasedPrice });
         await addCoursePartsToWatchHistory(courseId, userId);
         await purchasedCourse.save();
+
+        const teacherEarning = (course.price * 80) / 100; 
+        await storeTeacherEarnings(course.teacherId, userId, courseId, teacherEarning);
+
         return res.status(201).json({ message: "Purchased course created successfully", purchasedCourse });
     } catch (err) {
         return res.status(500).json({ message: err.message });

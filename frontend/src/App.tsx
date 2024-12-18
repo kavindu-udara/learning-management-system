@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/user/Profile"));
 const SingleCoursePage = lazy(() => import("./pages/course/SingleCoursePage"));
-const TeacherDashboard = lazy(() => import("./pages/teacher/TeacherDashboard"));
+const TeacherCoursesPage = lazy(() => import("./pages/teacher/TeacherCoursesPage"));
 const CreateCourse = lazy(() => import("./pages/teacher/CreateCourse"));
 const EditCourse = lazy(() => import("./pages/course/EditCourse"));
 const EntrollCoursePage = lazy(
@@ -18,6 +18,9 @@ import TeacherRoute from "./routes/TeacherRoute";
 import Index from "./pages/LandingPage";
 import LoadingPage from "./pages/LoadingPage";
 import CartPage from "./pages/CartPage";
+import TeacherLayout from "./layouts/TeacherLayout";
+import NewTeacherDashboard from "./pages/teacher/NewTeacherDashboard";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -40,11 +43,17 @@ function App() {
 
           <Route element={<TeacherRoute />}>
             <Route path="/teacher">
-              <Route index element={<TeacherDashboard />} />
-              <Route path="create-course" element={<CreateCourse />} />
-              <Route path="edit-course/:id" element={<EditCourse />} />
+              <Route element={<TeacherLayout />}>
+                <Route index element={<NewTeacherDashboard />} />
+                <Route path="courses" element={<TeacherCoursesPage />} />
+                <Route path="create-course" element={<CreateCourse />} />
+                <Route path="edit-course/:id" element={<EditCourse />} />
+              </Route>
             </Route>
           </Route>
+
+          {/* Add this Route at the end */} 
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
