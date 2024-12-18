@@ -28,22 +28,21 @@ const VideoPlayer: React.FC<Props> = ({
   const [currentVolume, setCurrentVolume] = useState(videoState.volume);
   const [isInFullScreen, setIsInFullScreen] = useState(false);
 
-  const videoPlayerRef = useRef(null);
+  const videoPlayerRef = useRef<ReactPlayer>(null);
   const divRef = useRef<HTMLDivElement>(null);
 
   const playPauseHandler = () => {
     setIsPlaying(!isPlaying);
   };
 
-  const progressHandler = (state: number) => {
-    if (!videoState.seeking) {
-      setVideoState({ ...videoState, ...state });
-      setPlayedTime(state.playedSeconds);
-    }
-  };
-
+const progressHandler = (state: { playedSeconds: number }) => {
+  if (!videoState.seeking) {
+    setVideoState({ ...videoState, ...state });
+    setPlayedTime(state.playedSeconds);
+  }
+};
   const seekHandler = (value: number) => {
-    setVideoState({ ...videoState, played: parseFloat(value) / 100 });
+    setVideoState({ ...videoState, played: parseFloat(value.toString()) / 100 });
   };
 
   const seekMouseUpHandler = (value: number) => {
@@ -54,7 +53,7 @@ const VideoPlayer: React.FC<Props> = ({
   };
   
   const volumeChangeHandler = (value: number) => {
-    const newVolume = parseFloat(value) / 100;
+    const newVolume = parseFloat(value.toString()) / 100;
     setCurrentVolume(newVolume);
     setVideoState({
       ...videoState,
@@ -64,7 +63,7 @@ const VideoPlayer: React.FC<Props> = ({
     setIsMuted(newVolume === 0);
   };
   const volumeSeekUpHandler = (value: number) => {
-    const newVolume = parseFloat(value) / 100;
+    const newVolume = parseFloat(value.toString()) / 100;
     setVideoState({
       ...videoState,
       volume: newVolume,
@@ -95,7 +94,6 @@ const VideoPlayer: React.FC<Props> = ({
 
   useEffect(() => {
     if (playedTime === duration) {
-      // TODO : finished function
       if (duration > 0) {
         finishedCallback();
       }
