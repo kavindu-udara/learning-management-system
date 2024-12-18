@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
-import Course from '../models/courseModel.js';
-import { getCartByUserId, getCartTotalPrice } from './CartController.js';
+import Course from '../models/course.model.js';
+import { getCartByUserId, getCartTotalPrice } from './cart.controller.js';
 dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_API_KEY);
 

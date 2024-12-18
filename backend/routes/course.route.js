@@ -1,5 +1,5 @@
 import express from "express";
-import { createCategory, createCourse, createCoursePart, createCourseSection, deleteCourse, deletePart, deleteSection, entrollCourse, showCourseById, showCourseCategories, showCourses, showCoursesByTeacherId, updateCourse, updatePart, updateSection } from "../controllers/courseController.js";
+import { createCategory, createCourse, createCoursePart, createCourseSection, deleteCourse, deletePart, deleteSection, entrollCourse, showCourseById, showCourseCategories, showCourses, showCoursesByTeacherId, updateCourse, updatePart, updateSection } from "../controllers/course.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 import { verifyTeacher } from "../utils/verifyTeacher.js";
 import { uploadCourseImage, uploadVideo } from "../utils/uploadConfig.js";

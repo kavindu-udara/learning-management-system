@@ -1,11 +1,11 @@
-import Cart from "../models/CartModel.js";
-import Course from "../models/courseModel.js";
-import PurchasedCourse from "../models/purchasedCourseModel.js";
-import User from "../models/userModel.js";
+import Cart from "../models/cart.model.js";
+import Course from "../models/course.model.js";
+import PurchasedCourse from "../models/purchasedCourse.model.js";
+import User from "../models/user.model.js";
 import logger from "../utils/logger.js";
-import { addAdditionalDetailsToCourse } from "./courseController.js";
-import { addCoursePartsToWatchHistory } from "./purchasedCourseController.js";
-import { storeTeacherEarnings } from "./teacherEarningController.js";
+import { addAdditionalDetailsToCourse } from "./course.controller.js";
+import { addCoursePartsToWatchHistory } from "./purchasedCourse.controller.js";
+import { storeTeacherEarnings } from "./teacherEarning.controller.js";
 
 
 export const getCartByUserId = async (userId) => {

@@ -1,8 +1,8 @@
 import express from "express";
-import { createCartPaymentIntent, createPaymentIntent } from "../controllers/paymentController.js";
+import { createCartPaymentIntent, createPaymentIntent } from "../controllers/payment.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
-import { createPurchasedCourse } from "../controllers/purchasedCourseController.js";
-import { createPurchasedCart } from "../controllers/CartController.js";
+import { createPurchasedCourse } from "../controllers/purchasedCourse.controller.js";
+import { createPurchasedCart } from "../controllers/cart.controller.js";
 
 const router = express.Router();
 

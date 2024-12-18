@@ -1,6 +1,6 @@
 import fs from "fs";
-import CoursePart from "../models/coursePartModel.js";
-import WatchHistory from "../models/watchHistoryModel.js";
+import CoursePart from "../models/coursePart.model.js";
+import WatchHistory from "../models/watchHistory.model.js";
 
 export const showVideo = async (req, res, next) => {
 

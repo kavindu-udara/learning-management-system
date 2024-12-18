@@ -1,9 +1,9 @@
-import Course from "../models/courseModel.js";
-import CoursePart from "../models/coursePartModel.js";
-import CourseSection from "../models/courseSectionModel.js";
-import PurchasedCourse from "../models/purchasedCourseModel.js";
-import WatchHistory from "../models/watchHistoryModel.js";
-import { storeTeacherEarnings } from "./teacherEarningController.js";
+import Course from "../models/course.model.js";
+import CoursePart from "../models/coursePart.model.js";
+import CourseSection from "../models/courseSection.model.js";
+import PurchasedCourse from "../models/purchasedCourse.model.js";
+import WatchHistory from "../models/watchHistory.model.js";
+import { storeTeacherEarnings } from "./teacherEarning.controller.js";
 
 export const createPurchasedCourse = async (req, res, next) => {
 
