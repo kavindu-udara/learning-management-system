@@ -4,7 +4,7 @@
  * @param {string} email - The email address to validate.
  * @returns {boolean} - Returns true if the email is valid, otherwise false.
  */
-export const validateEmail = (email) => {
+export const validateEmail = (email: string): boolean => {
     const regex = /^[\w!#$%&'*+/=?`{|}~^.-]+(?:\.[\w!#$%&'*+/=?`{|}~^.-]+)*@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,6}$/;
     return regex.test(email);
 }
@@ -15,7 +15,7 @@ export const validateEmail = (email) => {
  * @param {string} phone - The phone number to validate.
  * @returns {boolean} - Returns true if the phone number is valid, otherwise false.
  */
-export const validatePhone = (phone) => {
+export const validatePhone = (phone: string): boolean => {
     const regex = /^(?:\+94|0)?(7[0-9]{8})$/;
     return regex.test(phone);
 }
@@ -27,7 +27,7 @@ export const validatePhone = (phone) => {
  * @param {string} password - The password to validate.
  * @returns {boolean} - Returns true if the password is valid, otherwise false.
  */
-export const validatePassword = (password) => {
+export const validatePassword = (password: string): boolean => {
     const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     return regex.test(password);
 }
@@ -39,7 +39,7 @@ export const validatePassword = (password) => {
  * @param {string} name - The name to validate.
  * @returns {boolean} - Returns true if the name is valid, otherwise false.
  */
-export const validateName = (name) => {
+export const validateName = (name: string): boolean => {
     const regex = /^[a-zA-Z]{1,10}$/;
     return regex.test(name);
 }

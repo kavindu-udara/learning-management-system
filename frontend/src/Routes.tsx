@@ -1,29 +1,41 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import TeacherRoute from './routes/TeacherRoute';
-import TeacherLayout from './layouts/TeacherLayout';
+import "react-toastify/dist/ReactToastify.css";
 
-import LoadingPage from './pages/LoadingPage';
+import TeacherRoute from "./routes/TeacherRoute";
+import TeacherLayout from "./layouts/TeacherLayout";
 
-const Home = React.lazy(() => import('./pages/Home'));
-const Index = React.lazy(() => import('./pages/LandingPage'));
-const Register = React.lazy(() => import('./pages/auth/Register'));
-const Login = React.lazy(() => import('./pages/auth/Login'));
-const Profile = React.lazy(() => import('./pages/user/Profile'));
-const SingleCoursePage = React.lazy(() => import('./pages/course/SingleCoursePage'));
-const EntrollCoursePage = React.lazy(() => import('./pages/course/EntrollCoursePage'));
-const CartPage = React.lazy(() => import('./pages/CartPage'));
-const NewTeacherDashboard = React.lazy(() => import('./pages/teacher/NewTeacherDashboard'));
-const TeacherCoursesPage = React.lazy(() => import('./pages/teacher/TeacherCoursesPage'));
-const CreateCourse = React.lazy(() => import('./pages/teacher/CreateCourse'));
-const EditCourse = React.lazy(() => import('./pages/course/EditCourse'));
-const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
+import LoadingPage from "./pages/LoadingPage";
+import { ToastContainer } from "react-toastify";
+
+const Home = React.lazy(() => import("./pages/Home"));
+const Index = React.lazy(() => import("./pages/LandingPage"));
+const Register = React.lazy(() => import("./pages/auth/Register"));
+const Login = React.lazy(() => import("./pages/auth/Login"));
+const Profile = React.lazy(() => import("./pages/user/Profile"));
+const SingleCoursePage = React.lazy(
+  () => import("./pages/course/SingleCoursePage")
+);
+const EntrollCoursePage = React.lazy(
+  () => import("./pages/course/EntrollCoursePage")
+);
+const CartPage = React.lazy(() => import("./pages/CartPage"));
+const NewTeacherDashboard = React.lazy(
+  () => import("./pages/teacher/NewTeacherDashboard")
+);
+const TeacherCoursesPage = React.lazy(
+  () => import("./pages/teacher/TeacherCoursesPage")
+);
+const CreateCourse = React.lazy(() => import("./pages/teacher/CreateCourse"));
+const EditCourse = React.lazy(() => import("./pages/course/EditCourse"));
+const NotFoundPage = React.lazy(() => import("./pages/NotFoundPage"));
 
 const AppRoutes: React.FC = () => {
-    return (
-        <BrowserRouter>
-        <Suspense fallback={<LoadingPage />}>
+  return (
+    <BrowserRouter>
+      <ToastContainer />
+      <Suspense fallback={<LoadingPage />}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/home" element={<Home />} />
@@ -49,12 +61,12 @@ const AppRoutes: React.FC = () => {
             </Route>
           </Route>
 
-          {/* Add this Route at the end */} 
+          {/* Add this Route at the end */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-      </BrowserRouter>
-    );
+    </BrowserRouter>
+  );
 };
 
 export default AppRoutes;

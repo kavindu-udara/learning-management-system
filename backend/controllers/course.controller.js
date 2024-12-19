@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import logger from "../utils/logger.js";
 import fs from "fs";
 import { isInCart } from "./cart.controller.js";
+import { deleteCourseVideo } from "./files.controller.js";
 
 dotenv.config();
 
@@ -35,8 +36,7 @@ export const createCategory = () => {
     categories.map(category => {
         const newCategory = new CourseCategory({ name: category });
         newCategory.save();
-    }
-    )
+    });
 }
 
 export const showCourseCategories = async (req, res) => {
@@ -69,15 +69,6 @@ const addCourseTeacherImageUrl = (teacher) => {
         // Add the default image URL if imageUrl does not exist
         teacher.imageUrl = `${baseUrl}default.png`;
     }
-}
-
-const deleteCourseVideo = (videoFile) => {
-    const videoPath = "./public/course/videos/" + videoFile;
-    fs.unlink(videoPath, (err) => {
-        if (err) {
-            logger.error("While deleting video file", err);
-        }
-    });
 }
 
 const deleteCourseImage = (fileName) => {
@@ -279,7 +270,7 @@ export const createCoursePart = async (req, res, next) => {
     }
 
     try {
-        // check is course is created by teacher
+        // check course is created by teacher
         const courseSection = await CourseSection.findOne({ _id: sectionId });
 
         if (courseSection) {

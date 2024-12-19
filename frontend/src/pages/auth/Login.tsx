@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { validateEmail, validatePassword } from "@/lib/regex";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -25,22 +26,36 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const validate = () => {
+    if (!validateEmail(email)) {
+      toast.error("Invalid Email");
+      return false;
+    } else if (!validatePassword(password)) {
+      toast.error("Invalid Password");
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const login = async () => {
-    setIsLoading(true);
-    apiClient
-      .post("/auth/signin", {
-        email,
-        password,
-      })
-      .then((res) => {
-        setIsLoading(false);
-        dispatch(addUser(res.data.user));
-        navigate("/home");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-        setIsLoading(false);
-      });
+    if (validate()) {
+      setIsLoading(true);
+      apiClient
+        .post("/auth/signin", {
+          email,
+          password,
+        })
+        .then((res) => {
+          setIsLoading(false);
+          dispatch(addUser(res.data.user));
+          navigate("/home");
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+          setIsLoading(false);
+        });
+    }
   };
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,7 +103,12 @@ const Login: React.FC = () => {
                 {isLoading ? "Loading..." : "Login"}
               </Button>
             </div>
-            <Link to={'/register'} className="text-center mt-3 font-montserrat text-light-gray-color">don't have an account ?</Link>
+            <Link
+              to={"/register"}
+              className="text-center mt-3 font-montserrat text-light-gray-color"
+            >
+              don't have an account ?
+            </Link>
           </CardFooter>
         </Card>
       </form>

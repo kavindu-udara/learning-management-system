@@ -7,7 +7,6 @@ import { addAdditionalDetailsToCourse } from "./course.controller.js";
 import { addCoursePartsToWatchHistory } from "./purchasedCourse.controller.js";
 import { storeTeacherEarnings } from "./teacherEarning.controller.js";
 
-
 export const getCartByUserId = async (userId) => {
     const cart = await Cart.find({ userId: userId });
     return cart;
@@ -113,18 +112,14 @@ export const deleteCart = async (req, res) => {
         logger.error("while delete cart : ", err);
         return res.status(500).json({ message: "Error while deleting from cart" });
     };
-
 }
 
 
 export const createPurchasedCart = async (req, res) => {
-
     const userId = req.user.id;
-
     if (!userId) {
         return res.status(400).json({ message: "All fields are required" });
     }
-
     try {
         const cart = await getCartByUserId(userId);
         if (cart) {

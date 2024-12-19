@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { validateEmail, validateName, validatePassword } from "@/lib/regex";
 
 const Register: React.FC = () => {
   const [fname, setFname] = useState<string>("");
@@ -24,34 +25,46 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const validate = () => {
-    if (fname && lname && email && password && passwordConfirmation) {
+    if (!validateName(fname)) {
+      toast.error("Invalid first name");
+      return false;
+    } else if (!validateName(lname)) {
+      toast.error("Invalid last name");
+      return false;
+    } else if (!validateEmail(email)) {
+      toast.error("Invalid email");
+      return false;
+    } else if (
+      !validatePassword(password) ||
+      !validatePassword(passwordConfirmation)
+    ) {
+      toast.error("Invalid password");
+      return false;
+    } else if (password !== passwordConfirmation) {
+      toast.error("Passwords do not match");
+      return false;
+    } else {
       return true;
     }
-    return false;
   };
 
   const register = async () => {
+    toast.error("Passwords do not match");
     if (validate()) {
-      if (password === passwordConfirmation) {
-        setIsLoading(true);
-        apiClient
-          .post("/auth/signup", {
-            fname,
-            lname,
-            email,
-            password,
-          })
-          .then((res) => {
-            toast.success(res.data.message);
-            navigate("/home");
-          })
-          .catch((err) => toast.error(err.response.data.message));
-        setIsLoading(false);
-      } else {
-        toast.error("Passwords do not match");
-      }
-    } else {
-      toast.error("All fields are required");
+      setIsLoading(true);
+      apiClient
+        .post("/auth/signup", {
+          fname,
+          lname,
+          email,
+          password,
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          navigate("/home");
+        })
+        .catch((err) => toast.error(err.response.data.message));
+      setIsLoading(false);
     }
   };
 
@@ -130,7 +143,12 @@ const Register: React.FC = () => {
             <Button className="w-full" type="submit" disabled={isLoading}>
               {isLoading ? "Loading" : "Register"}
             </Button>
-            <Link to={'/login'} className="text-center mt-3 font-montserrat text-light-gray-color">Already have an account ?</Link>
+            <Link
+              to={"/login"}
+              className="text-center mt-3 font-montserrat text-light-gray-color"
+            >
+              Already have an account ?
+            </Link>
           </CardFooter>
         </Card>
       </form>

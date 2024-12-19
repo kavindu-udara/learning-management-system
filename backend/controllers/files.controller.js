@@ -12,3 +12,8 @@ export const deleteCourseImage = (imageName) => {
     const imagePath = "./public/course/images/" + imageName;
     deleteFile(imagePath);
 }
+
+export const deleteCourseVideo = (videoName) => {
+    const videoPath = "./public/course/videos/" + videoName;
+    deleteFile(videoPath);
+}
