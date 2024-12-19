@@ -119,9 +119,10 @@ const Home: React.FC = () => {
           Newest Courses
         </div>
         <div className="grid lg:grid-cols-4 gap-5 container">
-          {courses.map((course: any) => {
+          {courses.map((course: any, index) => {
             return (
               <CourseCard
+                key={index}
                 id={course?._id}
                 title={course?.title}
                 price={course?.price}
@@ -145,8 +146,8 @@ const Home: React.FC = () => {
           Trending Categories
         </div>
         <div className="grid lg:grid-cols-6 gap-5 container">
-          {courseCategories.map((category) => (
-            <CourseCategoryCard title={category?.name} />
+          {courseCategories.map((category, index) => (
+            <CourseCategoryCard key={index} title={category?.name} />
           ))}
         </div>
 
