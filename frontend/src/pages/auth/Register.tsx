@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { validateEmail, validateName, validatePassword } from "@/lib/regex";
+import GoogleAuth from "./GoogleAuth";
 
 const Register: React.FC = () => {
   const [fname, setFname] = useState<string>("");
@@ -139,10 +140,18 @@ const Register: React.FC = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="grid grid-cols-1">
-            <Button className="w-full" type="submit" disabled={isLoading}>
-              {isLoading ? "Loading" : "Register"}
-            </Button>
+          <CardFooter className="grid grid-cols-1 gap-3">
+            <div>
+              <Button className="w-full" type="submit" disabled={isLoading}>
+                {isLoading ? "Loading" : "Register"}
+              </Button>
+            </div>
+            <div className="text-center font-montserrat text-light-gray-color">
+              or
+            </div>
+            <div className="flex justify-center">
+              <GoogleAuth setIsLoading={setIsLoading} />
+            </div>
             <Link
               to={"/login"}
               className="text-center mt-3 font-montserrat text-light-gray-color"
