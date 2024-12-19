@@ -4,7 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { PaymentElement } from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe(
-  "pk_test_51PRGBsHRaLDd6tB6SpoIpLXnrIMUHoiX5kuNsRU7xCyF4UkG9xT2ViIUn6FdDv1DCDBUr9AMZaDwONdmFddPWHnX00XYdhEyDd"
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY as string
 );
 
 const Stripe: React.FC = () => {
