@@ -120,7 +120,6 @@ const Home: React.FC = () => {
         </div>
         <div className="grid lg:grid-cols-4 gap-5 container">
           {courses.map((course: any) => {
-            console.log(course.isPurchased);
             return (
               <CourseCard
                 id={course?._id}
@@ -143,25 +142,6 @@ const Home: React.FC = () => {
         </div>
 
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
-          Trending Courses
-        </div>
-        <div className="grid lg:grid-cols-4 gap-5 container">
-          {Array(4)
-            .fill(null)
-            .map((_) => (
-              <CourseCard
-                id="1"
-                title="Title"
-                price="100"
-                createdAt="2024-10-22T22:13:22.147Z"
-                imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-                teacherImage=""
-                teacherName=""
-              />
-            ))}
-        </div>
-
-        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Trending Categories
         </div>
         <div className="grid lg:grid-cols-6 gap-5 container">
@@ -170,43 +150,6 @@ const Home: React.FC = () => {
           ))}
         </div>
 
-        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
-          Best Selling Courses
-        </div>
-        <div className="grid lg:grid-cols-4 gap-5 container">
-          {Array(4)
-            .fill(null)
-            .map((_) => (
-              <CourseCard
-                id="1"
-                title="Title"
-                price="100"
-                createdAt="2024-10-22T22:13:22.147Z"
-                imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-                teacherImage=""
-                teacherName=""
-              />
-            ))}
-        </div>
-
-        <div className="font-jua container text-start text-primary-color text-[40px] my-5">
-          Free Courses
-        </div>
-        <div className="grid lg:grid-cols-4 gap-5 container">
-          {Array(4)
-            .fill(null)
-            .map((_) => (
-              <CourseCard
-                id="1"
-                title="Title"
-                price="100"
-                createdAt="2024-10-22T22:13:22.147Z"
-                imageUrl="http://127.0.0.1:8000/api/v1/image/default.jpg"
-                teacherImage=""
-                teacherName=""
-              />
-            ))}
-        </div>
       </div>
 
       <Footer />

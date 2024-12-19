@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { validateEmail, validatePassword } from "@/lib/regex";
+import GoogleAuth from "./GoogleAuth";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -97,15 +98,21 @@ const Login: React.FC = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="grid grid-cols-1">
+          <CardFooter className="grid grid-cols-1 gap-3">
             <div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Login"}
               </Button>
             </div>
+            <div className="text-center font-montserrat text-light-gray-color">
+              or
+            </div>
+            <div className="flex justify-center">
+              <GoogleAuth setIsLoading={setIsLoading} />
+            </div>
             <Link
               to={"/register"}
-              className="text-center mt-3 font-montserrat text-light-gray-color"
+              className="text-center font-montserrat text-light-gray-color"
             >
               don't have an account ?
             </Link>
