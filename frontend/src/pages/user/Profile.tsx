@@ -14,15 +14,30 @@ import { toast } from "react-toastify";
 import { addUser } from "@/features/user/userSlice";
 import Header from "@/components/Header";
 import defaultProfilePic from "../../assets/header/default-profile-icon.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { validatePassword } from "@/lib/regex";
 
 const Profile: React.FC = () => {
   const [fname, setFname] = useState<string>("");
   const [lname, setLname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [newpassword, setNewpassword] = useState<string>("");
+  const [newPasswordConfirmation, setNewPasswordConfirmation] =
+    useState<string>("");
   const [profileImage, setProfileImage] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const changePasswordButtonRef = useRef<HTMLButtonElement>(null);
 
   const user = useSelector((state: any) => state.userReducer.user);
 
@@ -87,10 +102,95 @@ const Profile: React.FC = () => {
     update();
   };
 
+  const handleChangePassword = () => {
+    if (
+      password !== "" &&
+      newpassword !== "" &&
+      newPasswordConfirmation !== ""
+    ) {
+      if (
+        validatePassword(newpassword) &&
+        validatePassword(newPasswordConfirmation)
+      ) {
+        if (newpassword === newPasswordConfirmation) {
+          apiClient
+            .put(`/user/${user?._id}/change-password`, {
+              oldPassword: password,
+              newPassword: newpassword,
+            })
+            .then((res) => {
+              toast.success(res.data.message);
+              setPassword("");
+              setNewpassword("");
+              setNewPasswordConfirmation("");
+              changePasswordButtonRef.current?.click();
+            })
+            .catch((err) => {
+              toast.error(err.response.data.message);
+            });
+        } else {
+          toast.error("New Password and Confirm New Password should be same");
+        }
+      } else {
+        toast.error(
+          "Password should be atleast 8 characters long and should contain atleast one uppercase, one lowercase, one number and one special character"
+        );
+      }
+    } else {
+      toast.error("All Fields are required");
+    }
+  };
+
   return (
     <>
       <Header />
-      <div className="flex bg-slate-200 h-screen justify-center items-center content-center">
+      <Dialog>
+        <DialogTrigger className="hidden" ref={changePasswordButtonRef}>
+          Open
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-1 w-full items-center gap-4 mb-4">
+            <div className="grid w-full items-center gap-4">
+              <Label>Old Password</Label>
+              <Input
+                type="password"
+                id="old-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="grid w-full items-center gap-4">
+              <Label>New Password</Label>
+              <Input
+                type="password"
+                id="new-password"
+                value={newpassword}
+                onChange={(e) => setNewpassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="grid w-full items-center gap-4">
+              <Label>Confirm New Password</Label>
+              <Input
+                type="password"
+                id="new-password-confirmation"
+                value={newPasswordConfirmation}
+                onChange={(e) => setNewPasswordConfirmation(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleChangePassword}>Change</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="flex bg-white h-screen justify-center items-center content-center">
         <form onSubmit={(e) => formSubmit(e)}>
           <Card className="lg:w-[500px] w-full">
             <CardHeader>
@@ -150,6 +250,15 @@ const Profile: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <Button
+                    type="button"
+                    className="w-full bg-dark-acent-color"
+                    onClick={() => changePasswordButtonRef?.current?.click()}
+                  >
+                    Change Password
+                  </Button>
                 </div>
               </div>
             </CardContent>
