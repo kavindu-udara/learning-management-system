@@ -150,7 +150,6 @@ const Home: React.FC = () => {
             <CourseCategoryCard key={index} title={category?.name} />
           ))}
         </div>
-
       </div>
 
       <Footer />
