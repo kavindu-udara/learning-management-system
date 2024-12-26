@@ -50,7 +50,7 @@ const Header: React.FC = () => {
                   !user?._id ? navigate("/login") : navigate("/profile");
                 }}
               >
-                Profile
+                {!user?._id ? "login" : "profile"}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
@@ -59,7 +59,6 @@ const Header: React.FC = () => {
               >
                 Cart
               </DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuItem onClick={() => logOutUser()}>
                 Logout
               </DropdownMenuItem>
