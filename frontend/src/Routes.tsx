@@ -8,6 +8,7 @@ import TeacherLayout from "./layouts/TeacherLayout";
 
 import LoadingPage from "./pages/LoadingPage";
 import { ToastContainer } from "react-toastify";
+import SearchPage from "./pages/SearchPage";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const Index = React.lazy(() => import("./pages/LandingPage"));
@@ -60,6 +61,9 @@ const AppRoutes: React.FC = () => {
               </Route>
             </Route>
           </Route>
+
+          {/* Search Page */}
+          <Route path="/search" element={<SearchPage />} />
 
           {/* Add this Route at the end */}
           <Route path="*" element={<NotFoundPage />} />

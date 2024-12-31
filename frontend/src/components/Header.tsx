@@ -52,6 +52,9 @@ const Header: React.FC = () => {
               >
                 {!user?._id ? "login" : "profile"}
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/search")}>
+                Search
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   !user?._id ? navigate("/login") : navigate("/cart");
