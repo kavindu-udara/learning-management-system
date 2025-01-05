@@ -16,29 +16,6 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 
-// ! create categories
-export const createCategory = () => {
-
-    // ! need to delete this
-    const categories = [
-        "Web Development",
-        "Mobile App Development",
-        "Data Science",
-        "Artificial Intelligence",
-        "Cyber Security",
-        "Database Management",
-        "Networking",
-        "Computer Systems",
-        "Algorithms and Data Structures",
-        "Software Engineering"
-    ];
-
-    categories.map(category => {
-        const newCategory = new CourseCategory({ name: category });
-        newCategory.save();
-    });
-}
-
 export const showCourseCategories = async (req, res) => {
     try {
         const categories = await CourseCategory.find();

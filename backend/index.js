@@ -2,9 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-import logger from "./utils/logger.js";
 
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
@@ -14,16 +12,11 @@ import videoRouter from "./routes/video.router.js";
 import imageRouter from "./routes/image.route.js";
 import cartRouter from "./routes/cart.route.js";
 import teacherRouter from "./routes/teacher.route.js";
+import { connectDatabase } from "./database/databaseConnect.js";
 
 dotenv.config();
 
-// connect to mongoDb
-mongoose.connect(process.env.MONGODB_URL).then(() => {
-    console.log("Connected to mongoDB");
-}).catch((err) => {
-    logger.error("MongoDB Connection Failed : " + err);
-    console.log(err);
-})
+connectDatabase();
 
 const app = express();
 

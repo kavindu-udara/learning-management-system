@@ -140,7 +140,7 @@ export const googleAuthController = async (req, res) => {
             if (alreadyExistUser) {
                 user = alreadyExistUser;
             } else {
-                const hashedPassword = await bcryptjs.hash(password, 12);
+                const hashedPassword = await bcryptjs.hash(generatedPassword, 12);
                 user = new User({ fname, lname, email, password: hashedPassword });
                 await user.save();
             }
