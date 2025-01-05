@@ -20,8 +20,12 @@ To get started with the LMS project, follow these steps:
 3. **Setup env :** 
     - Setup your .env files in the frontend and backend directories
 
+4. **Seed Database :**
+    ```bash
+    npm run db:seed
+    ```
 
-4. **Run the application:**
+5. **Run the application:**
     ```bash
     npm run dev
     ```
