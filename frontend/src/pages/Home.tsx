@@ -118,30 +118,33 @@ const Home: React.FC = () => {
         <div className="font-jua container text-start text-primary-color text-[40px] my-5 lg:mx-0 mx-5">
           Newest Courses
         </div>
-        <div className="grid lg:grid-cols-4 gap-5 container">
-          {courses.map((course: any, index) => {
-            return (
-              <CourseCard
-                key={index}
-                id={course?._id}
-                title={course?.title}
-                price={course?.price}
-                createdAt={course?.createdAt}
-                imageUrl={course?.imageUrl}
-                teacherName={
-                  course?.teacher?.fname + " " + course?.teacher?.lname
-                }
-                teacherImage={course?.teacher?.imageUrl}
-                addToCartCallBack={handleAddToCart}
-                removeFromCartCallBack={handleRemoveFromCart}
-                isNew
-                isInCart={course?.inCart}
-                showCart={user?.role === "user" && !course.isPurchased}
-              />
-            );
-          })}
-        </div>
-
+        {courses.length === 0 ? (
+          <div> no courses available </div>
+        ) : (
+          <div className="grid lg:grid-cols-4 gap-5 container">
+            {courses.map((course: any, index) => {
+              return (
+                <CourseCard
+                  key={index}
+                  id={course?._id}
+                  title={course?.title}
+                  price={course?.price}
+                  createdAt={course?.createdAt}
+                  imageUrl={course?.imageUrl}
+                  teacherName={
+                    course?.teacher?.fname + " " + course?.teacher?.lname
+                  }
+                  teacherImage={course?.teacher?.imageUrl}
+                  addToCartCallBack={handleAddToCart}
+                  removeFromCartCallBack={handleRemoveFromCart}
+                  isNew
+                  isInCart={course?.inCart}
+                  showCart={user?.role === "user" && !course.isPurchased}
+                />
+              );
+            })}
+          </div>
+        )}
         <div className="font-jua container text-start text-primary-color text-[40px] my-5">
           Trending Categories
         </div>
